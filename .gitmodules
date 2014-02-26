@@ -1,0 +1,3 @@
+[submodule "src/windows-isolation"]
+	path = src/windows-isolation
+	url = git@github.com:UhuruSoftware/windows-isolation.git
