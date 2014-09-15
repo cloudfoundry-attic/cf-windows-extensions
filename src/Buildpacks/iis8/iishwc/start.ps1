@@ -1,3 +1,6 @@
+Import-Module Microsoft.PowerShell.Management
+Import-Module Microsoft.PowerShell.Utility
+
 $script:scriptPath = Join-Path $env:HOME iishwc
 $script:appPoolName = [Guid]::NewGuid().ToString()
 $script:appPort = $Env:PORT

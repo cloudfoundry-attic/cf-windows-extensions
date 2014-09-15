@@ -13,7 +13,6 @@ namespace Uhuru.CloudFoundry.DEA
     using System.Threading;
     using Uhuru.CloudFoundry.DEA.Messages;
     using Uhuru.CloudFoundry.DEA.PluginBase;
-    using Uhuru.Isolation;
     using Uhuru.Utilities;
     using Uhuru.Utilities.Json;
     using Uhuru.Utilities.ProcessPerformance;
@@ -47,7 +46,7 @@ namespace Uhuru.CloudFoundry.DEA
         /// <summary>
         /// The Windows Job Object for the application instance. Used for security/resource sandboxing.
         /// </summary>
-        private ProcessPrison processPrison = new ProcessPrison();
+        private Prison.Prison processPrison = new Prison.Prison();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DropletInstance"/> class.
@@ -57,7 +56,7 @@ namespace Uhuru.CloudFoundry.DEA
             this.TotalTerminatedProcessesTracked = 0;        
         }
 
-        public ProcessPrison Prison
+        public Prison.Prison Prison
         {
             get
             {
