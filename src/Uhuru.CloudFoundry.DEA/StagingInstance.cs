@@ -183,7 +183,7 @@ namespace Uhuru.CloudFoundry.DEA
         public void CreatePrison()
         {
 
-            if (this.Container.IsLocked)
+            if (this.Container.IsLocked())
             {
                 return;
             }

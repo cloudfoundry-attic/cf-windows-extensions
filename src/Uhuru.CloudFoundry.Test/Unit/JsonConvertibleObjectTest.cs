@@ -210,21 +210,6 @@ namespace Uhuru.CloudFoundry.Test.Unit
 
         }
 
-        [TestMethod()]
-        [TestCategory("Unit")]
-        public void SerializeDEAHeatbeatJsonTest()
-        {
-            // Arrange
-            Uhuru.CloudFoundry.DEA.Messages.HeartbeatMessage message = new DEA.Messages.HeartbeatMessage();
-
-            // Act
-            string serializedJson = message.SerializeToJson();
-
-            // Assert
-            Assert.AreEqual(@"{""droplets"":[],""prod"":false}", serializedJson);
-        }
-
-
         class parenttest : JsonConvertibleObject
         {
             public class childtest : JsonConvertibleObject

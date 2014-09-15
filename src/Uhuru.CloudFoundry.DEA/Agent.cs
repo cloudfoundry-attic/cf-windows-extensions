@@ -1778,7 +1778,7 @@ namespace Uhuru.CloudFoundry.DEA
 
                 string startSciprtPath = this.CreateStartScript(instance);
 
-                instance.Prison.Execute(null, startSciprtPath, false, Path.Combine(instance.Properties.Directory, "app"), null);
+                instance.Prison.Execute(null, startSciprtPath, Path.Combine(instance.Properties.Directory, "app"), false, null, null, null, null);
 
                 Logger.Debug(Strings.TookXTimeToLoadConfigureAndStartDebugMessage, (DateTime.Now - start).TotalSeconds);
 
@@ -2242,7 +2242,7 @@ namespace Uhuru.CloudFoundry.DEA
                     // Stop the instance gracefully before cleaning up.
                     if (isStopped)
                     {
-                        if (instance.Prison.IsLocked && instance.Prison.JobObject.ActiveProcesses > 0)
+                        if (instance.Prison.IsLocked() && instance.Prison.JobObject.ActiveProcesses > 0)
                         {
                             try
                             {
@@ -2260,7 +2260,7 @@ namespace Uhuru.CloudFoundry.DEA
                     {
                         this.monitoring.RemoveInstanceResources(instance);
 
-                        if (instance.Prison.IsLocked)
+                        if (instance.Prison.IsLocked())
                         {
                             try
                             {
@@ -2284,7 +2284,7 @@ namespace Uhuru.CloudFoundry.DEA
                             instance.Properties.Directory = null;
                         }
 
-                        if (instance.Properties.Directory != null && !instance.Prison.IsLocked)
+                        if (instance.Properties.Directory != null && !instance.Prison.IsLocked())
                         {
                             try
                             {
@@ -2306,7 +2306,7 @@ namespace Uhuru.CloudFoundry.DEA
                             }
                         }
 
-                        if (!instance.Prison.IsLocked && instance.Properties.Directory == null)
+                        if (!instance.Prison.IsLocked() && instance.Properties.Directory == null)
                         {
                             removeDroplet = true;
                         }
@@ -2417,7 +2417,7 @@ namespace Uhuru.CloudFoundry.DEA
                             p.Kill();
                         }
                     }
-                    if (instance.Container.IsLocked)
+                    if (instance.Container.IsLocked())
                     {
                         instance.Container.Destroy();
                     }

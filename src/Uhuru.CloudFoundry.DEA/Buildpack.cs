@@ -57,7 +57,7 @@ namespace Uhuru.CloudFoundry.DEA
 
             Logger.Debug("Running detect script: {0}", script);
 
-            Process process = prison.Execute(null, script, false, this.appDir, null);
+            Process process = prison.Execute(null, script, this.appDir, false, null, null, null, null);
 
             process.WaitForExit(5000);
             if (!process.HasExited)
@@ -89,7 +89,7 @@ namespace Uhuru.CloudFoundry.DEA
            
             var script = string.Format("{0} {1}", exe, args);
 
-            Process process = prison.Execute(null, script, false, this.appDir, null);
+            Process process = prison.Execute(null, script, this.appDir, false, null, null, null, null);
 
             return process;
         }
@@ -101,8 +101,8 @@ namespace Uhuru.CloudFoundry.DEA
             string outputPath = Path.Combine(this.cacheDir, "release.yml");
             string script = string.Format("{0} {1} > {2} 2>&1", exe, this.appDir, outputPath);
 
-            Process process = prison.Execute(null, script, false, this.appDir, null);
-
+            Process process = prison.Execute(null, script, this.appDir, false, null, null, null, null);
+            
             process.WaitForExit(5000);
 
             string output = File.ReadAllText(outputPath);
