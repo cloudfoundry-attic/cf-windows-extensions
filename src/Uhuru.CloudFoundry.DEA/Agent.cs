@@ -25,7 +25,6 @@ namespace Uhuru.CloudFoundry.DEA
     using System.Collections.Specialized;
     using Microsoft.Win32;
     using System.Text;
-    using Uhuru.Isolation;
     using System.Web;
     using System.Security.Cryptography;
 
@@ -233,7 +232,7 @@ namespace Uhuru.CloudFoundry.DEA
             this.fileResources.DBDir = Path.Combine(this.fileResources.DropletDir, "db");
             this.fileResources.StagingDir = Path.Combine(this.fileResources.DropletDir, "staging");
 
-            this.droplets.AppStateFile = Path.Combine(this.fileResources.DropletDir, "applications.json");            
+            this.droplets.AppStateFile = Path.Combine(this.fileResources.DropletDir, "applications.json");
 
             this.deaReactor.UUID = this.UUID;
 
@@ -308,7 +307,7 @@ namespace Uhuru.CloudFoundry.DEA
                 case "staging_tasks":
                     {
                         this.stagingTaskRegistry.ForEach(delegate(StagingInstance instance)
-                        {                        
+                        {
                             if (instance.Properties.TaskId == path.Segments[2].Replace("/", string.Empty))
                             {
                                 if (DEAUtilities.VerifyHmacedUri(path.ToString(), this.directoryServerHmacKey, new string[] { "path", "timestamp" }))
@@ -372,41 +371,43 @@ namespace Uhuru.CloudFoundry.DEA
             // Clean everything in the staged directory
             this.fileResources.CleanCacheDirectory();
 
-            if (this.useDiskQuota)
-            {
-                // Initialize disk quota
-                Logger.Info("Initializing disk quota.");
+            //if (this.useDiskQuota)
+            //{
+            //    // Initialize disk quota
+            //    Logger.Info("Initializing disk quota.");
 
-                int retryCount = 3;
-                while (retryCount > 0)
-                {
-                    try
-                    {
-                        DiskQuotaManager.StartQuotaInitialization();
+            //    int retryCount = 3;
+            //    while (retryCount > 0)
+            //    {
+            //        try
+            //        {
+            //            DiskQuotaManager.StartQuotaInitialization();
 
-                        // Wait until the volume diskquota is initialized
-                        while (!DiskQuotaManager.IsQuotaInitialized())
-                        {
-                            Thread.Sleep(200);
-                        }
-                        break;
-                    }
-                    catch(Exception ex)
-                    {
-                        retryCount--;
-                        if (retryCount > 0)
-                        {
-                            Logger.Error(ex.ToString());
-                            Thread.Sleep(1000);
-                        }
-                        else
-                        {
-                            throw ex;
-                        }
-                    }
-                }
-                Logger.Info("Disk quota initialization complete");
-            }
+            //            // Wait until the volume diskquota is initialized
+            //            while (!DiskQuotaManager.IsQuotaInitialized())
+            //            {
+            //                Thread.Sleep(200);
+            //            }
+            //            break;
+            //        }
+            //        catch(Exception ex)
+            //        {
+            //            retryCount--;
+            //            if (retryCount > 0)
+            //            {
+            //                Logger.Error(ex.ToString());
+            //                Thread.Sleep(1000);
+            //            }
+            //            else
+            //            {
+            //                throw ex;
+            //            }
+            //        }
+            //    }
+            //    Logger.Info("Disk quota initialization complete");
+            //}
+
+            Prison.Prison.Init();
 
             this.fileViewer.Start(this.Host, DirectoryConfiguration.ReadConfig(), this);
 
@@ -522,22 +523,23 @@ namespace Uhuru.CloudFoundry.DEA
                     this.monitoring.AddInstanceResources(instance);
                     instance.Properties.StopProcessed = false;
 
-                    var prisonInfo = new ProcessPrisonCreateInfo();
+                    //var prisonInfo = new ProcessPrisonCreateInfo();
 
-                    prisonInfo.Id = instance.Properties.InstanceId;
-                    prisonInfo.TotalPrivateMemoryLimitBytes = instance.Properties.MemoryQuotaBytes;
-                    prisonInfo.WindowsPassword = instance.Properties.WindowsPassword;
+                    //prisonInfo.Id = instance.Properties.InstanceId;
+                    //prisonInfo.TotalPrivateMemoryLimitBytes = instance.Properties.MemoryQuotaBytes;
+                    //prisonInfo.WindowsPassword = instance.Properties.WindowsPassword;
 
 
-                    if (this.useDiskQuota)
-                    {
-                        prisonInfo.DiskQuotaBytes = instance.Properties.DiskQuotaBytes;
-                        prisonInfo.DiskQuotaPath = instance.Properties.Directory;
-                    }
+                    //if (this.useDiskQuota)
+                    //{
+                    //    prisonInfo.DiskQuotaBytes = instance.Properties.DiskQuotaBytes;
+                    //    prisonInfo.DiskQuotaPath = instance.Properties.Directory;
+                    //}
 
-                    Logger.Info("Recovering Process Prisson: {0}", prisonInfo.Id);
+                    Logger.Info("Recovering Instance: {0}", instance.Properties.ContainerId);
 
-                    instance.Prison.Attach(prisonInfo);
+                    //instance.Prison.Attach(prisonInfo);
+                    Prison.Prison.LoadPrisonAndAttach(Guid.Parse(instance.Properties.ContainerId));
 
                     if (instance.Properties.State == DropletInstanceState.Starting)
                     {
@@ -1364,7 +1366,7 @@ namespace Uhuru.CloudFoundry.DEA
             ThreadPool.QueueUserWorkItem(delegate(object data)
             {
                 this.StartStagingInstance(instance, pmessage);
-            });                
+            });
         }
 
         private void StartStagingInstance(StagingInstance instance, StagingStartMessageRequest pmessage)
@@ -1378,14 +1380,14 @@ namespace Uhuru.CloudFoundry.DEA
 
                     instance.Properties.UseDiskQuota = this.useDiskQuota;
                     instance.Properties.UploadThrottleBitsps = this.uploadThrottleBitsps;
-                                        
+
                     UriBuilder streamingLog = new UriBuilder();
                     streamingLog.Host = this.ExternalHost;
                     streamingLog.Scheme = "http";
                     streamingLog.Path = string.Format("/staging_tasks/{0}/file_path", pmessage.TaskID);
                     streamingLog.Query = string.Format("path={0}&timestamp={1}", workspace.StagingLogSuffix, RubyCompatibility.DateTimeToEpochSeconds(DateTime.Now));
 
-                    instance.Properties.StreamingLogUrl = DEAUtilities.GetHmacedUri(streamingLog.Uri.ToString(), this.directoryServerHmacKey, new string[] { "path", "timestamp" }).ToString();                    
+                    instance.Properties.StreamingLogUrl = DEAUtilities.GetHmacedUri(streamingLog.Uri.ToString(), this.directoryServerHmacKey, new string[] { "path", "timestamp" }).ToString();
                     instance.Workspace = workspace;
                     instance.Properties.TaskLog = workspace.StagingLogPath;
                 }
@@ -1410,34 +1412,35 @@ namespace Uhuru.CloudFoundry.DEA
                 instance.UnpackDroplet();
                 instance.PrepareStagingDirs();
 
+                instance.CreatePrison();
+
                 instance.GetBuildpack(pmessage, this.gitPath, this.buildpacksDir);
-                this.stagingTaskRegistry.ScheduleSnapshotStagingState();                    
+                this.stagingTaskRegistry.ScheduleSnapshotStagingState();
 
                 try
                 {
                     Logger.Info("Staging task {0}: Running compilation script", pmessage.TaskID);
 
-                    instance.CreatePrison();
                     this.stagingTaskRegistry.ScheduleSnapshotStagingState();
-                    instance.CompileProcess = instance.Buildpack.StartCompile(instance.Prison);
+                    instance.CompileProcess = instance.Buildpack.StartCompile(instance.Container);
 
                     instance.Lock.EnterWriteLock();
                     instance.Properties.Start = DateTime.Now;
-                }                    
+                }
                 finally
                 {
-                    if(instance.Lock.IsWriteLockHeld)
+                    if (instance.Lock.IsWriteLockHeld)
                     {
                         instance.Lock.ExitWriteLock();
                     }
-                }                    
+                }
             }
             catch (Exception ex)
             {
                 instance.StagingException = ex;
                 instance.Properties.Stopped = true;
                 Logger.Error(ex.ToString());
-            }           
+            }
         }
 
         private void AfterStagingSetup(StagingInstance instance)
@@ -1460,7 +1463,7 @@ namespace Uhuru.CloudFoundry.DEA
                 if (instance.Properties.Stopped)
                 {
                     return;
-                }                
+                }
                 instance.Lock.EnterWriteLock();
                 instance.Properties.Stopped = true;
                 StagingStartMessageResponse response = new StagingStartMessageResponse();
@@ -1564,7 +1567,7 @@ namespace Uhuru.CloudFoundry.DEA
                                 }
                             }
                         }
-                        
+
                         this.StartStagedDropletInstance(instance, response.DropletSHA);
 
                         Uri uri = new Uri(instance.Properties.UploadURI);
@@ -1588,7 +1591,7 @@ namespace Uhuru.CloudFoundry.DEA
                     catch
                     {
                         Logger.Debug("Staging task {0}: Cannot pack buildpack cache", instance.Properties.TaskId);
-                    }                    
+                    }
                 }
 
                 if (instance.StagingException != null)
@@ -1597,7 +1600,7 @@ namespace Uhuru.CloudFoundry.DEA
                 }
 
                 response.TaskId = instance.Properties.TaskId;
-                
+
                 // try to read log. don't throw exception if it fails
                 try
                 {
@@ -1609,17 +1612,15 @@ namespace Uhuru.CloudFoundry.DEA
                 {
                     response.DetectedBuildpack = instance.Properties.DetectedBuildpack;
                 }
-                
+
                 this.deaReactor.SendReply(instance.Properties.Reply, response.SerializeToJson());
                 Logger.Debug("Staging task {0}: sent reply {1}", instance.Properties.TaskId, response.SerializeToJson());
-            }            
+            }
             finally
             {
-                Logger.Debug("Cleaning up directory {0}", instance.Workspace.BaseDir);
-                instance.Cleanup();                
             }
         }
-    
+
 
         /// <summary>
         /// Handler for the staging.locate message.
@@ -1678,34 +1679,70 @@ namespace Uhuru.CloudFoundry.DEA
                 {
                     instance.Lock.EnterWriteLock();
 
-                    var prisonInfo = new ProcessPrisonCreateInfo();
+                    var containerRules = new Uhuru.Prison.PrisonRules();
 
-                    prisonInfo.Id = instance.Properties.InstanceId;
-                    prisonInfo.TotalPrivateMemoryLimitBytes = instance.Properties.MemoryQuotaBytes;
+                    containerRules.PrisonHomePath = instance.Properties.Directory;
 
-                    if (this.useDiskQuota)
-                    {
-                        prisonInfo.DiskQuotaBytes = instance.Properties.DiskQuotaBytes;
-                        prisonInfo.DiskQuotaPath = instance.Properties.Directory;
-                    }
+                    containerRules.CellType |= Prison.RuleType.WindowStation;
+                    containerRules.CellType |= Prison.RuleType.IISGroup;
+
+
+                    containerRules.TotalPrivateMemoryLimitBytes = instance.Properties.MemoryQuotaBytes;
+                    containerRules.PriorityClass = ProcessPriorityClass.BelowNormal;
+                    containerRules.ActiveProcessesLimit = 10;
 
                     if (this.uploadThrottleBitsps > 0)
                     {
-                        prisonInfo.NetworkOutboundRateLimitBitsPerSecond = this.uploadThrottleBitsps;
+                        containerRules.CellType |= Prison.RuleType.Network;
+                        containerRules.NetworkOutboundRateLimitBitsPerSecond = this.uploadThrottleBitsps;
+                        containerRules.AppPortOutboundRateLimitBitsPerSecond = this.uploadThrottleBitsps;
                     }
 
-                    prisonInfo.UrlPortAccess = instance.Properties.Port;
+                    containerRules.CellType |= Prison.RuleType.Httpsys;
+                    containerRules.UrlPortAccess = instance.Properties.Port;
 
-                    Logger.Info("Creating Process Prisson: {0}", prisonInfo.Id);
+                    if (this.useDiskQuota)
+                    {
+                        containerRules.CellType |= Prison.RuleType.Disk;
+                        containerRules.DiskQuotaBytes = instance.Properties.DiskQuotaBytes;
+                    }
 
-                    instance.Prison.Create(prisonInfo);
+                    //var prisonInfo = new ProcessPrisonCreateInfo();
+
+                    //prisonInfo.Id = instance.Properties.InstanceId;
+                    //prisonInfo.TotalPrivateMemoryLimitBytes = instance.Properties.MemoryQuotaBytes;
+
+                    //if (this.useDiskQuota)
+                    //{
+                    //    prisonInfo.DiskQuotaBytes = instance.Properties.DiskQuotaBytes;
+                    //    prisonInfo.DiskQuotaPath = instance.Properties.Directory;
+                    //}
+
+                    //if (this.uploadThrottleBitsps > 0)
+                    //{
+                    //    prisonInfo.NetworkOutboundRateLimitBitsPerSecond = this.uploadThrottleBitsps;
+                    //}
+
+                    //prisonInfo.UrlPortAccess = instance.Properties.Port;
+
+                    instance.Prison.Tag = "dea";
+                    instance.Properties.ContainerId = instance.Prison.ID.ToString();
+
+                    Logger.Info("Creating Process Prisson: {0}", instance.Properties.ContainerId);
+
+                    instance.Prison.Lockdown(containerRules);
+
+                    //instance.Prison.Create(prisonInfo);
 
                     Logger.Info("Opening firewall port {0} for instance {1}", instance.Properties.Port, instance.Properties.LoggingId);
 
                     FirewallTools.OpenPort(instance.Properties.Port, instance.Properties.InstanceId);
 
-                    instance.Properties.WindowsPassword = instance.Prison.WindowsPassword;
-                    instance.Properties.WindowsUserName = instance.Prison.WindowsUsername;
+                    instance.Properties.WindowsUserName = instance.Prison.User.Username;
+                    instance.Properties.WindowsPassword = instance.Prison.User.Password;
+
+                    //instance.Properties.WindowsPassword = instance.Prison.WindowsPassword;
+                    //instance.Properties.WindowsUserName = instance.Prison.WindowsUsername;
                 }
                 finally
                 {
@@ -1731,7 +1768,6 @@ namespace Uhuru.CloudFoundry.DEA
                     instance.Properties.EnvironmentVariables.Add(VcapWindowsUserPasswordVariable, instance.Properties.WindowsPassword);
 
                     instance.Prison.SetUsersEnvironmentVariables(instance.Properties.EnvironmentVariables);
-
                 }
                 finally
                 {
@@ -1742,11 +1778,7 @@ namespace Uhuru.CloudFoundry.DEA
 
                 string startSciprtPath = this.CreateStartScript(instance);
 
-                var runInfo = new ProcessPrisonRunInfo();
-                runInfo.WorkingDirectory = Path.Combine(instance.Properties.Directory, "app");
-                runInfo.FileName = startSciprtPath;
-
-                instance.Prison.RunProcess(runInfo);
+                instance.Prison.Execute(null, startSciprtPath, false, Path.Combine(instance.Properties.Directory, "app"), null);
 
                 Logger.Debug(Strings.TookXTimeToLoadConfigureAndStartDebugMessage, (DateTime.Now - start).TotalSeconds);
 
@@ -2119,11 +2151,11 @@ namespace Uhuru.CloudFoundry.DEA
                         if (isPortReady)
                         {
                             DateTime currentWorldTicks = DateTime.Now;
-                            long usedTicks = instance.Prison.jobObject.TotalProcessorTime.Ticks;
+                            long usedTicks = instance.Prison.JobObject.TotalProcessorTime.Ticks;
 
                             long lastUsedTicks = instance.Usage.Count >= 1 ? instance.Usage[instance.Usage.Count - 1].TotalProcessTicks : 0;
                             long sampleUsedTicks = usedTicks - lastUsedTicks;
-                            
+
                             DateTime lastWorldTicks = instance.Usage.Count >= 1 ? instance.Usage[instance.Usage.Count - 1].Time : currentWorldTicks;
                             long sampleActiveTicks = (currentWorldTicks - lastWorldTicks).Ticks;
 
@@ -2139,17 +2171,13 @@ namespace Uhuru.CloudFoundry.DEA
                             cpu = float.Parse(cpu.ToString("F1", CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
 
                             // PrivateMemory is Virtual Private Memory usage and is the enforced Job Object memory usage.
-                            long memBytes = instance.Prison.PrivateVirtualMemoryUsageBytes;
+                            long memBytes = instance.Prison.JobObject.PrivateMemory;
 
                             // Return -1 is disk quota is not enforced.
-                            long diskBytes = instance.Prison.DiskUsageBytes;
+                            // long diskBytes = instance.Prison.DiskUsageBytes;
+                            long diskBytes = -1; // TODO: fix this
 
                             instance.AddUsage(memBytes, cpu, diskBytes, usedTicks);
-
-                            if (this.secure)
-                            {
-                                this.CheckUsage(instance);
-                            }
 
                             memoryUsageKbytes += memBytes / 1024;
 
@@ -2193,68 +2221,6 @@ namespace Uhuru.CloudFoundry.DEA
         }
 
         /// <summary>
-        /// Checks the usage of the instance. If it has a usage above the quota and the DEA is in secure mode, the instance will be stopped.
-        /// </summary>
-        /// <param name="instance">The instance to checks.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "MiB", Justification = "Correct"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Uhuru.Utilities.FileLogger.Fatal(System.String,System.Object[])", Justification = "More clear")]
-        private void CheckUsage(DropletInstance instance)
-        {
-            DropletInstanceUsage curUsage = instance.Properties.LastUsage;
-
-            if (instance == null || curUsage == null)
-            {
-                return;
-            }
-
-            //// Check Memory
-            //// Memory usage also enforced by windows job object
-            //if (curUsage.MemoryBytes > (instance.Properties.MemoryQuotaBytes))
-            //{
-            //    instance.ErrorLog.Fatal(
-            //         "Memory size usage exceeded the limit of {0} MiB. Memory size used: {1} MiB. Stopping the app instance.",
-            //         instance.Properties.MemoryQuotaBytes / 1024 / 1024,
-            //         curUsage.MemoryBytes / 1024 / 1024);
-            //    this.StopDroplet(instance);
-            //}
-
-            //// Check Disk
-            //// Disk usage also enforced by windows disk quota
-            //if (curUsage.DiskBytes > instance.Properties.DiskQuotaBytes * 1.05)
-            //{
-            //    instance.ErrorLog.Fatal(
-            //        "Disk size usage exceeded the limit of {0} MiB. Disk size used: {1} MiB. Stopping the app instance.",
-            //        instance.Properties.DiskQuotaBytes / 1024 / 1024,
-            //        curUsage.DiskBytes / 1024 / 1024);
-            //    this.StopDroplet(instance);
-            //}
-
-            // Check CPU
-            if (instance.Usage.Count == 0)
-            {
-                return;
-            }
-
-            if (curUsage.Cpu > Monitoring.BeginReniceCpuThreshold)
-            {
-                int nice = instance.Properties.Nice + 1;
-                if (nice <= Monitoring.MaxReniceValue)
-                {
-                    instance.Properties.Nice = nice;
-                    ProcessPriorityClass priority =
-                        nice == 0 ? ProcessPriorityClass.Normal :
-                        nice == 1 ? ProcessPriorityClass.BelowNormal :
-                                    ProcessPriorityClass.Idle;
-
-                    // TODO: instantiate ErrorLog
-                    // instance.ErrorLog.Warning(Strings.LoggerLoweringPriority, priority.ToString());
-                    Logger.Info(Strings.LoweringPriorityOnCpuBound, instance.Properties.Name, priority);
-
-                    instance.Prison.jobObject.PriorityClass = priority;
-                }
-            }
-        }
-
-        /// <summary>
         /// Does all the cleaning that is needed for an instance if stopped gracefully or has crashed
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Manageable."),
@@ -2276,11 +2242,11 @@ namespace Uhuru.CloudFoundry.DEA
                     // Stop the instance gracefully before cleaning up.
                     if (isStopped)
                     {
-                        if (instance.Prison.Created && instance.Prison.jobObject.ActiveProcesses > 0)
+                        if (instance.Prison.IsLocked && instance.Prison.JobObject.ActiveProcesses > 0)
                         {
                             try
                             {
-                                instance.Prison.TerminateProcesses();
+                                instance.Prison.JobObject.TerminateProcesses(-1);
                             }
                             catch (Exception ex)
                             {
@@ -2294,7 +2260,7 @@ namespace Uhuru.CloudFoundry.DEA
                     {
                         this.monitoring.RemoveInstanceResources(instance);
 
-                        if (instance.Prison.Created)
+                        if (instance.Prison.IsLocked)
                         {
                             try
                             {
@@ -2318,7 +2284,7 @@ namespace Uhuru.CloudFoundry.DEA
                             instance.Properties.Directory = null;
                         }
 
-                        if (instance.Properties.Directory != null && !instance.Prison.Created)
+                        if (instance.Properties.Directory != null && !instance.Prison.IsLocked)
                         {
                             try
                             {
@@ -2340,7 +2306,7 @@ namespace Uhuru.CloudFoundry.DEA
                             }
                         }
 
-                        if (!instance.Prison.Created && instance.Properties.Directory == null)
+                        if (!instance.Prison.IsLocked && instance.Properties.Directory == null)
                         {
                             removeDroplet = true;
                         }
@@ -2358,10 +2324,10 @@ namespace Uhuru.CloudFoundry.DEA
                 true,
                 delegate(StagingInstance instance)
                 {
-                    bool removeInstance = false;                    
+                    bool removeInstance = false;
 
                     if (instance.CompileProcess != null)
-                    {                        
+                    {
                         if (instance.CompileProcess.HasExited)
                         {
                             if (instance.CompileProcess.ExitCode != 0)
@@ -2370,7 +2336,11 @@ namespace Uhuru.CloudFoundry.DEA
                             }
                             Logger.Info("Destroying prison for staging instance {0}", instance.Properties.TaskId);
                             instance.Properties.Stopped = true;
-                            instance.Prison.Destroy();
+                            try
+                            {
+                                instance.Container.JobObject.TerminateProcesses(-1);
+                            }
+                            catch { }
                             removeInstance = true;
                         }
                         else
@@ -2379,7 +2349,11 @@ namespace Uhuru.CloudFoundry.DEA
                             {
                                 instance.CompileProcess.Kill();
                                 Logger.Info("Destroying prison for staging instance {0}", instance.Properties.TaskId);
-                                instance.Prison.Destroy();
+                                try
+                                {
+                                    instance.Container.JobObject.TerminateProcesses(-1);
+                                }
+                                catch { }
                                 removeInstance = true;
                             }
 
@@ -2387,7 +2361,11 @@ namespace Uhuru.CloudFoundry.DEA
                             {
                                 instance.CompileProcess.Kill();
                                 Logger.Info("Destroying prison for staging instance {0}", instance.Properties.TaskId);
-                                instance.Prison.Destroy();
+                                try
+                                {
+                                    instance.Container.JobObject.TerminateProcesses(-1);
+                                }
+                                catch { }
                                 instance.StagingException = new Exception("Compilation timed out");
                                 removeInstance = true;
                             }
@@ -2398,10 +2376,13 @@ namespace Uhuru.CloudFoundry.DEA
                     {
                         this.AfterStagingFinished(instance);
                         removeInstance = true;
-                    }                    
+                    }
 
                     if (removeInstance)
                     {
+                        instance.Container.Destroy();
+                        Logger.Debug("Cleaning up directory {0}", instance.Workspace.BaseDir);
+                        instance.Cleanup();
                         this.monitoring.RemoveInstanceResources(instance);
                         this.stagingTaskRegistry.RemoveStagingInstance(instance);
                     }
@@ -2411,7 +2392,7 @@ namespace Uhuru.CloudFoundry.DEA
         private void CleanupStagingInstances()
         {
             if (!File.Exists(this.stagingTaskRegistry.StagingStateFile))
-            {                
+            {
                 return;
             }
 
@@ -2425,34 +2406,23 @@ namespace Uhuru.CloudFoundry.DEA
                     instance = new StagingInstance();
                     instance.Properties.FromJsonIntermediateObject(obj);
 
-                    var prisonInfo = new ProcessPrisonCreateInfo();
-                    prisonInfo.Id = instance.Properties.InstanceId;
+                    Logger.Info("Recovering Process Prison: {0}", instance.Properties.InstanceId);
 
-                    prisonInfo.TotalPrivateMemoryLimitBytes = instance.Properties.MemoryQuotaBytes;
-                    prisonInfo.WindowsPassword = instance.Properties.WindowsPassword;
+                    instance.Container = Prison.Prison.LoadPrisonAndAttach(Guid.Parse(instance.Properties.InstanceId));
 
-                    if (this.useDiskQuota)
-                    {
-                        prisonInfo.DiskQuotaBytes = instance.Properties.DiskQuotaBytes;
-                        prisonInfo.DiskQuotaPath = instance.Properties.Directory;
-                    }
-
-                    Logger.Info("Recovering Process Prisson: {0}", prisonInfo.Id);
-
-                    instance.Prison.Attach(prisonInfo);
-                    foreach (Process p in instance.Prison.jobObject.GetJobProcesses())
+                    foreach (Process p in instance.Container.JobObject.GetJobProcesses())
                     {
                         if (!p.HasExited)
                         {
                             p.Kill();
                         }
                     }
-                    if (instance.Prison.Created)
+                    if (instance.Container.IsLocked)
                     {
-                        instance.Prison.Destroy();
+                        instance.Container.Destroy();
                     }
                     instance.Workspace = new StagingWorkspace(instance.Properties.Directory);
-                    instance.Cleanup();                    
+                    instance.Cleanup();
                 }
                 catch (Exception ex)
                 {

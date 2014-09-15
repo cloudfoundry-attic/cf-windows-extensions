@@ -16,7 +16,6 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using Uhuru.CloudFoundry.DEA.Messages;
-using Uhuru.Isolation;
 using Uhuru.Utilities;
 
 namespace Uhuru.CloudFoundry.DEA
@@ -29,13 +28,13 @@ namespace Uhuru.CloudFoundry.DEA
         private ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
         /// <summary>
-        /// The Windows Job Object for the application instance. Used for security/resource sandboxing.
+        /// Used for security/resource sand-boxing.
         /// </summary>
-        private ProcessPrison processPrison = new ProcessPrison();
-        
+        private Uhuru.Prison.Prison processPrison = new Uhuru.Prison.Prison();
+
         private StagingInstanceProperties properties = new StagingInstanceProperties();
 
-        
+
 
         /// <summary>
         /// Gets or sets the instances lock.
@@ -61,7 +60,7 @@ namespace Uhuru.CloudFoundry.DEA
             set { this.properties = value; }
         }
 
-        public ProcessPrison Prison
+        public Prison.Prison Container
         {
             get { return this.processPrison; }
             set { this.processPrison = value; }
@@ -71,7 +70,7 @@ namespace Uhuru.CloudFoundry.DEA
         public StagingWorkspace Workspace { get; set; }
         public DeaStartMessageRequest StartMessage { get; set; }
         public Exception StagingException { get; set; }
-        
+
         public delegate void StagingTaskEventHandler(StagingInstance instance);
 
         public event StagingTaskEventHandler AfterSetup;
@@ -183,30 +182,48 @@ namespace Uhuru.CloudFoundry.DEA
 
         public void CreatePrison()
         {
-            if(this.Prison.Created)
+
+            if (this.Container.IsLocked)
             {
-                this.Prison.Destroy();
+                return;
             }
 
             this.Lock.EnterWriteLock();
-            var prisonInfo = new ProcessPrisonCreateInfo();
-            prisonInfo.TotalPrivateMemoryLimitBytes = this.Properties.MemoryQuotaBytes;
-            if (this.Properties.UseDiskQuota)
-            {
-                prisonInfo.DiskQuotaBytes = this.Properties.DiskQuotaBytes;
-                prisonInfo.DiskQuotaPath = this.Properties.Directory;
-            }
+
+            var containerRules = new Uhuru.Prison.PrisonRules();
+
+            containerRules.PrisonHomePath = this.Properties.Directory;
+
+            containerRules.CellType |= Prison.RuleType.WindowStation;
+            containerRules.CellType |= Prison.RuleType.IISGroup;
+
+
+            containerRules.TotalPrivateMemoryLimitBytes = this.Properties.MemoryQuotaBytes;
+            containerRules.PriorityClass = ProcessPriorityClass.BelowNormal;
+            containerRules.ActiveProcessesLimit = 10;
 
             if (this.Properties.UploadThrottleBitsps > 0)
             {
-                prisonInfo.NetworkOutboundRateLimitBitsPerSecond = this.Properties.UploadThrottleBitsps;
+                containerRules.CellType |= Prison.RuleType.Network;
+                containerRules.NetworkOutboundRateLimitBitsPerSecond = this.Properties.UploadThrottleBitsps;
+                containerRules.AppPortOutboundRateLimitBitsPerSecond = this.Properties.UploadThrottleBitsps;
             }
 
-            Logger.Info("Creating Process Prisson: {0}", prisonInfo.Id);
-            this.Prison.Create(prisonInfo);
-            this.Properties.WindowsPassword = this.Prison.WindowsPassword;
-            this.Properties.WindowsUserName = this.Prison.WindowsUsername;
-            this.Properties.InstanceId = this.Prison.Id;
+            if (this.Properties.UseDiskQuota)
+            {
+                containerRules.CellType |= Prison.RuleType.Disk;
+                containerRules.DiskQuotaBytes = this.Properties.DiskQuotaBytes;
+            }
+
+            Logger.Info("Creating Process Prison: {0}", this.Container.ID.ToString());
+            this.Container.Tag = "dea";
+            this.Container.Lockdown(containerRules);
+
+            this.Properties.WindowsUserName = this.Container.User.Username;
+            this.Properties.WindowsPassword = this.Container.User.Password;
+
+            this.Properties.InstanceId = this.Container.ID.ToString();
+
             this.Lock.ExitWriteLock();
 
             // Explode the app into its directory and optionally bind its local runtime.
@@ -232,64 +249,54 @@ namespace Uhuru.CloudFoundry.DEA
         }
 
         public void GetBuildpack(StagingStartMessageRequest message, string gitPath, string buildpacksDir)
-        {           
-            try
-            {
-                this.CreatePrison();
-                if (message.Properties.Buildpack != null)
-                {
-                    Logger.Info("Staging task {0}: Downloading buildpack from {1}", this.Properties.TaskId, message.Properties.Buildpack);
-                    Directory.CreateDirectory(Path.Combine(this.Workspace.TempDir, "buildpacks"));
-                    string buildpackPath = Path.Combine(this.Workspace.TempDir, "buildpacks", Path.GetFileName(new Uri(message.Properties.Buildpack).LocalPath));
-                    string command = string.Format("\"{0}\" clone --quiet --recursive {1} {2}", gitPath, message.Properties.Buildpack, buildpackPath);
-                    Logger.Debug(command);
-                    int success = Command.ExecuteCommand(command, this.Workspace.TempDir);
-                    if (success != 0)
-                    {
-                        throw new Exception(string.Format("Failed to git clone buildpack. Exit code: {0}", success));
-                    }
-                    this.Buildpack = new Buildpack(buildpackPath, Path.Combine(this.Workspace.StagedDir, "app"), this.Workspace.Cache, this.Workspace.StagingLogPath);
-                    
-                    bool detected = this.Buildpack.Detect(this.Prison);
-                    if (!detected)
-                    {
-                        throw new Exception("Buildpack does not support this application.");
-                    }
-                }
-                else
-                {
-                    Logger.Info("Staging task {0}: Detecting buildpack", this.Properties.TaskId);
-                    foreach (string dir in Directory.EnumerateDirectories(buildpacksDir))
-                    {
-                        DEAUtilities.DirectoryCopy(dir, Path.Combine(this.Workspace.TempDir, "buildpack"), true);
-                        Buildpack bp = new Buildpack(Path.Combine(this.Workspace.TempDir, "buildpack"), Path.Combine(this.Workspace.StagedDir, "app"), this.Workspace.Cache, this.Workspace.StagingLogPath);
-                        bool success = bp.Detect(this.Prison);
-                        if (success)
-                        {
-                            this.Buildpack = bp;
-                            break;
-                        }
-                        else
-                        {
-                            Directory.Delete(Path.Combine(this.Workspace.TempDir, "buildpack"), true);
-                        }
-                    }
+        {
 
-                    if (this.Buildpack == null)
-                    {
-                        throw new Exception("Unable to detect a supported application type");
-                    }
-                    Logger.Info("Staging task {0}: Detected buildpack {1}", this.Properties.TaskId, this.Buildpack.Name);
-                }
-                this.Properties.DetectedBuildpack = this.Buildpack.Name;
-            }
-            finally
+            if (message.Properties.Buildpack != null)
             {
-                if (this.Prison.Created)
+                Logger.Info("Staging task {0}: Downloading buildpack from {1}", this.Properties.TaskId, message.Properties.Buildpack);
+                Directory.CreateDirectory(Path.Combine(this.Workspace.TempDir, "buildpacks"));
+                string buildpackPath = Path.Combine(this.Workspace.TempDir, "buildpacks", Path.GetFileName(new Uri(message.Properties.Buildpack).LocalPath));
+                string command = string.Format("\"{0}\" clone --quiet --recursive {1} {2}", gitPath, message.Properties.Buildpack, buildpackPath);
+                Logger.Debug(command);
+                int success = Command.ExecuteCommand(command, this.Workspace.TempDir);
+                if (success != 0)
                 {
-                    this.Prison.Destroy();
+                    throw new Exception(string.Format("Failed to git clone buildpack. Exit code: {0}", success));
+                }
+                this.Buildpack = new Buildpack(buildpackPath, Path.Combine(this.Workspace.StagedDir, "app"), this.Workspace.Cache, this.Workspace.StagingLogPath);
+
+                bool detected = this.Buildpack.Detect(this.Container);
+                if (!detected)
+                {
+                    throw new Exception("Buildpack does not support this application.");
                 }
             }
+            else
+            {
+                Logger.Info("Staging task {0}: Detecting buildpack", this.Properties.TaskId);
+                foreach (string dir in Directory.EnumerateDirectories(buildpacksDir))
+                {
+                    DEAUtilities.DirectoryCopy(dir, Path.Combine(this.Workspace.TempDir, "buildpack"), true);
+                    Buildpack bp = new Buildpack(Path.Combine(this.Workspace.TempDir, "buildpack"), Path.Combine(this.Workspace.StagedDir, "app"), this.Workspace.Cache, this.Workspace.StagingLogPath);
+                    bool success = bp.Detect(this.Container);
+                    if (success)
+                    {
+                        this.Buildpack = bp;
+                        break;
+                    }
+                    else
+                    {
+                        Directory.Delete(Path.Combine(this.Workspace.TempDir, "buildpack"), true);
+                    }
+                }
+
+                if (this.Buildpack == null)
+                {
+                    throw new Exception("Unable to detect a supported application type");
+                }
+                Logger.Info("Staging task {0}: Detected buildpack {1}", this.Properties.TaskId, this.Buildpack.Name);
+            }
+            this.Properties.DetectedBuildpack = this.Buildpack.Name;
         }
 
         public string GetStartCommand()
@@ -299,18 +306,9 @@ namespace Uhuru.CloudFoundry.DEA
             {
                 return this.Properties.MetaCommand;
             }
-            try
-            {
-                this.CreatePrison();
-                info = this.Buildpack.GetReleaseInfo(this.Prison);
-            }
-            finally
-            {
-                if (this.Prison.Created)
-                {
-                    this.Prison.Destroy();
-                }
-            }
+
+            info = this.Buildpack.GetReleaseInfo(this.Container);
+
             if (info.defaultProcessType != null)
             {
                 if (info.defaultProcessType.Web != null)

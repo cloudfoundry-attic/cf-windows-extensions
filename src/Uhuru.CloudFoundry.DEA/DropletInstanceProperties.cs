@@ -407,6 +407,16 @@ namespace Uhuru.CloudFoundry.DEA
         }
 
         /// <summary>
+        /// Gets or sets the process id associated to the instance. Used to track the application resource usage.
+        /// </summary>
+        [JsonName("container_id")]
+        public string ContainerId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the droplet.exited is sent through the message bus.
         /// </summary>
         [JsonName("notified")]

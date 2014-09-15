@@ -12,7 +12,6 @@ namespace Uhuru.CloudFoundry.DEA
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Uhuru.Isolation;
     using Uhuru.Utilities;
     using YamlDotNet.RepresentationModel;
     using YamlDotNet.RepresentationModel.Serialization;
@@ -49,7 +48,7 @@ namespace Uhuru.CloudFoundry.DEA
             this.logFile = logFile;
         }
 
-        public bool Detect(ProcessPrison prison)
+        public bool Detect(Uhuru.Prison.Prison prison)
         {
             string exe = GetExecutable(Path.Combine(this.path, "bin"), "detect");
 
@@ -57,11 +56,9 @@ namespace Uhuru.CloudFoundry.DEA
             string script = string.Format("{0} {1} > {2} 2>&1", exe, this.appDir, outputPath);
 
             Logger.Debug("Running detect script: {0}", script);
-            var runInfo = new ProcessPrisonRunInfo();
-            runInfo.WorkingDirectory = Path.Combine(this.appDir);
-            runInfo.FileName = null;
-            runInfo.Arguments = script;
-            Process process = prison.RunProcess(runInfo);
+
+            Process process = prison.Execute(null, script, false, this.appDir, null);
+
             process.WaitForExit(5000);
             if (!process.HasExited)
             {
@@ -84,31 +81,28 @@ namespace Uhuru.CloudFoundry.DEA
             }
         }
 
-        public Process StartCompile(ProcessPrison prison) 
+        public Process StartCompile(Uhuru.Prison.Prison prison) 
         {
             string exe = GetExecutable(Path.Combine(path, "bin"), "compile");
             string args = string.Format("{0} {1} >> {2} 2>&1", this.appDir, this.cacheDir, this.logFile);
             Logger.Debug("Running compile script {0} {1}", exe, args);
            
-            var runInfo = new ProcessPrisonRunInfo();
-            runInfo.WorkingDirectory = Path.Combine(this.appDir);
-            runInfo.FileName = null;
-            runInfo.Arguments = string.Format("{0} {1}", exe, args);
-            return prison.RunProcess(runInfo);
+            var script = string.Format("{0} {1}", exe, args);
+
+            Process process = prison.Execute(null, script, false, this.appDir, null);
+
+            return process;
         }
 
-        public ReleaseInfo GetReleaseInfo(ProcessPrison prison) 
+        public ReleaseInfo GetReleaseInfo(Uhuru.Prison.Prison prison) 
         {
             string exe = GetExecutable(Path.Combine(this.path, "bin"), "release");
 
             string outputPath = Path.Combine(this.cacheDir, "release.yml");
             string script = string.Format("{0} {1} > {2} 2>&1", exe, this.appDir, outputPath);
 
-            var runInfo = new ProcessPrisonRunInfo();
-            runInfo.WorkingDirectory = Path.Combine(this.appDir);
-            runInfo.FileName = null;
-            runInfo.Arguments = script;
-            Process process = prison.RunProcess(runInfo);
+            Process process = prison.Execute(null, script, false, this.appDir, null);
+
             process.WaitForExit(5000);
 
             string output = File.ReadAllText(outputPath);

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Uhuru.CloudFoundry.DEA</RootNamespace>
     <AssemblyName>Uhuru.CloudFoundry.DEA</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
@@ -37,6 +37,7 @@
     <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
     <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -52,12 +53,16 @@
     <StyleCopTreatErrorsAsWarnings>true</StyleCopTreatErrorsAsWarnings>
     <DocumentationFile>..\..\doc\Uhuru.CloudFoundry.DEA.XML</DocumentationFile>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AlphaFS, Version=1.5.0.0, Culture=neutral, PublicKeyToken=4b76c8c88cc75802, processorArchitecture=MSIL">
@@ -164,13 +169,13 @@
       <Project>{BF174398-E394-4730-A6E0-B07A27C6CEF4}</Project>
       <Name>Uhuru.NatsClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Uhuru.ProcessPrison\Uhuru.Isolation.csproj">
-      <Project>{af9d3a52-3380-4df3-81e2-3302ff2349a4}</Project>
-      <Name>Uhuru.Isolation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Uhuru.Utilities\Uhuru.Utilities.csproj">
       <Project>{CD3B15D7-8C7D-4302-A621-02BFD96FE6E3}</Project>
       <Name>Uhuru.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\windows-isolation\src\Uhuru.Prison\Uhuru.Prison.csproj">
+      <Project>{b9c02cb5-33ce-479a-9a16-78f67a66bf80}</Project>
+      <Name>Uhuru.Prison</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
