@@ -221,7 +221,7 @@ namespace Uhuru.CloudFoundry.Test.Unit
             string serializedJson = message.SerializeToJson();
 
             // Assert
-            Assert.AreEqual(@"{""droplets"":[],""prod"":false}", serializedJson);
+            Assert.AreEqual(@"{""droplets"":[]}", serializedJson);
         }
 
 
