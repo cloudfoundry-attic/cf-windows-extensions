@@ -12,7 +12,6 @@ namespace Uhuru.CloudFoundry.DEA
     using System.Net.Sockets;
     using System.Threading;
     using Uhuru.CloudFoundry.DEA.Messages;
-    using Uhuru.CloudFoundry.DEA.PluginBase;
     using Uhuru.Utilities;
     using Uhuru.Utilities.Json;
     using Uhuru.Utilities.ProcessPerformance;
@@ -281,27 +280,6 @@ namespace Uhuru.CloudFoundry.DEA
             }
 
             return response;
-        }
-
-        /// <summary>
-        /// Updates an ApplicationInfo object with the information of the current droplet instance.
-        /// </summary>
-        /// <param name="appInfo">The object whose info is to be updated (if this is null a new ApplicationInfo object will be used instead).</param>
-        /// <returns>The updated ApplicationInfo object.</returns>
-        public ApplicationInfo PopulateApplicationInfo(ApplicationInfo appInfo)
-        {
-            if (appInfo == null)
-            {
-                appInfo = new ApplicationInfo();
-            }
-
-            appInfo.InstanceId = this.Properties.InstanceId;
-            appInfo.Name = this.Properties.Name;
-            appInfo.Path = this.Properties.Directory;
-            appInfo.Port = this.Properties.Port;
-            appInfo.WindowsPassword = this.Properties.WindowsPassword;
-            appInfo.WindowsUserName = this.Properties.WindowsUserName;
-            return appInfo;
         }
 
         /// <summary>

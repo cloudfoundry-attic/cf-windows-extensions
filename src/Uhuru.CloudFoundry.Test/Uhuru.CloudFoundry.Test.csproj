@@ -127,14 +127,11 @@
     <Compile Include="SystemTests\Tests.cs" />
     <Compile Include="Unit\DiskUsageTest.cs" />
     <Compile Include="Integration\ConfigurationTest.cs" />
-    <Compile Include="Integration\IISPluginTest.cs" />
     <Compile Include="Integration\NatsClientTest.cs" />
     <Compile Include="Unit\HeartbeatMessage.cs" />
-    <Compile Include="Unit\PluginHelperTest.cs" />
     <Compile Include="SystemTests\UmbracoTest.cs" />
     <Compile Include="Unit\JsonConvertibleObjectTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Integration\AutoWiringTest.cs" />
     <Compile Include="TestUtil.cs" />
     <Compile Include="Unit\WindowsUsersAndGroupsTest.cs" />
   </ItemGroup>
@@ -142,14 +139,6 @@
     <ProjectReference Include="..\Uhuru.CloudFoundry.DEA.DirectoryServer\Uhuru.CloudFoundry.DEA.DirectoryServer.csproj">
       <Project>{0C7A0FCA-20C9-45F5-9497-738258A3717A}</Project>
       <Name>Uhuru.CloudFoundry.DEA.DirectoryServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Uhuru.CloudFoundry.DEA.Plugins\Uhuru.CloudFoundry.DEA.Plugins.csproj">
-      <Project>{E4F8E3CD-1F1E-4255-BF80-C62283BF0597}</Project>
-      <Name>Uhuru.CloudFoundry.DEA.Plugins</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Uhuru.CloudFoundry.DEA.PluginBase\Uhuru.CloudFoundry.DEA.PluginBase.csproj">
-      <Project>{2EFB2C3D-89A1-439E-B1CA-B75FA8217314}</Project>
-      <Name>Uhuru.CloudFoundry.DEA.PluginBase</Name>
     </ProjectReference>
     <ProjectReference Include="..\Uhuru.CloudFoundry.DEA\Uhuru.CloudFoundry.DEA.csproj">
       <Project>{25C9BC3C-1897-4B00-858A-3CE7E4CB06F1}</Project>
