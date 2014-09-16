@@ -77,8 +77,10 @@ We downloaded the micro-cloud. We could use this for tweaking the messaging for 
 - trello *gert.drapers@live.com*
 
 8. Are Thursdays good for the status report?
-*Good, 10:00 PM*
+*Good, 10:00 PM Thursday*
 *Friday or Wednesdays 8:00 AM*
+
+  *Wednesday 6PM*
 
 9. Is this document good as a template for a status report? 
 *Yep*
@@ -104,7 +106,7 @@ We downloaded the micro-cloud. We could use this for tweaking the messaging for 
 4. Integrate the latest prison code with the v2 DEA
  - Create a submodule for the prison library in the vcap-dotnet-hp repository
  - Replace the older prison code
-5. Logging compatibility (Stackato does not use the loggregator)
+5. Logging compatibility (Stackato does not use the loggregator, but logyard)
  - Research how Stackato handles logging
  - Document application lifecycle
 6. Deployment Automation
