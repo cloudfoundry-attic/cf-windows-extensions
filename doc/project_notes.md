@@ -92,10 +92,15 @@ Is this just because there isn't another stack in the Stackato product?
 
 13. **Is HP Helion Community edition a good destribution to use ? I coudn't download HP Helion Beta, signup is not working.**
 
+*Community edition is good*
+
 14. **We tried the CloudBase windows image, it's not working, It used to work on DevStack, is there another image to try (even if not 2012), note we are using quemu 2.0.0+dfsg-2ubuntu1.3**
+
+*2008 R2 is available, 2012 will be uploaded by us*
 
 15. **We found some problems with the Helion documentation, and some typos, should we contact someone ?**
 
+*Send e-mail to Gert directly (bundle everything in an e-mail)*
 
 ##Work Items (to be moved to Trello)
 
