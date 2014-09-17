@@ -25,13 +25,13 @@ We will host a Jenkins server inside the Romania lab, and provide HP with creden
  - Automated (un-)installer; provisioning of Windows application-host nodes in a HP Helion ALS cluster
  - Standard Visual Studio hosted ASP.net test application using membership, using MySQL for persistence
 
-  **Planned Completion Date**:01/01/2000
+  **Planned Completion Date**:10/08/2014
 
 2. Automated Test Suites
  - Automated test suite validating the (un-) installer functionality testing provisioning and de-provisioning of Windows application-host nodes in a HP Helion ALS cluster
  - Automated test suite validating the complete set of application lifecycle cfcommands for Windows applications
 
-  **Planned Completion Date**:01/01/2000
+  **Planned Completion Date**:10/15/2014
 
 3. Documentation
  - Wiki style documentation covering:
@@ -41,7 +41,7 @@ We will host a Jenkins server inside the Romania lab, and provide HP with creden
     - Troubleshooting all the steps/stages in the Windows applications lifecycle
     - Demo script installing, deploying and managing the lifecycle of the two reference applications
 
-  **Planned Completion Date**:01/01/2000
+  **Planned Completion Date**:10/15/2014
 
 ##Questions/Open Issues
 
