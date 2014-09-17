@@ -11,7 +11,7 @@ namespace Uhuru.CloudFoundry.DEA.Messages
     using Uhuru.Utilities.Json;
 
     /// <summary>
-    /// This class is a representation of a DEA status message response.
+    /// This class is a representation of a DEA advertise message response.
     /// </summary>
     public class DeaAdvertiseMessage : JsonConvertibleObject
     {
@@ -20,6 +20,17 @@ namespace Uhuru.CloudFoundry.DEA.Messages
         /// </summary>
         [JsonName("id")]
         public string Id
+        {
+            get;
+            set;
+        }
+
+
+        /// <summary>
+        /// Gets or sets the ip of the machine hosting the Windows DEA.
+        /// </summary>
+        [JsonName("ip")]
+        public string Ip
         {
             get;
             set;
@@ -38,10 +49,30 @@ namespace Uhuru.CloudFoundry.DEA.Messages
         }
 
         /// <summary>
+        /// Gets or sets the physical memory available on the machine hosting the Windows DEA.
+        /// </summary>
+        [JsonName("physical_memory")]
+        public long PhysicalMemory
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets the current available memory in MiB.
         /// </summary>
         [JsonName("available_memory")]
         public long AvailableMemory
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the available disk space on the machine hosting the Windows DEA.
+        /// </summary>
+        [JsonName("available_disk")]
+        public long AvailableDisk
         {
             get;
             set;
@@ -57,5 +88,54 @@ namespace Uhuru.CloudFoundry.DEA.Messages
             get;
             set;
         }
+
+        /// <summary>
+        /// Gets or sets the placement properties for the Windows DEA.
+        /// </summary>
+        [JsonName("placement_properties")]
+        public DeaAdvertiseMessagePlacementProperties PlacementProperties
+        {
+            get;
+            set;
+        }
+    }
+
+    /// <summary>
+    /// This class is a representation of the placement properties section of a DEA advertise message.
+    /// </summary>
+    public class DeaAdvertiseMessagePlacementProperties
+    {
+        /// <summary>
+        /// Gets or sets the zone for DEA placement.
+        /// </summary>
+        [JsonName("zone")]
+        public string Zone
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the zones available for DEA placement.
+        /// </summary>
+        /// <value>
+        [JsonName("zones")]
+        public string[] Zones
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the availability zones for DEA placement.
+        /// </summary>
+        /// <value>
+        [JsonName("availability_zone")]
+        public string AvailabilityZone
+        {
+            get;
+            set;
+        }
+
     }
 }
