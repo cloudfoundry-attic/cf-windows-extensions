@@ -14,22 +14,7 @@ Usage and Deployment of the Windows Extensions for HP ALS
 
 ###Adding a Windows DEA to the cluster
 
-####Making the win2012 stack available
-
-The cloud foundry stacks can be configured in the cloud controller's stacks.yml configuration file. The stack used for the Windows DEA is `win2012`. This is how the stacks.yml config file should look like:
-
-    default: "lucid64"
-    stacks:
-     - name: "lucid64"           
-       description: "Linux stack"
-     - name: "win2012"           
-       description: "Windows"
-
 ####The NATS URL
-
-For development purposes, the NATS url can be found in the cloud_controller.yml configuration file.
-Can we assume that in an automated scenario, the NATS url is well known?
-
 
 ####Troubleshooting
 
@@ -41,7 +26,12 @@ Can we assume that in an automated scenario, the NATS url is well known?
 
 ###Sample Applications
 
-####Vanilla sample app with a MySQL Membership Provide
+####Vanilla sample app with a MySQL Membership Provider
+
+- Create the app yourself
+ - Get the MySQL connector 
+- Download the app
+
 
 ####Umbraco
 
