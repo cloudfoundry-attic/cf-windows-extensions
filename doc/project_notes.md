@@ -90,6 +90,13 @@ We downloaded the micro-cloud. We could use this for tweaking the messaging for 
 12. **There is a comment in the dea.yml config that says stacks are "Unused in Stackato for now"**
 Is this just because there isn't another stack in the Stackato product? 
 
+13. **Is HP Helion Community edition a good destribution to use ? I coudn't download HP Helion Beta, signup is not working.**
+
+14. **We tried the CloudBase windows image, it's not working, It used to work on DevStack, is there another image to try (even if not 2012), note we are using quemu 2.0.0+dfsg-2ubuntu1.3**
+
+15. **We found some problems with the Helion documentation, and some typos, should we contact someone ?**
+
+
 ##Work Items (to be moved to Trello)
 
 1. CI for unit testing *not needed for HP*
