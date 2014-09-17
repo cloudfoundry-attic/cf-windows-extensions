@@ -64,30 +64,31 @@ We downloaded the micro-cloud. We could use this for tweaking the messaging for 
 *we will have to test*
 *no 2012 images right now*
 
-5. Can HP provide us with an OpenStack environment for testing?
+6. Can HP provide us with an OpenStack environment for testing?
 *We might have access to some environments. Could be public access. ALS will not be the same there. You start with Stackato 3.4*
 *In private deployments you go to horizon and use a wizard*
 *Once we have something to deploy, we'll figure something out for the private installation*
 
-6. We have previously obtained permission from Stackato to look at NATS messages via nats-sub, since they have a restrictive license. Should we obtain permission again?
+7. We have previously obtained permission from Stackato to look at NATS messages via nats-sub, since they have a restrictive license. Should we obtain permission again?
 *Gert will talk to Jeff Hobbs*
 
-7. Which accounts should we add to github and trello?
-- github *gert.drapers@live.com*
-- trello *gert.drapers@live.com*
+8. Which accounts should we add to github and trello?
+ - github *gert.drapers@live.com*
+ - trello *gert.drapers@live.com*
 
-8. Are Thursdays good for the status report?
-*Good, 10:00 PM Thursday*
-*Friday or Wednesdays 8:00 AM*
+9. Are Thursdays good for the status report?
 
-  *Wednesday 6PM*
+  *Wednesday 8AM*
 
-9. Is this document good as a template for a status report? 
+10. Is this document good as a template for a status report? 
 *Yep*
 
-10. Where should we host build artifacts? Keep the in the Romania LAN for now?
+11. Where should we host build artifacts? Keep the in the Romania LAN for now?
 *github*
 *ftp*
+
+12. **There is a comment in the dea.yml config that says stacks are "Unused in Stackato for now"**
+Is this just because there isn't another stack in the Stackato product? 
 
 ##Work Items (to be moved to Trello)
 
