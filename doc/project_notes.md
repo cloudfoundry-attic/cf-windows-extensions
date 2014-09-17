@@ -118,3 +118,6 @@ Is this just because there isn't another stack in the Stackato product?
 7. CI for system tests
  - *not sure how this will work yet*
  *we'll do Linux based tests, probably go (because of the go cf client)*
+8. *Is HP Helion Community edition a good destribution to use ? I coudn't download HP Helion Beta, signup is not working.*
+9. *We tried the CloudBase windows image, it's not working, It used to work on DevStack, is there another image to try (even if not 2012), note we are using quemu 2.0.0+dfsg-2ubuntu1.3*
+10. *We found some problems with the Helion documentation, and some typos, should we contact someone ?*
