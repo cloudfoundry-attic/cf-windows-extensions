@@ -29,7 +29,14 @@ Usage and Deployment of the Windows Extensions for HP ALS
 ####Vanilla sample app with a MySQL Membership Provider
 
 - Create the app yourself
- - Get the MySQL connector 
+	- From Visual Studio 2013 create an empty ASP.NET application
+	<img src="create_app.png"/>
+	- Install the MySQL connector nuget packages: MySql.ConnectorNET.Entity, MySql.ConnectorNET.Data, MySql.ConnectorNET.Web
+	<img src="install_nuget_packages.png"/>
+	- In web.config, add autogenerateschema="true" in membership provider MySQLMembershipProvider section
+	<img src="add_autogenerate_section.png"/>
+	- In web.config add connectionStrings section
+	<img src="add_connectionString_section.png"/>
 - Download the app
 
 
