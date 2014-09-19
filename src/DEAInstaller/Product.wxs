@@ -5,9 +5,11 @@
   <?define var.BINDIRECTORY = $(var.Uhuru.CloudFoundry.DEA.WindowsService.TargetDir)?>  
   
   <?define var.ProductName = "Windows DEA"?>
-  <?define var.Manufacturer = "Uhuru Software, Inc."?>   
-  
-	<Product Id="*" Name="$(var.ProductName)" Language="1033" Version="1.0.0.0" Manufacturer="$(var.Manufacturer)" UpgradeCode="efc0d212-71b1-4ef9-b6d2-e1468b7c4a47">
+  <?define var.Manufacturer = "Uhuru Software, Inc."?>
+  <?define var.REDISTPATH = "C:\Program Files (x86)\Common Files\Merge Modules"?>
+  <?define var.MergeModulesVersion = "100"?>
+
+  <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="1.0.0.0" Manufacturer="$(var.Manufacturer)" UpgradeCode="efc0d212-71b1-4ef9-b6d2-e1468b7c4a47">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
@@ -110,9 +112,35 @@
           </Directory>
         </Directory>
       </Directory>
+      
+      <Merge Id="VCRedist86CRT" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_CRT_x86.msm" />
+      <Merge Id="VCRedist64CRT" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_CRT_x64.msm" />
+
+      <Merge Id="VCRedist86MFC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFC_x86.msm" />
+      <Merge Id="VCRedist64MFC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFC_x64.msm" />
+
+      <Merge Id="VCRedist86MFCLOC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFCLOC_x86.msm" />
+      <Merge Id="VCRedist64MFCLOC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFCLOC_x64.msm" />
+
+      <Merge Id="VCRedist86OpenMP" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_OpenMP_x86.msm" />
+      <Merge Id="VCRedist64OpenMP" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_OpenMP_x64.msm" />
+
+      <Merge Id="VCRedist86CXXAMP" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_CXXAMP_x86.msm" />
+      <Merge Id="VCRedist64CXXAMP" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_CXXAMP_x64.msm" />
+      
     </Directory>
 		<Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
 			<ComponentRef Id="ProductComponents" />
+      <MergeRef Id="VCRedist86CRT"/>
+      <MergeRef Id="VCRedist64CRT"/>
+      <MergeRef Id="VCRedist86MFC"/>
+      <MergeRef Id="VCRedist64MFC"/>
+      <MergeRef Id="VCRedist86MFCLOC"/>
+      <MergeRef Id="VCRedist64MFCLOC"/>
+      <MergeRef Id="VCRedist86OpenMP"/>
+      <MergeRef Id="VCRedist64OpenMP"/>
+      <MergeRef Id="VCRedist86CXXAMP"/>
+      <MergeRef Id="VCRedist64CXXAMP"/>
 		</Feature>
-	</Product>
+	</Product>  
 </Wix>
