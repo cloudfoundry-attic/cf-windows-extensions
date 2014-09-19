@@ -1,4 +1,11 @@
 # Prerequisites
+
+	Install a linux distor with X server and the following packages:
+	
+>  apt-get install -y qemu-kvm qemu-common virt-manager virt-viewer
+
+	
+	
 	Create and run the following script:
 
 
