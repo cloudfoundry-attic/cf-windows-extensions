@@ -7,7 +7,7 @@
   <?define var.ProductName = "Windows DEA"?>
   <?define var.Manufacturer = "Uhuru Software, Inc."?>
   <?define var.REDISTPATH = "C:\Program Files (x86)\Common Files\Merge Modules"?>
-  <?define var.MergeModulesVersion = "100"?>
+  <?define var.MergeModulesVersion = "120"?>
 
   <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="1.0.0.0" Manufacturer="$(var.Manufacturer)" UpgradeCode="efc0d212-71b1-4ef9-b6d2-e1468b7c4a47">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
@@ -35,7 +35,7 @@
     <Property Id="STREAMINGTIMEOUTMS" Value="60000"/>
     <Property Id="STAGINGENABLED" Value="TRUE"/>
     <Property Id="BUILDPACKSDIRECTORY" Value="buildpacks"/>
-    <Property Id="GIT" Value="E:\Program Files (x86)\Git\bin\git.exe"/>
+    <Property Id="GIT" Value="C:\Program Files (x86)\Git\bin\git.exe"/>
     <Property Id="STAGINGTIMEOUTMS" Value="1200000"/>
     <Property Id="STACKS" Value="iis8"/>
     
