@@ -136,6 +136,16 @@ namespace Uhuru.CloudFoundry.DEA.Messages
                 get;
                 set;
             }
+
+            /// <summary>
+            /// Gets or sets the docker id of the current instance.
+            /// </summary>
+            [JsonName("docker_id")]
+            public string DockerId
+            {
+                get;
+                set;
+            }
         }
     }
 }

@@ -157,6 +157,7 @@ namespace Uhuru.CloudFoundry.DEA
                 beat.DropletId = this.Properties.DropletId;
                 beat.Version = this.Properties.Version;
                 beat.InstanceId = this.Properties.InstanceId;
+                beat.DockerId = this.Properties.InstanceId;
                 beat.InstanceIndex = this.Properties.InstanceIndex;
                 beat.State = this.Properties.State;
                 beat.StateTimestamp = this.Properties.StateTimestamp;
@@ -205,17 +206,6 @@ namespace Uhuru.CloudFoundry.DEA
         public bool IsPortReady()
         {
             return this.IsPortReady(150);
-        }
-
-        /// <summary>
-        /// Generates the heartbeat of the instance ready to be sent to the message bus.
-        /// </summary>
-        /// <returns>The heartbeat.</returns>
-        public HeartbeatMessage GenerateHeartbeat()
-        {
-            HeartbeatMessage response = new HeartbeatMessage();
-            response.Droplets.Add(this.GenerateInstanceHeartbeat().ToJsonIntermediateObject());
-            return response;
         }
 
         /// <summary>
