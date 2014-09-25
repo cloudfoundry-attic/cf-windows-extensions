@@ -26,6 +26,8 @@ We will host a Jenkins server inside the Romania lab, and provide HP with creden
  - Standard Visual Studio hosted ASP.net test application using membership, using MySQL for persistence
 
   **Planned Completion Date**:10/08/2014
+  **Items with risk:**
+    - Being able to figure out how logging works in HP ALS
 
 2. Automated Test Suites
  - Automated test suite validating the (un-) installer functionality testing provisioning and de-provisioning of Windows application-host nodes in a HP Helion ALS cluster
@@ -87,20 +89,20 @@ We downloaded the micro-cloud. We could use this for tweaking the messaging for 
 *github*
 *ftp*
 
-12. **There is a comment in the dea.yml config that says stacks are "Unused in Stackato for now"**
+12. There is a comment in the dea.yml config that says stacks are "Unused in Stackato for now"
 Is this just because there isn't another stack in the Stackato product? 
 
-13. **Is HP Helion Community edition a good destribution to use ? I coudn't download HP Helion Beta, signup is not working.**
+13. Is HP Helion Community edition a good destribution to use ? I coudn't download HP Helion Beta, signup is not working.
 
-*Community edition is good*
+ *Community edition is good*
 
-14. **We tried the CloudBase windows image, it's not working, It used to work on DevStack, is there another image to try (even if not 2012), note we are using quemu 2.0.0+dfsg-2ubuntu1.3**
+14. We tried the CloudBase windows image, it's not working, It used to work on DevStack, is there another image to try (even if not 2012), note we are using quemu 2.0.0+dfsg-2ubuntu1.3
 
-*2008 R2 is available, 2012 will be uploaded by us*
+ *2008 R2 is available, 2012 will be uploaded by us*
 
-15. **We found some problems with the Helion documentation, and some typos, should we contact someone ?**
+15. We found some problems with the Helion documentation, and some typos, should we contact someone ?
 
-*Send e-mail to Gert directly (bundle everything in an e-mail)*
+ *Send e-mail to Gert directly (bundle everything in an e-mail)*
 
 ##Work Items (to be moved to Trello)
 
