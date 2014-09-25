@@ -104,7 +104,9 @@ Is this just because there isn't another stack in the Stackato product?
 
  *Send e-mail to Gert directly (bundle everything in an e-mail)*
 
-16. **Helion's Horizon does not have the extension you mentioned for ALS. Assuming we need to install the HP Helion Dev Platform Community edition?**
+16. Helion's Horizon does not have the extension you mentioned for ALS. Assuming we need to install the HP Helion Dev Platform Community edition?
+ 
+  *Yes* 
 
 ##Work Items (to be moved to Trello)
 
