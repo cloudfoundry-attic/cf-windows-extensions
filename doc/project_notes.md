@@ -33,6 +33,8 @@ We will host a Jenkins server inside the Romania lab, and provide HP with creden
  - Automated test suite validating the (un-) installer functionality testing provisioning and de-provisioning of Windows application-host nodes in a HP Helion ALS cluster
  - Automated test suite validating the complete set of application lifecycle cfcommands for Windows applications
 
+  **If latest Windows image does not work on hpcloud.com, contact Gert and leave the image there.**
+
   **Planned Completion Date**:10/15/2014
 
 3. Documentation
