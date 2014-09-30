@@ -107,12 +107,12 @@
                 Description="Uhuru .NET Droplet Execution Agent" Start="auto" Account="LocalSystem" ErrorControl="normal">
                 <util:PermissionEx  User="Everyone" ServicePauseContinue="yes" ServiceQueryStatus="yes"
                         ServiceStart="yes" ServiceStop="yes" ServiceUserDefinedControl="yes" />
-                <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType ="reboot"/>
+                <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType ="restart"/>
               </ServiceInstall>
               <ServiceControl Id="DEAService" Start="install" Stop="both" Remove="both" Name="DEAService" Wait="no" />
               
             </Component>
-           
+            
             <Directory Id="BuildpackDir" Name="buildpacks">
               <Directory Id="iis8Dir" Name="iis8">
                 
