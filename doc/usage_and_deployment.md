@@ -17,10 +17,7 @@ Usage and Deployment of the Windows Extensions for HP ALS
 On a Windows Server 2012 R2 enable IIS Web Server Role with all Role Services except WebDAV support.
 
 1. The following features need to be available on the Windows server:
-
-	- Remote Server Administration Tools 
-		- Role Administration Tools
-			- Web Server(IIS) Tools
+	
 	- Windows Process Activation Service
 		- Process Model
 		- .NET Environment
@@ -40,16 +37,17 @@ called WinDEA.
 
 	- The installer can be used from the command line by using msiexec 
 		
-			-Sample call: msiexec /i c:\DEAInstaller.msi /qn messageBus="nats://192.168.1.109:4222/" baseDir="C:\droplets"  maxMemory="4000" /lvx! C:\\DEAInstaller.log ALLUSERS=2
-	- The following parameters can be used with the installer; it is recommended to set the BaseDir, MessageBus, Git and MaxMemoryMB according to your configuration
+		<code>Sample call: msiexec /i c:\DEAInstaller.msi /qn messageBus="nats://192.168.1.109:4222/" baseDir="C:\droplets"  maxMemory="4000" /lvx! C:\\DEAInstaller.log ALLUSERS=2</code>
+
+	- The following parameters can be used with the installer; it is **required** to set the MessageBus and Domain according to your configuration
 	
+			- MessageBus  		   
+			- Domain	 
 			- Index 	 		   -> default value: 0
 			- BaseDir 			   -> default value: C:\droplets
 			- LocalRoute 		   -> default value: 8.8.8.8
 			- FilerPort   		   -> default value: 12345
-			- StatusPort  		   -> default value: 0
-			- MessageBus  		   -> default value: nats://nats@10.0.7.122:4222
-			- Domain	  		   -> default value: ccng-dev.net
+			- StatusPort  		   -> default value: 0			 		   
 			- MultiTenant 		   -> default value: true
 			- MaxMemoryMB 		   -> default value: 4096
 			- Secure			   -> default value: true
@@ -67,8 +65,7 @@ called WinDEA.
 			- StagingTimeoutMS	   -> default value: 1200000
 			- Stacks			   -> default value: iis8
 
- [*optional*] A buildpack needs to be manually installed on the DEA - copy the desired buildpack in the BuilpacksDirecory (default "buildpacks") in the following path "\Program Files\Uhuru Software Inc\Windows DEA\".
-
+  Default IIS8 buildpack will be **automatically** installed in the buildpacks folder of the target directory.
 
 ####The NATS URL
 
