@@ -103,13 +103,13 @@
               <util:XmlFile Id="SetStagingTimeout" Action="setValue" ElementPath="/uhuru/dea/staging/@stagingTimeoutMs" File="[INSTALLDIR]\Dea.config" Value="[STAGINGTIMEOUTMS]" ></util:XmlFile>
               <util:XmlFile Id="SetStacks" Action="setValue" ElementPath="/uhuru/dea/stacks/stack/@name" File="[INSTALLDIR]\Dea.config" Value="[STACKS]" ></util:XmlFile>
 
-              <ServiceInstall Id="DEAService" Type="ownProcess" Name="DEAService" DisplayName="WinDEA"
+              <ServiceInstall Id="WinDEA" Type="ownProcess" Name="WinDEA" DisplayName="WinDEA"
                 Description="Uhuru .NET Droplet Execution Agent" Start="auto" Account="LocalSystem" ErrorControl="normal">
                 <util:PermissionEx  User="Everyone" ServicePauseContinue="yes" ServiceQueryStatus="yes"
                         ServiceStart="yes" ServiceStop="yes" ServiceUserDefinedControl="yes" />
                 <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType ="restart"/>
               </ServiceInstall>
-              <ServiceControl Id="DEAService" Start="install" Stop="both" Remove="both" Name="DEAService" Wait="no" />
+              <ServiceControl Id="WinDEA" Start="install" Stop="both" Remove="both" Name="WinDEA" Wait="no" />
               
             </Component>
             
