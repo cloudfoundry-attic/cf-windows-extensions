@@ -110,7 +110,9 @@ Is this just because there isn't another stack in the Stackato product?
  
   *Yes* 
 
-17. **Stackato uses admin buildpacks (i.e. buildpacks managed by cc and `stackato buildpacks`) for lucid64 stack. The current Windows DEA is not aware of admin buildpacks and CC dosn't keep any relationship between stacks and buildpacks. Should we add an ISS/.NET buildpack as an admin buildpack, or keep it as a system buildpack as part of the Windows DEA? Or, if possible, do both?**
+17. Stackato uses admin buildpacks (i.e. buildpacks managed by cc and `stackato buildpacks`) for lucid64 stack. The current Windows DEA is not aware of admin buildpacks and CC dosn't keep any relationship between stacks and buildpacks. Should we add an ISS/.NET buildpack as an admin buildpack, or keep it as a system buildpack as part of the Windows DEA? Or, if possible, do both?
+ 
+  *Use system buildpack only for now*
 
 18. **Given that we don't have something figured out for logging, we can start documenting some workarounds and limitations.**
 
