@@ -114,8 +114,9 @@ Is this just because there isn't another stack in the Stackato product?
  
   *Use system buildpack only for now*
 
-18. **Given that we don't have something figured out for logging, we can start documenting some workarounds and limitations.**
+18. Given that we don't have something figured out for logging, we can start documenting some workarounds and limitations.
 
+  *Shoot an e-mail to Gert about this*
 
 ##Work Items (to be moved to Trello)
 
