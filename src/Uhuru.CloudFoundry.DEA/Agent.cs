@@ -1899,6 +1899,8 @@ namespace Uhuru.CloudFoundry.DEA
             env.Add(VcapAppPortVariable, instance.Properties.Port.ToString(CultureInfo.InvariantCulture));
             env.Add("PORT", instance.Properties.Port.ToString(CultureInfo.InvariantCulture));
 
+            env.Add("HOMEPATH", Path.Combine(instance.Properties.Directory));
+
             // User's environment settings
             if (appVars != null)
             {
