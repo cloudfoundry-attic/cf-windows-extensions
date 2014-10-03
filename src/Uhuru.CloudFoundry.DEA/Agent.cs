@@ -861,7 +861,23 @@ namespace Uhuru.CloudFoundry.DEA
 
             response.Id = this.UUID;
             response.AvailableMemory = this.monitoring.MaxMemoryMbytes - this.monitoring.MemoryReservedMbytes;
+            // TODO: vladi: grab this from the config file
+            response.PhysicalMemory = 1024;
+            // TODO: this looks to be disk_mb from config * overcommit factor?
+            response.AvailableDisk = 204800;
+            // TODO: vladi: grab this from the config file
+            response.Ip = "10.2.0.104";
+            // TODO: vladi: grab this from the config file
+            response.PlacementProperties = new DeaAdvertiseMessagePlacementProperties()
+            {
+                AvailabilityZone = "default",
+                Zone = "default",
+                Zones = new string[] { "default" }
+            };
+            
+
             response.Stacks = this.fileResources.Stacks.ToList();
+
 
             response.AppIdCount = new Dictionary<string, int>();
 
