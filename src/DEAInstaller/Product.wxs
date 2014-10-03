@@ -3,11 +3,14 @@
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   
   <?define var.BINDIRECTORY = $(var.Uhuru.CloudFoundry.DEA.WindowsService.TargetDir)?>  
+  <?define var.BUILDPACKDIRECTORY =$(var.Uhuru.CloudFoundry.DEA.WindowsService.TargetDir)..\src\Buildpacks\?>  
   
   <?define var.ProductName = "Windows DEA"?>
-  <?define var.Manufacturer = "Uhuru Software, Inc."?>   
-  
-	<Product Id="*" Name="$(var.ProductName)" Language="1033" Version="1.0.0.0" Manufacturer="$(var.Manufacturer)" UpgradeCode="efc0d212-71b1-4ef9-b6d2-e1468b7c4a47">
+  <?define var.Manufacturer = "Uhuru Software, Inc."?>
+  <?define var.REDISTPATH = "C:\Program Files (x86)\Common Files\Merge Modules"?>
+  <?define var.MergeModulesVersion = "120"?>
+
+  <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="1.0.0.0" Manufacturer="$(var.Manufacturer)" UpgradeCode="efc0d212-71b1-4ef9-b6d2-e1468b7c4a47">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
@@ -18,8 +21,8 @@
     <Property Id="LOCALROUTE" Value="8.8.8.8"/>
     <Property Id="FILERPORT" Value="12345"/>
     <Property Id="STATUSPORT" Value="0"/>
-    <Property Id="MESSAGEBUS" Value="nats://nats:nats@10.0.7.122:4222"/>
-    <Property Id="DOMAIN" Value="ccng-dev.net"/>
+    <Property Id="MESSAGEBUS" Value="NA" />
+    <Property Id="DOMAIN" Value="#"/>
     <Property Id="MULTITENANT" Value="true"/>
     <Property Id="MAXMEMORYMB" Value="4096"/>
     <Property Id="SECURE" Value="true"/>
@@ -32,15 +35,17 @@
     <Property Id="DIRECTORYSERVERPORT" Value="34567"/>
     <Property Id="STREAMINGTIMEOUTMS" Value="60000"/>
     <Property Id="STAGINGENABLED" Value="TRUE"/>
-    <Property Id="BUILDPACKSDIRECTORY" Value="buildpacks"/>
-    <Property Id="GIT" Value="E:\Program Files (x86)\Git\bin\git.exe"/>
+    <!--<Property Id="BUILDPACKSDIRECTORY" Value="buildpacks" Hidden="yes" Secure="yes"/>-->
+    <Property Id="GIT" Value="C:\Program Files (x86)\Git\bin\git.exe"/>
     <Property Id="STAGINGTIMEOUTMS" Value="1200000"/>
     <Property Id="STACKS" Value="iis8"/>
     
+    <Condition Message="Please set a correct messagebus and domain."><![CDATA[(MESSAGEBUS<>"NA" AND DOMAIN<>"#") OR Installed]]></Condition>   
+    
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
-        <Directory Id="ManufacturerFolder" Name="$(var.Manufacturer)">
-          <Directory Id="INSTALLDIR" Name="$(var.ProductName)" >
+        <Directory Id="ManufacturerFolder" Name="$(var.Manufacturer)">          
+          <Directory Id="INSTALLDIR" Name="$(var.ProductName)">
             <Component Id="ProductComponents" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b44">
               <File Id="AlphaFSDll" Name="AlphaFS.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="AlphaFSPdb" Name="AlphaFS.pdb" Source="$(var.BINDIRECTORY)"/>
@@ -93,18 +98,117 @@
               <util:XmlFile Id="SetDirectoryServerPort" Action="setValue" ElementPath="/uhuru/dea/directoryServer/@v2Port" File="[INSTALLDIR]\Dea.config" Value="[DIRECTORYSERVERPORT]" ></util:XmlFile>
               <util:XmlFile Id="SetStreamingTimeout" Action="setValue" ElementPath="/uhuru/dea/directoryServer/@streamingTimeoutMS" File="[INSTALLDIR]\Dea.config" Value="[STREAMINGTIMEOUTMS]" ></util:XmlFile>
               <util:XmlFile Id="SetStagingEnabled" Action="setValue" ElementPath="/uhuru/dea/staging/@enabled" File="[INSTALLDIR]\Dea.config" Value="[STAGINGENABLED]" ></util:XmlFile>
-              <util:XmlFile Id="SetBuildpacksDir" Action="setValue" ElementPath="/uhuru/dea/staging/@buildpacksDirectory" File="[INSTALLDIR]\Dea.config" Value="[BUILDPACKSDIRECTORY]" ></util:XmlFile>
+              <!--<util:XmlFile Id="SetBuildpacksDir" Action="setValue" ElementPath="/uhuru/dea/staging/@buildpacksDirectory" File="[INSTALLDIR]\Dea.config" Value="[BUILDPACKSDIRECTORY]" ></util:XmlFile>-->
               <util:XmlFile Id="SetGit" Action="setValue" ElementPath="/uhuru/dea/staging/@gitExecutable" File="[INSTALLDIR]\Dea.config" Value="[GIT]" ></util:XmlFile>
               <util:XmlFile Id="SetStagingTimeout" Action="setValue" ElementPath="/uhuru/dea/staging/@stagingTimeoutMs" File="[INSTALLDIR]\Dea.config" Value="[STAGINGTIMEOUTMS]" ></util:XmlFile>
               <util:XmlFile Id="SetStacks" Action="setValue" ElementPath="/uhuru/dea/stacks/stack/@name" File="[INSTALLDIR]\Dea.config" Value="[STACKS]" ></util:XmlFile>
 
+              <ServiceInstall Id="WinDEA" Type="ownProcess" Name="WinDEA" DisplayName="WinDEA"
+                Description="Uhuru .NET Droplet Execution Agent" Start="auto" Account="LocalSystem" ErrorControl="normal">
+                <util:PermissionEx  User="Everyone" ServicePauseContinue="yes" ServiceQueryStatus="yes"
+                        ServiceStart="yes" ServiceStop="yes" ServiceUserDefinedControl="yes" />
+                <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType ="restart"/>
+              </ServiceInstall>
+              <ServiceControl Id="WinDEA" Start="install" Stop="both" Remove="both" Name="WinDEA" Wait="no" />
+              
             </Component>
+            
+            <Directory Id="BuildpackDir" Name="buildpacks">
+              <Directory Id="iis8Dir" Name="iis8">
+                
+                <Directory Id="iis8appDir" Name="app">
+                  <Directory Id="iis8appbin" Name="bin">                    
+                    <Component Id="iis8buildpackapplog" Feature="BuildpackFeature">
+                       <File Id="ASPLOGGING" Name="Uhuru.CloudFoundry.DEA.Plugins.AspDotNetLogging.dll" Source="$(var.BUILDPACKDIRECTORY)\iis8\app\bin\Uhuru.CloudFoundry.DEA.Plugins.AspDotNetLogging.dll"/>                     
+                    </Component>
+                  </Directory>
+                    <Component Id="iis8buildpackappconfig" Feature="BuildpackFeature">
+                       <File Id="ASPLOGConfig" Name="UhuruAspNetEventProvider.config" Source="$(var.BUILDPACKDIRECTORY)\iis8\app\UhuruAspNetEventProvider.config"/>
+                    </Component>                
+                </Directory>   
+                
+                <Directory Id="iis8binDir" Name="bin">                  
+                    <Component Id="iis8buildpackbin" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b45" Feature="BuildpackFeature">                     
+                        <File Id="CompileBat" Name="compile.bat" Source="$(var.BUILDPACKDIRECTORY)\iis8\bin\compile.bat"/>
+                        <File Id="CompilePS" Name="compile.ps1" Source="$(var.BUILDPACKDIRECTORY)\iis8\bin\compile.ps1"/>
+                        <File Id="DetectBat" Name="detect.bat" Source="$(var.BUILDPACKDIRECTORY)\iis8\bin\detect.bat"/>
+                        <File Id="DetectPS" Name="detect.ps1" Source="$(var.BUILDPACKDIRECTORY)\iis8\bin\detect.ps1"/>
+                        <File Id="ReleaseBat" Name="release.bat" Source="$(var.BUILDPACKDIRECTORY)\iis8\bin\release.bat"/>
+                        <File Id="ReleasePS" Name="release.ps1" Source="$(var.BUILDPACKDIRECTORY)\iis8\bin\release.ps1"/>                      
+                    </Component>                  
+                </Directory>
+              
+                <Directory Id="iis8hwc" Name="iishwc">
+                  
+                    <Directory Id="iis8hwcsrc" Name="src">
+                      <Component Id="iis8hwcsln" Feature="BuildpackFeature">
+                        <File Id="slnhwc" Name="iishwc.sln" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\src\iishwc.sln"/>
+                      </Component>
+                      <Directory Id="iis8hwcsrcc" Name="iishwc">
+                        <Component Id="iis8hwcslncpp" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b46" Feature="BuildpackFeature">
+                          <File Id="iishwcpp" Name="iishwc.cpp" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\src\iishwc\iishwc.cpp"/>
+                          <File Id="iishwcvcxproj" Name="iishwc.vcxproj" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\src\iishwc\iishwc.vcxproj"/>
+                          <File Id="iishwcvcxprojfilter" Name="iishwc.vcxproj.filters" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\src\iishwc\iishwc.vcxproj.filters"/>
+                        </Component>
+                      </Directory>
+                    </Directory>
+                    
+                    <Component Id="iis8isshwc" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b47" Feature="BuildpackFeature">
+                       <File Id="apphostTemp" Name="applicationHostTemplate.config" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\applicationHostTemplate.config"/>
+                       <File Id="detectVersion" Name="detectVersion.ps1" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\detectVersion.ps1"/>
+                       <File Id="iishwcx64" Name="iishwcx64.exe" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\iishwcx64.exe"/>
+                       <File Id="iishwcx86" Name="iishwcx86.exe" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\iishwcx86.exe"/>
+                       
+                       <File Id="rootWeb2064" Name="rootWeb2064.config" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\rootWeb2064.config"/>
+                       <File Id="rootWeb2086" Name="rootWeb2086.config" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\rootWeb2086.config"/>
+                      
+                       <File Id="rootWeb4064" Name="rootWeb4064.config" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\rootWeb4064.config"/>
+                       <File Id="rootWeb4086" Name="rootWeb4086.config" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\rootWeb4086.config"/>
+                       
+                       <File Id="startbat" Name="start.bat" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\start.bat"/>
+                       <File Id="startPS" Name="start.ps1" Source="$(var.BUILDPACKDIRECTORY)\iis8\iishwc\start.ps1"/>                       
+                    </Component>                
+                
+                </Directory>              
+              </Directory>
+            </Directory>          
+          
           </Directory>
         </Directory>
       </Directory>
+      
+      <Merge Id="VCRedist86CRT" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_CRT_x86.msm" />
+      <Merge Id="VCRedist64CRT" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_CRT_x64.msm" />
+
+      <Merge Id="VCRedist86MFC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFC_x86.msm" />
+      <Merge Id="VCRedist64MFC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFC_x64.msm" />
+
+      <Merge Id="VCRedist86MFCLOC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFCLOC_x86.msm" />
+      <Merge Id="VCRedist64MFCLOC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFCLOC_x64.msm" />
+
+      <Merge Id="VCRedist86OpenMP" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_OpenMP_x86.msm" />
+      <Merge Id="VCRedist64OpenMP" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_OpenMP_x64.msm" />
+
+      <Merge Id="VCRedist86CXXAMP" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_CXXAMP_x86.msm" />
+      <Merge Id="VCRedist64CXXAMP" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_CXXAMP_x64.msm" />
+      
     </Directory>
-		<Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
-			<ComponentRef Id="ProductComponents" />
-		</Feature>
-	</Product>
+  <Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
+	  <ComponentRef Id="ProductComponents" />
+      <MergeRef Id="VCRedist86CRT"/>
+      <MergeRef Id="VCRedist64CRT"/>
+      <MergeRef Id="VCRedist86MFC"/>
+      <MergeRef Id="VCRedist64MFC"/>
+      <MergeRef Id="VCRedist86MFCLOC"/>
+      <MergeRef Id="VCRedist64MFCLOC"/>
+      <MergeRef Id="VCRedist86OpenMP"/>
+      <MergeRef Id="VCRedist64OpenMP"/>
+      <MergeRef Id="VCRedist86CXXAMP"/>
+      <MergeRef Id="VCRedist64CXXAMP"/>
+  </Feature>
+  
+  <Feature Id="BuildpackFeature" Title="Buildpack" Absent="disallow" Display="hidden">  
+  </Feature>
+  
+	</Product>  
 </Wix>
