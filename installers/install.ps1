@@ -1,3 +1,4 @@
+#ps1_sysnative
 <#
 .SYNOPSIS
     ALS Windows DEA installation script
