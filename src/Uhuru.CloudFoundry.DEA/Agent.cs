@@ -430,6 +430,8 @@ namespace Uhuru.CloudFoundry.DEA
 
             base.Run();  // Start the nats client
 
+            this.RegisterRoutes();
+
             if (this.enableStaging)
             {
                 this.deaReactor.SubscribeToStaging();
@@ -1860,7 +1862,7 @@ namespace Uhuru.CloudFoundry.DEA
                                         instance.Properties.State = DropletInstanceState.Running;
                                         instance.Properties.StateTimestamp = DateTime.Now;
 
-                                        this.deaReactor.SendDeaHeartbeat(instance.GenerateHeartbeat().SerializeToJson());
+                                        this.SendHeartbeat();
                                         this.RegisterInstanceWithRouter(instance);
                                         this.droplets.ScheduleSnapshotAppState();
                                     }
@@ -1896,6 +1898,8 @@ namespace Uhuru.CloudFoundry.DEA
             env.Add(VcapAppHostVariable, Host);
             env.Add(VcapAppPortVariable, instance.Properties.Port.ToString(CultureInfo.InvariantCulture));
             env.Add("PORT", instance.Properties.Port.ToString(CultureInfo.InvariantCulture));
+
+            env.Add("HOMEPATH", Path.Combine(instance.Properties.Directory));
 
             // User's environment settings
             if (appVars != null)

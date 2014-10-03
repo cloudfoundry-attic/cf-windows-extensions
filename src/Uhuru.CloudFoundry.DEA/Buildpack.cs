@@ -62,7 +62,7 @@ namespace Uhuru.CloudFoundry.DEA
             process.WaitForExit(5000);
             if (!process.HasExited)
             {
-                process.Kill();                
+                prison.JobObject.TerminateProcesses(-2);
             }
             if (File.Exists(outputPath))
             {
