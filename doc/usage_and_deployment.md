@@ -119,7 +119,14 @@ called WinDEA.
 	- Install the MySQL connector nuget packages: MySql.ConnectorNET.Entity, MySql.ConnectorNET.Data, MySql.ConnectorNET.Web. It will update Web.config file
 	<img src="install_nuget_packages.png"/>
 	
-	- In Web.config change membership section
+	- In Web.config change connectionStrings section. In this case "sampleaspmysqlapp" is the name of the mysql service that will be bind to the application in the stackato micro cloud. Choose whatever name you like and replace it in connectionStrings section. "DefaultConnection" is the name of the connection string, if you want to use another name, please note that you will have to change it manually also in Web.config membership section, "MySqlInitializer" class and "IdentityModel" class.	
+	```
+	<connectionStrings>
+	  <add name="DefaultConnection" connectionString="Server={sampleaspmysqlapp#host};Database={sampleaspmysqlapp#name};Uid={sampleaspmysqlapp#user};Pwd={sampleaspmysqlapp#password};Port={sampleaspmysqlapp#port};pooling=false;" providerName="MySql.Data.MySqlClient" />
+	</connectionStrings>
+	```
+
+	- In Web.config change membership section, if the name of the connection string is different replace "DefaultConnection" with your own name
 	```
 	<membership defaultProvider="MySQLMembershipProvider">
 	  <providers>
@@ -128,45 +135,14 @@ called WinDEA.
 	         type="MySql.Web.Security.MySQLMembershipProvider, MySql.Web, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d"
 	         applicationName="/" description="MySQL default application"
 	         connectionStringName="DefaultConnection" writeExceptionsToEventLog="False"
-	         autogenerateschema="True" enableExpireCallback="False" enablePasswordRetrieval="False"
+	         autogenerateschema="False" enableExpireCallback="False" enablePasswordRetrieval="False"
 	         enablePasswordReset="True" requiresQuestionAndAnswer="True" requiresUniqueEmail="False" passwordFormat="Clear"
 	         maxInvalidPasswordAttempts="5" minRequiredPasswordLength="7" minRequiredNonalphanumericCharacters="1"
 	         passwordAttemptWindow="10" passwordStrengthRegularExpression="" />
 	  </providers>
 	</membership>
 	```
-
-	- In Web.config change profile section
-	```
-	<profile enabled="true" defaultProvider="MySQLProfileProvider">
-	  <providers>
-	    <clear />
-	    <add name="MySQLProfileProvider" type="MySql.Web.Profile.MySQLProfileProvider, MySql.Web, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d"
-	         applicationName="/" description="" connectionStringName="DefaultConnection" writeExceptionsToEventLog="False"
-	         autogenerateschema="True" enableExpireCallback="False" />
-	  </providers>
-	</profile>
-	```
-
-	- In Web.config change role manager section
-	```
-	<roleManager enabled="true" defaultProvider="MySQLRoleProvider">
-	  <providers>
-	    <clear />
-	    <add name="MySQLRoleProvider" type="MySql.Web.Security.MySQLRoleProvider, MySql.Web, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d"
-	         applicationName="/" description="" connectionStringName="DefaultConnection" writeExceptionsToEventLog="False" 
-	         autogenerateschema="True" enableExpireCallback="False" />
-	  </providers>
-	</roleManager>
-	```
-
-	- In Web.config change connectionStrings section. In this case "sampleaspmysqlapp" is the name of the mysql service that will be bind to the application in the stackato micro cloud. Choose whatever name you like and replace it in connectionStrings section.	
-	```
-	<connectionStrings>
-	  <add name="DefaultConnection" connectionString="Server={sampleaspmysqlapp#host};Database={sampleaspmysqlapp#name};Uid={sampleaspmysqlapp#user};Pwd={sampleaspmysqlapp#password};Port={sampleaspmysqlapp#port};pooling=false;" providerName="MySql.Data.MySqlClient" />
-	</connectionStrings>
-	```
-
+	
 	- In Web.config change Entity Framework and system data sections 
 	```
 	<entityFramework >
@@ -243,12 +219,13 @@ called WinDEA.
 	    }
 	}
 	```
-	- To create a new custom database initializer, add a new class file named `MySqlInitializer.cs` to the project, and change its code to this:
+	- To create a new custom database initializer, add a new class file named `MySqlInitializer.cs` to the project, and change its code to the one below. If the name of the connection string is different replace "DefaultConnection" with your own name:
 	```
 	using SampleASPMySQLApp.Models;
 	using System.Data.Entity;
 	using System.Data.Entity.Infrastructure;
 	using System.Linq;
+	using MySql.Data.MySqlClient;
 	
 	namespace SampleASPMySQLApp
 	{
@@ -256,33 +233,27 @@ called WinDEA.
 	    {
 	        public void InitializeDatabase(ApplicationDbContext context)
 	        {
-	            if (!context.Database.Exists())
-	            {
-	                // if database did not exist before - create it
-	                context.Database.CreateIfNotExists();
-	            }
-	            else
-	            {
-	                string connString = WebConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-                	string db = "Database=";
-                	string dbName = connString.Substring(connString.LastIndexOf(db) + db.Length, 33);
+	            string db = new MySqlConnectionStringBuilder(WebConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString).Database;
 
-                	// query to check if MigrationHistory table is present in the database
-                	var migrationHistoryTableExists = ((IObjectContextAdapter)context).ObjectContext.ExecuteStoreQuery<int>(
-                	string.Format("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{0}' AND table_name = '__MigrationHistory'", dbName));
-	
-	                // if MigrationHistory table is not there (which is the case first time we run) - create it
-	                if (migrationHistoryTableExists.FirstOrDefault() == 0)
-	                {
-	                    context.Database.Delete();
-	                    context.Database.Create();
-	                }
-	            }
+            	// query to check if MigrationHistory table is present in the database
+            	var migrationHistoryTableExists = ((IObjectContextAdapter)	context).ObjectContext.ExecuteStoreQuery<int>(
+            		string.Format(
+              		"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{0}' AND table_name = '__MigrationHistory'",
+              		db));
+
+            	bool dbMigrated = migrationHistoryTableExists.FirstOrDefault() != 0;
+
+            	if (!dbMigrated)
+            	{
+                	// if MigrationHistory table is not there (which is the case first time we run) - create it
+                	context.Database.Delete();
+                	context.Database.Create();
+            	}
 	        }
 	    }
 	}
 	```
-	- In Models folder, change the `IdentityModel.cs` file code to look like this, the Helpers section remains the same:
+	- In Models folder, change the `IdentityModel.cs` file code to look like this, the Helpers section remains the same. If the name of the connection string is different replace "DefaultConnection" with your own name:
 	```
 	using System;
 	using System.Security.Claims;
