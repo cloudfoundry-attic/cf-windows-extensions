@@ -56,7 +56,6 @@
 							<File Id="InteropDiskQuotaTypeLibrary" Name="Interop.DiskQuotaTypeLibrary.dll" Source="$(var.BINDIRECTORY)"/>
 							<File Id="NewtonsoftJson" Name="Newtonsoft.Json.dll" Source="$(var.BINDIRECTORY)"/>
 							<File Id="NLogDll" Name="NLog.dll" Source="$(var.BINDIRECTORY)"/>
-							<File Id="NLogPdb" Name="NLog.pdb" Source="$(var.BINDIRECTORY)"/>
 							<File Id="NLogConfig" Name="NLog.config" Source="$(var.BINDIRECTORY)"/>
 							<File Id="ProcessPrivileges" Name="ProcessPrivileges.dll" Source="$(var.BINDIRECTORY)"/>
 							<File Id="SevenZipSharp" Name="SevenZipSharp.dll" Source="$(var.BINDIRECTORY)"/>
@@ -64,14 +63,10 @@
 							<File Id="DirectoryServerPdb" Name="Uhuru.CloudFoundry.DEA.DirectoryServer.pdb" Source="$(var.BINDIRECTORY)"/>
 							<File Id="UhuruCloudFoundryDEADll" Name="Uhuru.CloudFoundry.DEA.dll" Source="$(var.BINDIRECTORY)"/>
 							<File Id="UhuruCloudFoundryDEAPdb" Name="Uhuru.CloudFoundry.DEA.pdb" Source="$(var.BINDIRECTORY)"/>
-							<File Id="UhuruCloudFoundryDEAPluginBaseDll" Name="Uhuru.CloudFoundry.DEA.PluginBase.dll" Source="$(var.BINDIRECTORY)"/>
-							<File Id="UhuruCloudFoundryDEAPluginBasePdb" Name="Uhuru.CloudFoundry.DEA.PluginBase.pdb" Source="$(var.BINDIRECTORY)"/>
 							<File Id="UhuruConfigurationDll" Name="Uhuru.Configuration.dll" Source="$(var.BINDIRECTORY)"/>
 							<File Id="UhuruConfigurationPdb" Name="Uhuru.Configuration.pdb" Source="$(var.BINDIRECTORY)"/>
 							<File Id="UhuruNatsClientDll" Name="Uhuru.NatsClient.dll" Source="$(var.BINDIRECTORY)"/>
 							<File Id="UhuruNatsClientPdb" Name="Uhuru.NatsClient.pdb" Source="$(var.BINDIRECTORY)"/>
-							<File Id="UhuruProcessPrisonDll" Name="Uhuru.ProcessPrison.dll" Source="$(var.BINDIRECTORY)"/>
-							<File Id="UhuruProcessPrisonPdb" Name="Uhuru.ProcessPrison.pdb" Source="$(var.BINDIRECTORY)"/>
 							<File Id="UhuruUtilitiesDll" Name="Uhuru.Utilities.dll" Source="$(var.BINDIRECTORY)"/>
 							<File Id="UhuruUtilitiesPdb" Name="Uhuru.Utilities.pdb" Source="$(var.BINDIRECTORY)"/>
 							<File Id="YamlDotNetCoreDll" Name="YamlDotNet.Core.dll" Source="$(var.BINDIRECTORY)"/>
