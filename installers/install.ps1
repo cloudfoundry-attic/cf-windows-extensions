@@ -68,16 +68,15 @@ param (
     $streamingTimeoutMS = 60000,
     $stagingEnabled = 'true',
     $stagingTimeoutMS = 1200000,
-    $stack = "windows2012",
+    $stack = "win2012",
     $installDir = 'C:\WinDEA'
 )
 
 $neccessaryFeatures = "Web-Server","Web-WebServer","Web-Common-Http","Web-Default-Doc","Web-Dir-Browsing","Web-Http-Errors","Web-Static-Content","Web-Http-Redirect","Web-Health","Web-Http-Logging","Web-Custom-Logging","Web-Log-Libraries","Web-ODBC-Logging","Web-Request-Monitor","Web-Http-Tracing","Web-Performance","Web-Stat-Compression","Web-Dyn-Compression","Web-Security","Web-Filtering","Web-Basic-Auth","Web-CertProvider","Web-Client-Auth","Web-Digest-Auth","Web-Cert-Auth","Web-IP-Security","Web-Url-Auth","Web-Windows-Auth","Web-App-Dev","Web-Net-Ext","Web-Net-Ext45","Web-AppInit","Web-ASP","Web-Asp-Net","Web-Asp-Net45","Web-CGI","Web-ISAPI-Ext","Web-ISAPI-Filter","Web-Includes","Web-WebSockets","Web-Mgmt-Tools","Web-Mgmt-Console","Web-Mgmt-Compat","Web-Metabase","Web-Lgcy-Mgmt-Console","Web-Lgcy-Scripting","Web-WMI","Web-Scripting-Tools","Web-Mgmt-Service","WAS","WAS-Process-Model","WAS-NET-Environment","WAS-Config-APIs","NET-Framework-Features","NET-Framework-Core","NET-Framework-45-Features","NET-Framework-45-Core","NET-Framework-45-ASPNET","NET-WCF-Services45","NET-WCF-HTTP-Activation45","Web-WHC"
 $gitDownloadURL = "https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe"
-$deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/Installer.msi"
+$deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.28.msi"
 $location = $pwd.Path
 $tempDir = [System.Guid]::NewGuid().ToString()
-$gitLocation = "C:\Program Files (x86)\Git\bin\git.exe"
 
 
 function VerifyParameters{
@@ -132,14 +131,14 @@ function CheckGit()
    If (Test-Path $defaultGitPath){
      Write-Host "git installed on system" -ForegroundColor Green
         $gitLocation = $defaultGitPath
-        return
+        return $gitLocation
     }
     #test install folder
     $gitDir = Join-Path -Path $installDir -ChildPath "Git"
     $gitLocation = Join-Path -Path $gitDir -ChildPath "bin\git.exe"
     If (Test-Path $gitLocation){
      Write-Host "git installed on system" -ForegroundColor Green
-        return
+        return $gitLocation
     }
 
     Write-Host "git not installed, trying to install"
@@ -149,25 +148,27 @@ function CheckGit()
     
     Write-Host "Installing git"
     $gitInstallFile = Join-Path -Path $env:temp -ChildPath "$tempDir\Git-Install.exe"
-    $gitInstallArgs = "/c `"$gitInstallFile`" /DIR=$gitDir /silent"
+    $gitInstallArgs = "/DIR=`"${gitDir}`" /silent"
     
     
-    [System.Diagnostics.Process]::Start("cmd", [System.String]::Join(" ",$gitInstallArgs)).WaitForExit()
+    [System.Diagnostics.Process]::Start($gitInstallFile, $gitInstallArgs).WaitForExit()
 
     
     Write-Host "Done!" -ForegroundColor Green
+
+    return $gitLocation
 }
 
-function InstallDEA{
+function InstallDEA($gitLocation){
     Write-Host "Downloading Windows DEA"
     Invoke-WebRequest $deaDownloadURL -OutFile "DEAInstaller.msi"
     $deaInstallFile = Join-Path -Path $env:temp -ChildPath "$tempDir\DEAInstaller.msi"
     $deaArgs =  "/c", "msiexec", "/i", "`"$deaInstallFile`"", "/qn",  "INSTALLDIR=`"$installDir`""
-    $deaArgs += "MessageBus=$messageBus", "Domain=$domain", "Index=$index"
+    $deaArgs += "MessageBus=$messageBus", "Domain=$domain", "Index=$index", "Stacks=$stack"
     $deaArgs += "LocalRoute=$localRoute", "StatusPort=$statusPort", "MultiTenant=$multiTenant"
     $deaArgs += "MaxMemoryMB=$maxMemoryMB", "HeartBeatIntervalMS=$heartBeatIntervalMS", "AdvertiseIntervalMS=$advertiseIntervalMS"
     $deaArgs += "UploadThrottleBitsPS=$uploadThrottleBitsPS", "MaxConcurrentStarts=$maxConcurrentStarts", "DirectoryServerPort=$directoryServerPort"
-    $deaArgs += "StreamingTimeoutMS=$streamingTimeoutMS", "StagingEnabled=$stagingEnabled", "Git=`"$gitLocation`""
+    $deaArgs += "StreamingTimeoutMS=$streamingTimeoutMS", "StagingEnabled=$stagingEnabled", "Git=`"${gitLocation}`""
     Write-Host "Installing Windows DEA"
     [System.Diagnostics.Process]::Start("cmd", [System.String]::Join(" ", $deaArgs)).WaitForExit()
     Write-Host "Done!" -ForegroundColor Green
@@ -188,10 +189,10 @@ function Install{
     #Install windows features
     CheckFeatureDependency
     #check if git is installed, if not, install it
-    CheckGit
+    $gitLocation = CheckGit
 
     #download and install winDEA
-    InstallDEA
+    InstallDEA $gitLocation
 
 }
 
