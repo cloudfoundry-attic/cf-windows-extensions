@@ -321,8 +321,13 @@ namespace Uhuru.CloudFoundry.DEA
 
         public void Cleanup()
         {
-            DEAUtilities.RemoveReadOnlyAttribute(this.Workspace.BaseDir);
-            Directory.Delete(this.Workspace.BaseDir, true);
+            // don't crash if cleanup fails
+            try
+            {
+                DEAUtilities.RemoveReadOnlyAttribute(this.Workspace.BaseDir);
+                Directory.Delete(this.Workspace.BaseDir, true);
+            }
+            catch { }
         }
 
         /// <summary>

@@ -208,5 +208,10 @@ namespace Uhuru.CloudFoundry.DEA
         {
             NatsClient.Request("router.greet", null, callback, "{}");
         }
+
+        public void SendLogyardNotification(string logyardId, string message)
+        {
+            NatsClient.Publish(string.Format("logyard.{0}.newinstance", logyardId), null, message);
+        }
     }
 }

@@ -112,6 +112,11 @@
             <externalTypeMoniker name="/fe3fc0b9-36cd-404c-8c6b-49c6d0ea824d/Int64" />
           </type>
         </attributeProperty>
+        <attributeProperty name="LogyardUidPath" isRequired="false" isKey="false" isDefaultCollection="false" xmlName="logyardUidPath" isReadOnly="false" defaultValue="&quot;&quot;">
+          <type>
+            <externalTypeMoniker name="/fe3fc0b9-36cd-404c-8c6b-49c6d0ea824d/String" />
+          </type>
+        </attributeProperty>
       </attributeProperties>
       <elementProperties>
         <elementProperty name="Stacks" isRequired="false" isKey="false" isDefaultCollection="true" xmlName="stacks" isReadOnly="false">
