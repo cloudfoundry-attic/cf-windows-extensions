@@ -110,6 +110,7 @@
     <Compile Include="Buildpack.cs" />
     <Compile Include="DEAReactor.cs" />
     <Compile Include="Messages\DirectoryServerRequest.cs" />
+    <Compile Include="Messages\LogyardInstanceRequest.cs" />
     <Compile Include="Messages\StagingAdvertiseMessage.cs" />
     <Compile Include="Messages\StagingStartMessageRequest.cs" />
     <Compile Include="Messages\StagingStartMessageResponse.cs" />

@@ -213,6 +213,12 @@ using Uhuru.Utilities;
                     }
                 }
 
+                // create log files
+                string logDir = Path.Combine(instance.Properties.Directory, "logs");
+                Directory.CreateDirectory(logDir);
+                using (File.Create(Path.Combine(logDir, "stdout.log"))) { }
+                using (File.Create(Path.Combine(logDir, "stderr.log"))) { }
+
                 // check before extracting
                 if (instance.Properties.StopProcessed)
                 {

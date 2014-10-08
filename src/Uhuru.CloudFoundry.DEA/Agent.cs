@@ -172,6 +172,7 @@ namespace Uhuru.CloudFoundry.DEA
         private string gitPath;
         private string buildpacksDir;
         private int stagingTimeoutMs;
+        private string logyardUidPath;
         public string ExternalHost { get; set; }
 
         /// <summary>
@@ -203,6 +204,8 @@ namespace Uhuru.CloudFoundry.DEA
             this.uploadThrottleBitsps = uhuruSection.DEA.UploadThrottleBitsps;
 
             this.enableStaging = uhuruSection.DEA.Staging.Enabled;
+
+            this.logyardUidPath = uhuruSection.DEA.LogyardUidPath;
 
             // Replace the ephemeral monitoring port with the configured one
             if (uhuruSection.DEA.StatusPort > 0)
@@ -1429,6 +1432,21 @@ namespace Uhuru.CloudFoundry.DEA
                 instance.UnpackDroplet();
                 instance.PrepareStagingDirs();
 
+                if (File.Exists(this.logyardUidPath))
+                {
+                    LogyardInstanceRequest logyardMsg = new LogyardInstanceRequest();
+                    logyardMsg.AppGUID = pmessage.AppID;
+                    logyardMsg.AppName = pmessage.StartMessage.Name;
+                    logyardMsg.AppSpace = "";
+                    logyardMsg.DockerId = instance.Properties.InstanceId;
+                    logyardMsg.Index = -1;
+                    logyardMsg.LogFiles = new Dictionary<string, string>() { { "staging", Path.Combine("staging", instance.Workspace.StagingLogSuffix) } };
+                    logyardMsg.Type = "staging";
+                    logyardMsg.RootPath = instance.Workspace.BaseDir;
+
+                    string logyardId = File.ReadAllText(this.logyardUidPath).Trim();
+                    this.deaReactor.SendLogyardNotification(logyardId, logyardMsg.SerializeToJson());
+                }
                 instance.CreatePrison();
 
                 instance.GetBuildpack(pmessage, this.gitPath, this.buildpacksDir);
@@ -1813,6 +1831,24 @@ namespace Uhuru.CloudFoundry.DEA
                     instance.Lock.ExitWriteLock();
                 }
 
+                if (File.Exists(this.logyardUidPath))
+                {
+                    LogyardInstanceRequest logyardMsg = new LogyardInstanceRequest();
+                    logyardMsg.AppGUID = instance.Properties.DropletId;
+                    logyardMsg.AppName = instance.Properties.Name;
+                    logyardMsg.AppSpace = "";
+                    logyardMsg.DockerId = instance.Properties.InstanceId;
+                    logyardMsg.Index = -1;
+                    Dictionary<string, string> logfiles = new Dictionary<string, string>();
+                    logfiles["stdout"] = @"logs\stdout.log";
+                    logfiles["stderr"] = @"logs\stderr.log";
+                    logyardMsg.LogFiles = logfiles;
+                    logyardMsg.Type = "app";
+                    logyardMsg.RootPath = instance.Properties.Directory;
+
+                    string logyardId = File.ReadAllText(this.logyardUidPath).Trim();
+                    this.deaReactor.SendLogyardNotification(logyardId, logyardMsg.SerializeToJson());
+                }
                 this.DetectAppReady(instance);
             }
             catch (Exception ex)
