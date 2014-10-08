@@ -26,6 +26,7 @@ We will host a Jenkins server inside the Romania lab, and provide HP with creden
  - Standard Visual Studio hosted ASP.net test application using membership, using MySQL for persistence
 
   **Planned Completion Date**:10/08/2014
+  **Actual Completion Date**:10/15/2014
   **Items with risk:**
     - Being able to figure out how logging works in HP ALS
 
@@ -117,6 +118,8 @@ Is this just because there isn't another stack in the Stackato product?
 18. Given that we don't have something figured out for logging, we can start documenting some workarounds and limitations.
 
   *Shoot an e-mail to Gert about this*
+
+19. **We need a blob store for Umbraco. It currently has bindings for Azure and S3 blob stores. What is available on ALS? Is the Redis service persisted? We will have to implement an interface for the blob store of choice: https://bitbucket.org/gibedigital/umbraco-amazons3provider/src/6cb43d5dd8887785be6666172ea984f8ffc481b2/Gibe.Umbraco.AmazonS3Provider/AmazonS3Provider.cs?at=master**
 
 ##Work Items (to be moved to Trello)
 
