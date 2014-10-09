@@ -47,6 +47,8 @@
 .PARAMETER installDir
     Target install directory. This is where all the Windows DEA binaries will be installed. Default is C:\WinDEA
     If git is not installed on the system, this is where it is going to be installed
+.PARAMETER deaDownloadURL
+    URL of the DEA msi.
 #>
 
 [CmdletBinding()]
@@ -69,12 +71,12 @@ param (
     $stagingEnabled = 'true',
     $stagingTimeoutMS = 1200000,
     $stack = "win2012",
-    $installDir = 'C:\WinDEA'
+    $installDir = 'C:\WinDEA',
+    $deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.28.msi"
 )
 
 $neccessaryFeatures = "Web-Server","Web-WebServer","Web-Common-Http","Web-Default-Doc","Web-Dir-Browsing","Web-Http-Errors","Web-Static-Content","Web-Http-Redirect","Web-Health","Web-Http-Logging","Web-Custom-Logging","Web-Log-Libraries","Web-ODBC-Logging","Web-Request-Monitor","Web-Http-Tracing","Web-Performance","Web-Stat-Compression","Web-Dyn-Compression","Web-Security","Web-Filtering","Web-Basic-Auth","Web-CertProvider","Web-Client-Auth","Web-Digest-Auth","Web-Cert-Auth","Web-IP-Security","Web-Url-Auth","Web-Windows-Auth","Web-App-Dev","Web-Net-Ext","Web-Net-Ext45","Web-AppInit","Web-ASP","Web-Asp-Net","Web-Asp-Net45","Web-CGI","Web-ISAPI-Ext","Web-ISAPI-Filter","Web-Includes","Web-WebSockets","Web-Mgmt-Tools","Web-Mgmt-Console","Web-Mgmt-Compat","Web-Metabase","Web-Lgcy-Mgmt-Console","Web-Lgcy-Scripting","Web-WMI","Web-Scripting-Tools","Web-Mgmt-Service","WAS","WAS-Process-Model","WAS-NET-Environment","WAS-Config-APIs","NET-Framework-Features","NET-Framework-Core","NET-Framework-45-Features","NET-Framework-45-Core","NET-Framework-45-ASPNET","NET-WCF-Services45","NET-WCF-HTTP-Activation45","Web-WHC"
 $gitDownloadURL = "https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe"
-$deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.28.msi"
 $location = $pwd.Path
 $tempDir = [System.Guid]::NewGuid().ToString()
 
