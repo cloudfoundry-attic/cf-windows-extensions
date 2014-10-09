@@ -106,6 +106,14 @@ called WinDEA.
 
 ##Usage
 
+### Buildpacks
+
+There are two ways to use buildpacks with Windows DEA: system buildpakcs and custom buildpakcs. Admin buildpacks, which are managed by the Cloud Controller, are not supported.
+
+- System buidlapcks are installed on system alongside Windows DEA. The "BuildpacksDirectory" config entry will tell the DEA where to look for them when an application is staging, unless a custom buildpack is provided. The DEA will check all buildpacks from "BuildpacksDirectory" and use the first one that return successful on `bin/detect`. If an admin wants to add or change a system buildpack on a Stackato cluster, he has to update all buildpacks bits on every Windows DEA.
+- Custom buildpacks can be specified for an application at push time using a git URL. If a custom buildpack is used, system buildpacks will not be used anymore. Example: `$ stackato push --buildpack https://github.com/UhuruSoftware/uhuru-buildpack-iis8 ...`
+- Admin buildpacks are only available on Linux DEAs (i.e. lucid64 stack). This will NOT work: `$ stackato push --buildpack iis8`. Admin buildpacks command (e.g. `stackato buildpacks`, `stackato create-buildpack`) will have no effect on Windows DEAs.
+
 ###IIS8 Buildpack
 
 ###Sample Applications
