@@ -108,6 +108,7 @@
                 <util:PermissionEx User="Everyone" ServicePauseContinue="yes" ServiceQueryStatus="yes"
                         ServiceStart="yes" ServiceStop="yes" ServiceUserDefinedControl="yes" />
                 <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType ="restart"/>
+                <ServiceConfig DelayedAutoStart="yes" OnInstall="yes"></ServiceConfig>
               </ServiceInstall>
               <ServiceControl Id="WinDEA" Start="install" Stop="both" Remove="both" Name="WinDEA" Wait="no" />
               

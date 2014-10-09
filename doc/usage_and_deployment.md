@@ -90,7 +90,6 @@ called WinDEA.
 			- DirectoryServerPort  -> default value: 34567
 			- StramingTimeoutMS	   -> default value: 60000
 			- StagingEnabled	   -> default value: true
-			- BuildpacksDirectory  -> default value: buildpacks
 			- Git				   -> default value: C:\Program Files (x86)\Git\bin\git.exe
 			- StagingTimeoutMS	   -> default value: 1200000
 			- Stacks			   -> default value: iis8
