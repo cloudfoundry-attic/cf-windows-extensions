@@ -72,28 +72,38 @@ param (
     $stagingTimeoutMS = 1200000,
     $stack = "win2012",
     $installDir = 'C:\WinDEA',
-    $deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.28.msi"
+    $logyardInstallDir = 'C:\logyard',
+    $logyardRedisURL = '',
+    $deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.28.msi",
+    $logyardInstallerURL = "http://rpm.uhurucloud.net/wininstaller/inst/logyard-installer.exe",
+    $zmqDownloadURL = "http://miru.hk/archive/ZeroMQ-3.2.4~miru1.0-x64.exe",
+    $gitDownloadURL = "https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe"
 )
 
 $neccessaryFeatures = "Web-Server","Web-WebServer","Web-Common-Http","Web-Default-Doc","Web-Dir-Browsing","Web-Http-Errors","Web-Static-Content","Web-Http-Redirect","Web-Health","Web-Http-Logging","Web-Custom-Logging","Web-Log-Libraries","Web-ODBC-Logging","Web-Request-Monitor","Web-Http-Tracing","Web-Performance","Web-Stat-Compression","Web-Dyn-Compression","Web-Security","Web-Filtering","Web-Basic-Auth","Web-CertProvider","Web-Client-Auth","Web-Digest-Auth","Web-Cert-Auth","Web-IP-Security","Web-Url-Auth","Web-Windows-Auth","Web-App-Dev","Web-Net-Ext","Web-Net-Ext45","Web-AppInit","Web-ASP","Web-Asp-Net","Web-Asp-Net45","Web-CGI","Web-ISAPI-Ext","Web-ISAPI-Filter","Web-Includes","Web-WebSockets","Web-Mgmt-Tools","Web-Mgmt-Console","Web-Mgmt-Compat","Web-Metabase","Web-Lgcy-Mgmt-Console","Web-Lgcy-Scripting","Web-WMI","Web-Scripting-Tools","Web-Mgmt-Service","WAS","WAS-Process-Model","WAS-NET-Environment","WAS-Config-APIs","NET-Framework-Features","NET-Framework-Core","NET-Framework-45-Features","NET-Framework-45-Core","NET-Framework-45-ASPNET","NET-WCF-Services45","NET-WCF-HTTP-Activation45","Web-WHC"
-$gitDownloadURL = "https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe"
+
 $location = $pwd.Path
 $tempDir = [System.Guid]::NewGuid().ToString()
 
 
 function VerifyParameters{
-    if ($messageBus -eq "")
+    if ([string]::IsNullOrWhiteSpace($messageBus))
     {
-      throw [System.ArgumentException] "messageBus parameter is mandatory."
-      exit 1
-    }
-    if ($domain -eq "")
-    {
-     throw [System.ArgumentException] "domain parameter is mandatory."
-     exit 1
+        throw [System.ArgumentException] 'The messageBus parameter is mandatory.'
+        exit 1
     }
     
-    
+    if ([string]::IsNullOrWhiteSpace($domain))
+    {
+        throw [System.ArgumentException] 'The domain parameter is mandatory.'
+        exit 1
+    }
+
+    if ([string]::IsNullOrWhiteSpace($logyardRedisURL))
+    {
+        throw [System.ArgumentException] 'The logyardRedisURL parameter is mandatory.'
+        exit 1
+    }
 }
 
 function CheckFeatureDependency(){
@@ -161,6 +171,52 @@ function CheckGit()
     return $gitLocation
 }
 
+function CheckZMQ()
+{
+    Write-Host 'Checking if zmq is available ...'
+
+    # check if zmq libraries are available
+    $zmqExists = (Start-Process -FilePath 'cmd.exe' -ArgumentList '/c where libzmq-v120-mt-3_2_4.dll' -Wait -Passthru -NoNewWindow).ExitCode
+
+    if ($zmqExists -ne 0)
+    {
+        Write-Host 'ZeroMQ libraries not found, downloading and installing ...'
+        Write-Host "Downloading ZeroMQ installer from ${zmqDownloadURL} ..."
+        Invoke-WebRequest $zmqDownloadURL -OutFile 'ZMQ-Install.exe'
+        
+        Write-Host 'Installing ZeroMQ ...'
+        $zmqInstallFile = (Join-Path $env:temp (Join-Path $tempDir 'ZMQ-Install.exe'))
+        $zmqInstallArgs = '/S /D=c:\zmq'
+        
+        [System.Diagnostics.Process]::Start($zmqInstallFile, $zmqInstallArgs).WaitForExit()
+        
+        Write-Host 'Updating PATH environment variable ...'
+        [Environment]::SetEnvironmentVariable('Path', "${env:Path};c:\zmq\bin", [System.EnvironmentVariableTarget]::Machine )
+    }
+
+    Write-Host 'ZeroMQ check complete.' -ForegroundColor Green
+}
+
+function InstallLogyard()
+{
+    Write-Host 'Installing Logyard ...'
+
+    Write-Host "Downloading Logyard installer from ${logyardInstallerURL} ..."
+    Invoke-WebRequest $logyardInstallerURL -OutFile 'Logyard-Install.exe'
+    
+    Write-Host 'Installing Logyard ...'
+    $logyardInstallFile = (Join-Path $env:temp (Join-Path $tempDir 'Logyard-Install.exe'))
+    $logyardInstallArgs = '/Q'
+    
+    $env:LOGYARD_REDIS = $logyardRedisURL
+
+    Start-Process -FilePath $logyardInstallFile -ArgumentList $logyardInstallArgs -Wait -Passthru -NoNewWindow
+    
+    Get-Content 'c:\logyard-setup.txt'
+    
+    Write-Host 'Logyard installation complete.' -ForegroundColor Green
+}
+
 function InstallDEA($gitLocation){
     Write-Host "Downloading Windows DEA"
     Invoke-WebRequest $deaDownloadURL -OutFile "DEAInstaller.msi"
@@ -175,7 +231,6 @@ function InstallDEA($gitLocation){
     [System.Diagnostics.Process]::Start("cmd", [System.String]::Join(" ", $deaArgs)).WaitForExit()
     Write-Host "Done!" -ForegroundColor Green
 }
-
 
 function Install{
     Write-Host "Using message bus" $messageBus
@@ -192,10 +247,10 @@ function Install{
     CheckFeatureDependency
     #check if git is installed, if not, install it
     $gitLocation = CheckGit
+    CheckZMQ
 
     #download and install winDEA
     InstallDEA $gitLocation
-
 }
 
 function Cleanup{
