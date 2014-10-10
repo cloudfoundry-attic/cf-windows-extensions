@@ -251,6 +251,7 @@ function Install{
 
     #download and install winDEA
     InstallDEA $gitLocation
+    InstallLogyard
 }
 
 function Cleanup{
