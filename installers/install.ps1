@@ -80,6 +80,7 @@ param (
     $gitDownloadURL = "https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe"
 )
 
+
 $neccessaryFeatures = "Web-Server","Web-WebServer","Web-Common-Http","Web-Default-Doc","Web-Dir-Browsing","Web-Http-Errors","Web-Static-Content","Web-Http-Redirect","Web-Health","Web-Http-Logging","Web-Custom-Logging","Web-Log-Libraries","Web-ODBC-Logging","Web-Request-Monitor","Web-Http-Tracing","Web-Performance","Web-Stat-Compression","Web-Dyn-Compression","Web-Security","Web-Filtering","Web-Basic-Auth","Web-CertProvider","Web-Client-Auth","Web-Digest-Auth","Web-Cert-Auth","Web-IP-Security","Web-Url-Auth","Web-Windows-Auth","Web-App-Dev","Web-Net-Ext","Web-Net-Ext45","Web-AppInit","Web-ASP","Web-Asp-Net","Web-Asp-Net45","Web-CGI","Web-ISAPI-Ext","Web-ISAPI-Filter","Web-Includes","Web-WebSockets","Web-Mgmt-Tools","Web-Mgmt-Console","Web-Mgmt-Compat","Web-Metabase","Web-Lgcy-Mgmt-Console","Web-Lgcy-Scripting","Web-WMI","Web-Scripting-Tools","Web-Mgmt-Service","WAS","WAS-Process-Model","WAS-NET-Environment","WAS-Config-APIs","NET-Framework-Features","NET-Framework-Core","NET-Framework-45-Features","NET-Framework-45-Core","NET-Framework-45-ASPNET","NET-WCF-Services45","NET-WCF-HTTP-Activation45","Web-WHC"
 
 $location = $pwd.Path
@@ -107,31 +108,7 @@ function VerifyParameters{
 }
 
 function CheckFeatureDependency(){
-    $i = 1 
-    Foreach ($featureName in $neccessaryFeatures)
-    {
-        Write-Host "Checking Windows Feature" $i "/" $neccessaryFeatures.Count $featureName
-    $winFeature = Get-WindowsFeature $featureName | where Installed
-    if ($winFeature.InstallState -ne "Installed")
-    {
-        Write-Host "Not installed, trying to install"
-        $featureStatus = Install-WindowsFeature $featureName
-        if ($featureStatus.Success)
-        {
-            Write-Host "Succesfully installed" $featureName -ForegroundColor Green
-        }
-        Else
-        {
-            Write-Error "Failed to install" $featureName -ForegroundColor Red "please contact support"
-            exit -1
-        }
-    }
-    Else 
-    {
-        Write-Host "Installed, skipping" -ForegroundColor Green
-    }
-         $i++
-    }
+    $featureStatus = Install-WindowsFeature $neccessaryFeatures
 }
 
 function CheckGit()
