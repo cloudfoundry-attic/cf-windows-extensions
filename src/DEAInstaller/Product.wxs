@@ -105,9 +105,10 @@
 
               <ServiceInstall Id="WinDEA" Type="ownProcess" Name="WinDEA" DisplayName="WinDEA"
                 Description="Uhuru .NET Droplet Execution Agent" Start="auto" Account="LocalSystem" ErrorControl="normal">
-                <util:PermissionEx  User="Everyone" ServicePauseContinue="yes" ServiceQueryStatus="yes"
+                <util:PermissionEx User="Administrators" ServicePauseContinue="yes" ServiceQueryStatus="yes"
                         ServiceStart="yes" ServiceStop="yes" ServiceUserDefinedControl="yes" />
                 <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType ="restart"/>
+                <ServiceDependency Id="MpsSvc"/>
               </ServiceInstall>
               <ServiceControl Id="WinDEA" Start="install" Stop="both" Remove="both" Name="WinDEA" Wait="no" />
               
@@ -115,7 +116,6 @@
             
             <Directory Id="BuildpackDir" Name="buildpacks">
               <Directory Id="iis8Dir" Name="iis8">
-                
                 <Directory Id="iis8appDir" Name="app">
                   <Directory Id="iis8appbin" Name="bin">                    
                     <Component Id="iis8buildpackapplog" Feature="BuildpackFeature">

@@ -13,7 +13,7 @@
 
 .NOTES
     Author: Vlad Iovanov
-    Date:   January 27, 2014
+    Date:   October 11, 2014
 #>
 param (
     [Parameter(Mandatory=$true)]
@@ -136,7 +136,7 @@ function DoAction-Install()
         exit 1;
     }
 
-    InstallLogyard $destfolder $logyardLogDir $redisURI
+    InstallLogyard $destfolder $logFolder $redisURI
 }
 
 function InstallLogyard($logyardDir, $logyardLogDir, $redisURI)
