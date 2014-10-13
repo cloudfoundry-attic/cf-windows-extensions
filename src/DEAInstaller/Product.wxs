@@ -35,7 +35,7 @@
     <Property Id="DIRECTORYSERVERPORT" Value="34567"/>
     <Property Id="STREAMINGTIMEOUTMS" Value="60000"/>
     <Property Id="STAGINGENABLED" Value="TRUE"/>
-    <!--<Property Id="BUILDPACKSDIRECTORY" Value="buildpacks" Hidden="yes" Secure="yes"/>-->
+    <Property Id="BUILDPACKSDIRECTORY" Value="buildpacks"/>
     <Property Id="GIT" Value="C:\Program Files (x86)\Git\bin\git.exe"/>
     <Property Id="STAGINGTIMEOUTMS" Value="1200000"/>
     <Property Id="STACKS" Value="iis8"/>
@@ -98,7 +98,7 @@
               <util:XmlFile Id="SetDirectoryServerPort" Action="setValue" ElementPath="/uhuru/dea/directoryServer/@v2Port" File="[INSTALLDIR]\Dea.config" Value="[DIRECTORYSERVERPORT]" ></util:XmlFile>
               <util:XmlFile Id="SetStreamingTimeout" Action="setValue" ElementPath="/uhuru/dea/directoryServer/@streamingTimeoutMS" File="[INSTALLDIR]\Dea.config" Value="[STREAMINGTIMEOUTMS]" ></util:XmlFile>
               <util:XmlFile Id="SetStagingEnabled" Action="setValue" ElementPath="/uhuru/dea/staging/@enabled" File="[INSTALLDIR]\Dea.config" Value="[STAGINGENABLED]" ></util:XmlFile>
-              <!--<util:XmlFile Id="SetBuildpacksDir" Action="setValue" ElementPath="/uhuru/dea/staging/@buildpacksDirectory" File="[INSTALLDIR]\Dea.config" Value="[BUILDPACKSDIRECTORY]" ></util:XmlFile>-->
+              <util:XmlFile Id="SetBuildpacksDir" Action="setValue" ElementPath="/uhuru/dea/staging/@buildpacksDirectory" File="[INSTALLDIR]\Dea.config" Value="[BUILDPACKSDIRECTORY]" ></util:XmlFile>
               <util:XmlFile Id="SetGit" Action="setValue" ElementPath="/uhuru/dea/staging/@gitExecutable" File="[INSTALLDIR]\Dea.config" Value="[GIT]" ></util:XmlFile>
               <util:XmlFile Id="SetStagingTimeout" Action="setValue" ElementPath="/uhuru/dea/staging/@stagingTimeoutMs" File="[INSTALLDIR]\Dea.config" Value="[STAGINGTIMEOUTMS]" ></util:XmlFile>
               <util:XmlFile Id="SetStacks" Action="setValue" ElementPath="/uhuru/dea/stacks/stack/@name" File="[INSTALLDIR]\Dea.config" Value="[STACKS]" ></util:XmlFile>

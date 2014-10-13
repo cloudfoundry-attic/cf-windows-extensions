@@ -90,10 +90,11 @@ called WinDEA.
 			- DirectoryServerPort  -> default value: 34567
 			- StramingTimeoutMS	   -> default value: 60000
 			- StagingEnabled	   -> default value: true
+			- BuildpacksDirectory  -> default value: buildpacks
 			- Git				   -> default value: C:\Program Files (x86)\Git\bin\git.exe
 			- StagingTimeoutMS	   -> default value: 1200000
-			- Stacks			   -> default value: iis8
-			- INSTALLDIR		   -> default value C:\Program Files\Uhuru Software, Inc\Windows DEA\
+			- Stacks			   -> default value: iis8			
+			- INSTALLDIR		   -> default value: C:\Program Files\Uhuru Software, Inc\Windows DEA\
 
   Default IIS8 buildpack will be **automatically** installed in the buildpacks folder of the target directory.
 
