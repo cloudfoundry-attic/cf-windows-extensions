@@ -74,7 +74,8 @@ param (
     $installDir = 'C:\WinDEA',
     $logyardInstallDir = 'C:\logyard',
     $logyardRedisURL = '',
-    $deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.28.msi",
+    $defaultGitPath = "c:\Users\cloudbase-init\appdata\local\programs\git\bin\git.exe",
+    $deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.30.msi",
     $logyardInstallerURL = "http://rpm.uhurucloud.net/wininstaller/inst/logyard-installer.exe",
     $zmqDownloadURL = "http://miru.hk/archive/ZeroMQ-3.2.4~miru1.0-x64.exe",
     $gitDownloadURL = "https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe"
@@ -116,36 +117,25 @@ function CheckGit()
    Write-Host "Checking git"
 
    #check if default git location exists
-   $defaultGitPath = "C:\Program Files (x86)\Git\bin\git.exe"
    If (Test-Path $defaultGitPath){
      Write-Host "git installed on system" -ForegroundColor Green
-        $gitLocation = $defaultGitPath
-        return $gitLocation
+        return $defaultGitPath
     }
-    #test install folder
-    $gitDir = Join-Path -Path $installDir -ChildPath "Git"
-    $gitLocation = Join-Path -Path $gitDir -ChildPath "bin\git.exe"
-    If (Test-Path $gitLocation){
-     Write-Host "git installed on system" -ForegroundColor Green
-        return $gitLocation
-    }
-
-    Write-Host "git not installed, trying to install"
-    Write-Host "Downloading git"
+    
+    Write-Host "git not installed, trying to install ..."
+    Write-Host "Downloading git from ${gitDownloadURL} ..."
 
     Invoke-WebRequest $gitDownloadURL -OutFile "Git-Install.exe"
     
     Write-Host "Installing git"
     $gitInstallFile = Join-Path -Path $env:temp -ChildPath "$tempDir\Git-Install.exe"
-    $gitInstallArgs = "/DIR=`"${gitDir}`" /silent"
-    
+    $gitInstallArgs = "/silent"
     
     [System.Diagnostics.Process]::Start($gitInstallFile, $gitInstallArgs).WaitForExit()
 
-    
     Write-Host "Done!" -ForegroundColor Green
 
-    return $gitLocation
+    return $defaultGitPath
 }
 
 function CheckZMQ()
@@ -189,7 +179,7 @@ function InstallLogyard()
 
     Start-Process -FilePath $logyardInstallFile -ArgumentList $logyardInstallArgs -Wait -Passthru -NoNewWindow
     
-    Get-Content 'c:\logyard-setup.txt'
+    Get-Content 'c:\logyard-setup.log'
     
     Write-Host 'Logyard installation complete.' -ForegroundColor Green
 }

@@ -18,3 +18,6 @@ doc/*.XML
 !src/Buildpacks/iis8/bin
 !src/Buildpacks/iis8/iishwc/iishwcx64.exe
 !src/Buildpacks/iis8/iishwc/iishwcx86.exe
+!installers/logyard/binaries/apptail.exe
+!installers/logyard/binaries/logyard.exe
+!installers/logyard/binaries/systail.exe
