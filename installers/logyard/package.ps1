@@ -29,7 +29,7 @@ if (($pshome -like "*syswow64*") -and ((Get-WmiObject Win32_OperatingSystem).OSA
     $scriptPath = $SCRIPT:MyInvocation.MyCommand.Path
     
     # relaunch this script under 64 bit shell
-    $process = Start-Process -Wait -PassThru -NoNewWindow $powershellLocation "-nologo -noexit -file ${scriptPath} -action $action"
+    $process = Start-Process -Wait -PassThru -NoNewWindow $powershellLocation "-nologo -file ${scriptPath} -action ${action} -binDir ${binDir}"
     
     # This will exit the original powershell process. This will only be done in case of an x86 process on a x64 OS.
     exit $process.ExitCode
