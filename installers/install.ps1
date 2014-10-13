@@ -53,7 +53,6 @@
 
 [CmdletBinding()]
 param (
-
     $messageBus = '',
     $domain = '',
     $index = 0,
@@ -73,8 +72,9 @@ param (
     $stack = "win2012",
     $installDir = 'C:\WinDEA',
     $logyardInstallDir = 'C:\logyard',
+    $buildpacksDirectory = 'c:\windea\buildpacks',
     $logyardRedisURL = '',
-    $defaultGitPath = "c:\Users\cloudbase-init\appdata\local\programs\git\bin\git.exe",
+    $defaultGitPath = "c:\Program Files (x86)\git\bin\git.exe",
     $deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.30.msi",
     $logyardInstallerURL = "http://rpm.uhurucloud.net/wininstaller/inst/logyard-installer.exe",
     $zmqDownloadURL = "http://miru.hk/archive/ZeroMQ-3.2.4~miru1.0-x64.exe",
@@ -194,6 +194,7 @@ function InstallDEA($gitLocation){
     $deaArgs += "MaxMemoryMB=$maxMemoryMB", "HeartBeatIntervalMS=$heartBeatIntervalMS", "AdvertiseIntervalMS=$advertiseIntervalMS"
     $deaArgs += "UploadThrottleBitsPS=$uploadThrottleBitsPS", "MaxConcurrentStarts=$maxConcurrentStarts", "DirectoryServerPort=$directoryServerPort"
     $deaArgs += "StreamingTimeoutMS=$streamingTimeoutMS", "StagingEnabled=$stagingEnabled", "Git=`"${gitLocation}`""
+    $deaArgs += "BuildpacksDirectory=`"${buildpacksDirectory}`""
     Write-Host "Installing Windows DEA"
     [System.Diagnostics.Process]::Start("cmd", [System.String]::Join(" ", $deaArgs)).WaitForExit()
     Write-Host "Done!" -ForegroundColor Green
