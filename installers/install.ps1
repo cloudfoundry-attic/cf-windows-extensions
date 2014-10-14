@@ -49,18 +49,22 @@
     If git is not installed on the system, this is where it is going to be installed
 .PARAMETER deaDownloadURL
     URL of the DEA msi.
+    
++.PARAMETER buildpacksDir 
++	Target buildpacks directory. Default is C:\WinDEA\buildpacks 
++	If modified buildpacks need to be added manually to the Windows DEA
 #>
 
 [CmdletBinding()]
 param (
-    $messageBus = '{{.messageBus}}',
-    $domain = '{{.domain}}',
-    $index = '{{.index}}',
+    $messageBus = '',
+    $domain = '',
+    $index = 0,
     $dropletDir = 'C:\Droplets',
     $localRoute =  '8.8.8.8',
-    $statusPort = '0',
-    $multiTenant = '{{.multiTenant}}',
-    $maxMemoryMB = '{{.maxMemoryMB}}',
+    $statusPort = 0,
+    $multiTenant = 'true',
+    $maxMemoryMB = 4096,
     $heartBeatIntervalMS = 10000,
     $advertiseIntervalMS = 5000,
     $uploadThrottleBitsPS = 0,
@@ -69,18 +73,17 @@ param (
     $streamingTimeoutMS = 60000,
     $stagingEnabled = 'true',
     $stagingTimeoutMS = 1200000,
-    $stack = '{{.stack}}',
+    $stack = "win2012",
     $installDir = 'C:\WinDEA',
     $logyardInstallDir = 'C:\logyard',
     $buildpacksDirectory = 'c:\windea\buildpacks',
-    $logyardRedisURL = '{{.logyardRedisURL}}',
-    $defaultGitPath = 'c:\Program Files (x86)\git\bin\git.exe',
-    $deaDownloadURL = '{{.deaDownloadURL}}',
-    $logyardInstallerURL = '{{.logyardInstallerURL}}',
-    $zmqDownloadURL = '{{.zmqDownloadURL}}',
-    $gitDownloadURL = '{{.gitDownloadURL}}'
+    $logyardRedisURL = '',
+    $defaultGitPath = "c:\Program Files (x86)\git\bin\git.exe",
+    $deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.30.msi",
+    $logyardInstallerURL = "http://rpm.uhurucloud.net/wininstaller/inst/logyard-installer.exe",
+    $zmqDownloadURL = "http://miru.hk/archive/ZeroMQ-3.2.4~miru1.0-x64.exe",
+    $gitDownloadURL = "https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe"    
 )
-
 
 $neccessaryFeatures = "Web-Server","Web-WebServer","Web-Common-Http","Web-Default-Doc","Web-Dir-Browsing","Web-Http-Errors","Web-Static-Content","Web-Http-Redirect","Web-Health","Web-Http-Logging","Web-Custom-Logging","Web-Log-Libraries","Web-ODBC-Logging","Web-Request-Monitor","Web-Http-Tracing","Web-Performance","Web-Stat-Compression","Web-Dyn-Compression","Web-Security","Web-Filtering","Web-Basic-Auth","Web-CertProvider","Web-Client-Auth","Web-Digest-Auth","Web-Cert-Auth","Web-IP-Security","Web-Url-Auth","Web-Windows-Auth","Web-App-Dev","Web-Net-Ext","Web-Net-Ext45","Web-AppInit","Web-ASP","Web-Asp-Net","Web-Asp-Net45","Web-CGI","Web-ISAPI-Ext","Web-ISAPI-Filter","Web-Includes","Web-WebSockets","Web-Mgmt-Tools","Web-Mgmt-Console","Web-Mgmt-Compat","Web-Metabase","Web-Lgcy-Mgmt-Console","Web-Lgcy-Scripting","Web-WMI","Web-Scripting-Tools","Web-Mgmt-Service","WAS","WAS-Process-Model","WAS-NET-Environment","WAS-Config-APIs","NET-Framework-Features","NET-Framework-Core","NET-Framework-45-Features","NET-Framework-45-Core","NET-Framework-45-ASPNET","NET-WCF-Services45","NET-WCF-HTTP-Activation45","Web-WHC"
 
@@ -88,55 +91,56 @@ $location = $pwd.Path
 $tempDir = [System.Guid]::NewGuid().ToString()
 
 
-function VerifyParameters{
-    if (([string]::IsNullOrEmpty($messageBus) -eq $true) -or ($messageBus -like '*{.messageBus}*'))
+function CheckParam($paramName, [REF]$paramValue, $mandatory, $templateValue)
+{
+    if (([string]::IsNullOrWhiteSpace($templateValue) -eq $false) -and ($templateValue -notlike "*{.${paramName}}*"))
     {
-        throw [System.ArgumentException] 'The messageBus parameter is mandatory.'
-        exit 1
+        $paramValue.Value = $templateValue
+    }
+
+    if ([string]::IsNullOrWhiteSpace($paramValue.Value) -and $mandatory)
+    {
+        if ($mandatory)
+        {
+            Write-Error "The ${paramName} parameter is mandatory."
+            exit 1
+        }
     }
     
-    if (([string]::IsNullOrEmpty($domain) -eq $true) -or ($domain -like '*{.domain}*'))
-    {
-        throw [System.ArgumentException] 'The domain parameter is mandatory.'
-        exit 1
-    }
+    Write-Host "Using <${paramName}> = '${paramValue.Value}'"
+}
 
-    if (([string]::IsNullOrEmpty($logyardRedisURL) -eq $true) -or ($logyardRedisURL -like '*{.logyardRedisURL}*'))
-    {
-        throw [System.ArgumentException] 'The logyardRedisURL parameter is mandatory.'
-        exit 1
-    }
-    if ($index -like '*{.index}*')
-    {
-        $index = '0'
-    }
-    if ($multiTenant -like '*{.multiTenant}*')
-    {
-        $multiTenant = 'true'
-    }
-    if ($stack -like '*{.stack}*')
-    {
-        $stack = 'win2012'
-    }
-    if ($deaDownloadURL -like '*{.deaDownloadURL}*')
-    {
-        $deaDownloadURL= 'http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.46.msi'
-    }
-    if ($logyardInstallerURL -like '*{.logyardInstallerURL}*')
-    {
-        $logyardInstallerURL =  'http://rpm.uhurucloud.net/wininstaller/inst/logyard-installer-1.2.26.exe'
-    }
-    if ($zmqDownloadURL -like '*{.zmqDownloadURL}*')
-    {
-        $zmqDownloadURL = 'http://miru.hk/archive/ZeroMQ-3.2.4~miru1.0-x64.exe'
-    }
+function VerifyParameters
+{
+    # Mandatory parameters
+    CheckParam 'messageBus'             ([ref]$messageBus)              $true  '{{if .messageBus}}{{.messageBus}}{{else}}{{end}}',
+    CheckParam 'domain'                 ([ref]$domain)                  $true  '{{if .domain}}{{.domain}}{{else}}{{end}}',
+    CheckParam 'logyardRedisURL'        ([ref]$logyardRedisURL)         $true  '{{if .logyardRedisURL}}{{.logyardRedisURL}}{{else}}{{end}}',
 
-    if ($gitDownloadURL -like '*{.gitDownloadURL}*')
-    {
-        $gitDownloadURL = 'https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe'
-    }
-
-
+    # Optional parameters
+    CheckParam 'index'                  ([ref]$index)                   $false '{{if .index}}{{.index}}{{else}}{{end}}',
+    CheckParam 'dropletDir'             ([ref]$dropletDir)              $false '{{if .dropletDir}}{{.dropletDir}}{{else}}{{end}}',
+    CheckParam 'localRoute'             ([ref]$localRoute)              $false '{{if .localRoute}}{{.localRoute}}{{else}}{{end}}',
+    CheckParam 'statusPort'             ([ref]$statusPort)              $false '{{if .statusPort}}{{.statusPort}}{{else}}{{end}}',
+    CheckParam 'multiTenant'            ([ref]$multiTenant)             $false '{{if .multiTenant}}{{.multiTenant}}{{else}}{{end}}',
+    CheckParam 'maxMemoryMB'            ([ref]$maxMemoryMB)             $false '{{if .maxMemoryMB}}{{.maxMemoryMB}}{{else}}{{end}}',
+    CheckParam 'heartBeatIntervalMS'    ([ref]$heartBeatIntervalMS)     $false '{{if .heartBeatIntervalMS}}{{.heartBeatIntervalMS}}{{else}}{{end}}',
+    CheckParam 'advertiseIntervalMS'    ([ref]$advertiseIntervalMS)     $false '{{if .advertiseIntervalMS}}{{.advertiseIntervalMS}}{{else}}{{end}}',
+    CheckParam 'uploadThrottleBitsPS'   ([ref]$uploadThrottleBitsPS)    $false '{{if .uploadThrottleBitsPS}}{{.uploadThrottleBitsPS}}{{else}}{{end}}',
+    CheckParam 'maxConcurrentStarts'    ([ref]$maxConcurrentStarts)     $false '{{if .maxConcurrentStarts}}{{.maxConcurrentStarts}}{{else}}{{end}}',
+    CheckParam 'directoryServerPort'    ([ref]$directoryServerPort)     $false '{{if .directoryServerPort}}{{.directoryServerPort}}{{else}}{{end}}',
+    CheckParam 'streamingTimeoutMS'     ([ref]$streamingTimeoutMS)      $false '{{if .streamingTimeoutMS}}{{.streamingTimeoutMS}}{{else}}{{end}}',
+    CheckParam 'stagingEnabled'         ([ref]$stagingEnabled)          $false '{{if .stagingEnabled}}{{.stagingEnabled}}{{else}}{{end}}',
+    CheckParam 'stagingTimeoutMS'       ([ref]$stagingTimeoutMS)        $false '{{if .stagingTimeoutMS}}{{.stagingTimeoutMS}}{{else}}{{end}}',
+    CheckParam 'stack'                  ([ref]$stack)                   $false '{{if .stack}}{{.stack}}{{else}}{{end}}',
+    CheckParam 'installDir'             ([ref]$installDir)              $false '{{if .installDir}}{{.installDir}}{{else}}{{end}}',
+    CheckParam 'logyardInstallDir'      ([ref]$logyardInstallDir)       $false '{{if .logyardInstallDir}}{{.logyardInstallDir}}{{else}}{{end}}',
+    CheckParam 'buildpacksDirectory'    ([ref]$buildpacksDirectory)     $false '{{if .buildpacksDirectory}}{{.buildpacksDirectory}}{{else}}{{end}}',
+    CheckParam 'defaultGitPath'         ([ref]$defaultGitPath)          $false '{{if .defaultGitPath}}{{.defaultGitPath}}{{else}}{{end}}',
+    CheckParam 'deaDownloadURL'         ([ref]$deaDownloadURL)          $false '{{if .deaDownloadURL}}{{.deaDownloadURL}}{{else}}{{end}}',
+    CheckParam 'logyardInstallerURL'    ([ref]$logyardInstallerURL)     $false '{{if .logyardInstallerURL}}{{.logyardInstallerURL}}{{else}}{{end}}',
+    CheckParam 'zmqDownloadURL'         ([ref]$zmqDownloadURL)          $false '{{if .zmqDownloadURL}}{{.zmqDownloadURL}}{{else}}{{end}}',
+    CheckParam 'gitDownloadURL'         ([ref]$gitDownloadURL)          $false '{{if .gitDownloadURL}}{{.gitDownloadURL}}{{else}}{{end}}'
 }
 
 function CheckFeatureDependency(){

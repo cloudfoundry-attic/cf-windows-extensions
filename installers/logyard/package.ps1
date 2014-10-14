@@ -162,10 +162,13 @@ function InstallLogyard($logyardDir, $logyardLogDir, $redisURI)
     
     New-Service -Name 'Logyard' -BinaryPathName "${logyardBinary} -logDir ${logyardLogDir} -redisUri ${redisURI}" -DisplayName 'Logyard' -StartupType Automatic
     Start-Service -DisplayName 'Logyard'
-    New-Service -Name 'AppTail' -BinaryPathName "${apptailBinary} -logDir ${logyardLogDir} -uidFile ${uidFile} -redisUri ${redisURI}" -DisplayName 'AppTail' -StartupType Automatic
+    New-Service -Name 'AppTail' -BinaryPathName "${apptailBinary} -logDir ${logyardLogDir} -redisUri ${redisURI} -uidFile ${uidFile}"  -DisplayName 'AppTail' -StartupType Automatic
     Start-Service -DisplayName 'AppTail'
-    New-Service -Name 'SysTail' -BinaryPathName "${logyardDir}\systail.exe -logDir ${logyardLogDir} -redisUri ${redisURI}" -DisplayName 'SysTail' -StartupType Automatic
+    New-Service -Name 'SysTail' -BinaryPathName "${systailBinary} -logDir ${logyardLogDir} -redisUri ${redisURI}" -DisplayName 'SysTail' -StartupType Automatic
     Start-Service -DisplayName 'SysTail'
+    
+    # Setup a firewall rule for Logyard
+    New-NetFirewallRule -DisplayName “Allow Logyard TCP/IP Communication” -Direction Inbound -Program $logyardBinary -RemoteAddress LocalSubnet -Action Allow
 }
 
 if ($action -eq 'package')
