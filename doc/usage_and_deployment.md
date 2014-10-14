@@ -10,6 +10,7 @@ Full Documentation is available online on the stackato website: https://docs.sta
 
 - Create Security Group and add HTTP, HTTPS and SSH ingress rules
 - Add Ingress Rule: All TCP ports; set the current security group as Remote
+- Add Ingress Rule: All UDP ports; set the current security group as Remote
 - Launch a "ActiveState Stackato v3.4.1" instance with 4GB of RAM (standard.medium)
 - Associate floating IP to the newly created instance
 - Login using ssh and rename the node: `kato node rename {floating_ip}.xip.io`
@@ -103,6 +104,13 @@ called WinDEA.
 ####Troubleshooting
 
 #####Log files
+
+Use `kato config` on stackato-core to add windows log files to systail config
+
+    kato config set systail log_files\windea C:\\WinDEA\\log\\log.txt
+    kato config set systail log_files\winapptail C:\\logyard\\log\\apptail.txt
+    kato config set systail log_files\winlogyard C:\\logyard\\log\\logyard.txt
+    kato config set systail log_files\winsystail C:\\logyard\\log\\systail.txt
 
 ##Usage
 
