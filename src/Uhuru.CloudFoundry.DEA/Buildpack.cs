@@ -12,6 +12,7 @@ namespace Uhuru.CloudFoundry.DEA
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
     using Uhuru.Utilities;
     using YamlDotNet.RepresentationModel;
     using YamlDotNet.RepresentationModel.Serialization;
@@ -59,17 +60,30 @@ namespace Uhuru.CloudFoundry.DEA
 
             Process process = prison.Execute(null, script, this.appDir, false, null, null, null, null);
 
-            process.WaitForExit(5000);
-            if (!process.HasExited)
+            var startTs = DateTime.Now;
+            while (prison.JobObject.ActiveProcesses > 0)
             {
-                prison.JobObject.TerminateProcesses(-2);
+                if ((DateTime.Now - startTs).TotalSeconds > 15)
+                {
+                    Logger.Debug("Staging's detect script timed out. Killing all job processes. Detect path: {0}", exe);
+                    prison.JobObject.TerminateProcesses(-2);
+                    break;
+                }
+
+                Thread.Sleep(100);
             }
+
             if (File.Exists(outputPath))
             {
                 this.detectOutput = File.ReadAllText(outputPath);
                 Logger.Debug("Detect output: {0}", this.detectOutput);
                 File.Delete(outputPath);
             }
+            else
+            {
+                Logger.Warning("Detect output missing. Detect yml path: {0}", outputPath);
+            }
+
             if (process.ExitCode == 0)
             {
                 return true;
