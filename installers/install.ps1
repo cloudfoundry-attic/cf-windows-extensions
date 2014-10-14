@@ -49,10 +49,9 @@
     If git is not installed on the system, this is where it is going to be installed
 .PARAMETER deaDownloadURL
     URL of the DEA msi.
-    
-+.PARAMETER buildpacksDir 
-+	Target buildpacks directory. Default is C:\WinDEA\buildpacks 
-+	If modified buildpacks need to be added manually to the Windows DEA
+.PARAMETER buildpacksDir 
+	Target buildpacks directory. Default is C:\WinDEA\buildpacks 
+	If modified buildpacks need to be added manually to the Windows DEA
 #>
 
 [CmdletBinding()]
