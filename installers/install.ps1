@@ -53,14 +53,14 @@
 
 [CmdletBinding()]
 param (
-    $messageBus = '',
-    $domain = '',
-    $index = 0,
+    $messageBus = '{{.messageBus}}',
+    $domain = '{{.domain}}',
+    $index = '{{.index}}',
     $dropletDir = 'C:\Droplets',
     $localRoute =  '8.8.8.8',
-    $statusPort = 0,
-    $multiTenant = 'true',
-    $maxMemoryMB = 4096,
+    $statusPort = '0',
+    $multiTenant = '{{.multiTenant}}',
+    $maxMemoryMB = '{{.maxMemoryMB}}',
     $heartBeatIntervalMS = 10000,
     $advertiseIntervalMS = 5000,
     $uploadThrottleBitsPS = 0,
@@ -69,16 +69,16 @@ param (
     $streamingTimeoutMS = 60000,
     $stagingEnabled = 'true',
     $stagingTimeoutMS = 1200000,
-    $stack = "win2012",
+    $stack = '{{.stack}}',
     $installDir = 'C:\WinDEA',
     $logyardInstallDir = 'C:\logyard',
     $buildpacksDirectory = 'c:\windea\buildpacks',
-    $logyardRedisURL = '',
-    $defaultGitPath = "c:\Program Files (x86)\git\bin\git.exe",
-    $deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.30.msi",
-    $logyardInstallerURL = "http://rpm.uhurucloud.net/wininstaller/inst/logyard-installer.exe",
-    $zmqDownloadURL = "http://miru.hk/archive/ZeroMQ-3.2.4~miru1.0-x64.exe",
-    $gitDownloadURL = "https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe"
+    $logyardRedisURL = '{{.logyardRedisURL}}',
+    $defaultGitPath = 'c:\Program Files (x86)\git\bin\git.exe',
+    $deaDownloadURL = '{{.deaDownloadURL}}',
+    $logyardInstallerURL = '{{.logyardInstallerURL}}',
+    $zmqDownloadURL = '{{.zmqDownloadURL}}',
+    $gitDownloadURL = '{{.gitDownloadURL}}'
 )
 
 
@@ -89,23 +89,54 @@ $tempDir = [System.Guid]::NewGuid().ToString()
 
 
 function VerifyParameters{
-    if ([string]::IsNullOrWhiteSpace($messageBus))
+    if (([string]::IsNullOrEmpty($messageBus) -eq $true) -or ($messageBus -like '*{.messageBus}*'))
     {
         throw [System.ArgumentException] 'The messageBus parameter is mandatory.'
         exit 1
     }
     
-    if ([string]::IsNullOrWhiteSpace($domain))
+    if (([string]::IsNullOrEmpty($domain) -eq $true) -or ($domain -like '*{.domain}*'))
     {
         throw [System.ArgumentException] 'The domain parameter is mandatory.'
         exit 1
     }
 
-    if ([string]::IsNullOrWhiteSpace($logyardRedisURL))
+    if (([string]::IsNullOrEmpty($logyardRedisURL) -eq $true) -or ($logyardRedisURL -like '*{.logyardRedisURL}*'))
     {
         throw [System.ArgumentException] 'The logyardRedisURL parameter is mandatory.'
         exit 1
     }
+    if ($index -like '*{.index}*')
+    {
+        $index = '0'
+    }
+    if ($multiTenant -like '*{.multiTenant}*')
+    {
+        $multiTenant = 'true'
+    }
+    if ($stack -like '*{.stack}*')
+    {
+        $stack = 'win2012'
+    }
+    if ($deaDownloadURL -like '*{.deaDownloadURL}*')
+    {
+        $deaDownloadURL= 'http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.46.msi'
+    }
+    if ($logyardInstallerURL -like '*{.logyardInstallerURL}*')
+    {
+        $logyardInstallerURL =  'http://rpm.uhurucloud.net/wininstaller/inst/logyard-installer-1.2.26.exe'
+    }
+    if ($zmqDownloadURL -like '*{.zmqDownloadURL}*')
+    {
+        $zmqDownloadURL = 'http://miru.hk/archive/ZeroMQ-3.2.4~miru1.0-x64.exe'
+    }
+
+    if ($gitDownloadURL -like '*{.gitDownloadURL}*')
+    {
+        $gitDownloadURL = 'https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe'
+    }
+
+
 }
 
 function CheckFeatureDependency(){
