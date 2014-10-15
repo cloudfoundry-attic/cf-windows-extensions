@@ -16,136 +16,109 @@ We will host a Jenkins server inside the Romania lab, and provide HP with creden
 
 ##Deliverables
 
-1. Software Services and Components
- - Windows DEA (Droplet Execution Engine), providing:
-    - Management of Windows Warden containers
-    - Staging of Windows applications
-    - Execution of Windows droplets (using the IIS hostable web core)
- - Windows Build Pack
- - Automated (un-)installer; provisioning of Windows application-host nodes in a HP Helion ALS cluster
- - Standard Visual Studio hosted ASP.net test application using membership, using MySQL for persistence
+1. Demo on November 26
+ - GO tools for managing Windows extensions to ALS
+ - PoC MSSQL service running on the hpcloud demo account
+ - NerdDinner working with SQL Server  
 
-  **Planned Completion Date**:10/08/2014
-  **Actual Completion Date**:10/15/2014
-  **Items with risk:**
-    - Being able to figure out how logging works in HP ALS
-
-2. Automated Test Suites
- - Automated test suite validating the (un-) installer functionality testing provisioning and de-provisioning of Windows application-host nodes in a HP Helion ALS cluster
- - Automated test suite validating the complete set of application lifecycle cfcommands for Windows applications
-
-  **If latest Windows image does not work on hpcloud.com, contact Gert and leave the image there.**
-
-  **Planned Completion Date**:10/15/2014
-
-3. Documentation
- - Wiki style documentation covering:
-    - Installation and uninstalling Windows application-host nodes
-    - Troubleshooting Windows application-host nodes installation
-    - The complete lifecycle of a Windows application using the cf-commands
-    - Troubleshooting all the steps/stages in the Windows applications lifecycle
-    - Demo script installing, deploying and managing the lifecycle of the two reference applications
-
-  **Planned Completion Date**:10/15/2014
 
 ##Questions/Open Issues
 
-1. Is HP ALS completely compatible with Stackato?
-We downloaded the micro-cloud. We could use this for tweaking the messaging for the Windows DEA.   
-*Yes, it's compatible with the latest*
+1. **Should we use a custom domain and a proper SSL Certificate for the demo?**
+2. 
 
-2. The SOW mentions `warden` containers. We are not planning to use the windows-warden interface for this project, since it's not needed. They would be `prison` containers.
-*Just boilerplate wording*
+##Demo Resources and Useful Material
 
-3. The SOW mentions cf-commands. Can we assume that we don't need to add compatibility for stackato specific commands? 
-*Make a list of diffs, and decide after; careful about licensing*
+### Environment for building your own Windows OpenStack image
 
-4. Automatic deployment on an ALS cluster. Do we need to provide automation for spawning Windows VMs, or just automation for the installation process? 
-*Just use Nova commands*
-*For private and managed, in the horizon panel we need to allow user to say how many Windows nodes they want*
-*We probably won't code the horizon extension, just have an automated solution (a shell script that (de)spawns a windea)*
+Use an Ubuntu 14 Desktop VM, with VMware Workstation 10 (it supports virtual VT-X)
 
-5. Does HP support cloud-init for Windows? 
-*we will have to test*
-*no 2012 images right now*
+    apt-get install -y qemu-kvm qemu-common virt-manager virt-viewer git-core
+    git clone https://github.com/cloudbase/windows-openstack-imaging-tools.git
+    cd windows-openstack-imaging-tools
+    vim Autounattend.xml 
 
-6. Can HP provide us with an OpenStack environment for testing?
-*We might have access to some environments. Could be public access. ALS will not be the same there. You start with Stackato 3.4*
-*In private deployments you go to horizon and use a wizard*
-*Once we have something to deploy, we'll figure something out for the private installation*
+Used key `JMXNR-FRPQH-VXRMX-KFX93-974RY` for ProductKey `element`.
+Add the following to `Specialize.ps1`
 
-7. We have previously obtained permission from Stackato to look at NATS messages via nats-sub, since they have a restrictive license. Should we obtain permission again?
-*Gert will talk to Jeff Hobbs*
+    $neccessaryFeatures = "Web-Server","Web-WebServer","Web-Common-Http","Web-Default-Doc","Web-Dir-Browsing","Web-Http-Errors","Web-Static-Content","Web-Http-Redirect","Web-Health","Web-Http-Logging","Web-Custom-Logging","Web-Log-Libraries","Web-ODBC-Logging","Web-Request-Monitor","Web-Http-Tracing","Web-Performance","Web-Stat-Compression","Web-Dyn-Compression","Web-Security","Web-Filtering","Web-Basic-Auth","Web-CertProvider","Web-Client-Auth","Web-Digest-Auth","Web-Cert-Auth","Web-IP-Security","Web-Url-Auth","Web-Windows-Auth","Web-App-Dev","Web-Net-Ext","Web-Net-Ext45","Web-AppInit","Web-ASP","Web-Asp-Net","Web-Asp-Net45","Web-CGI","Web-ISAPI-Ext","Web-ISAPI-Filter","Web-Includes","Web-WebSockets","Web-Mgmt-Tools","Web-Mgmt-Console","Web-Mgmt-Compat","Web-Metabase","Web-Lgcy-Mgmt-Console","Web-Lgcy-Scripting","Web-WMI","Web-Scripting-Tools","Web-Mgmt-Service","WAS","WAS-Process-Model","WAS-NET-Environment","WAS-Config-APIs","NET-Framework-Features","NET-Framework-Core","NET-Framework-45-Features","NET-Framework-45-Core","NET-Framework-45-ASPNET","NET-WCF-Services45","NET-WCF-HTTP-Activation45","Web-WHC"
 
-8. Which accounts should we add to github and trello?
- - github *gert.drapers@live.com*
- - trello *gert.drapers@live.com*
+    Install-WindowsFeature $neccessaryFeatures
 
-9. Are Thursdays good for the status report?
 
-  *Wednesday 8AM*
+##Spawning a new Windows DEA on hpcloud.com
 
-10. Is this document good as a template for a status report? 
-*Yep*
+It takes the windows image ~12 min to spawn.
+Installing dependencies and the services takes ~2 min using resources from the local LAN.
 
-11. Where should we host build artifacts? Keep the in the Romania LAN for now?
-*github*
-*ftp*
 
-12. There is a comment in the dea.yml config that says stacks are "Unused in Stackato for now"
-Is this just because there isn't another stack in the Stackato product? 
+##Configs for Demo site
 
-13. Is HP Helion Community edition a good destribution to use ? I coudn't download HP Helion Beta, signup is not working.
+NATS: `nats://192.168.0.130:4222`
+Domain: `15.125.74.2.xip.io`
+Redis: `redis://192.168.0.130:7474/0`
 
- *Community edition is good*
+##Installers download links from hpcloud LAN 
 
-14. We tried the CloudBase windows image, it's not working, It used to work on DevStack, is there another image to try (even if not 2012), note we are using quemu 2.0.0+dfsg-2ubuntu1.3
+`http://15.125.102.70/installers/install.ps1`
+`http://15.125.102.70/installers/ZeroMQ-3.2.4~miru1.0-x64.exe`
+`http://15.125.102.70/installers/Git-1.9.4-preview20140929.exe`
+`http://15.125.102.70/installers/logyard-installer-1.2.38.exe`
+`http://15.125.102.70/installers/deainstaller-1.2.38.msi`
 
- *2008 R2 is available, 2012 will be uploaded by us*
+##install.ps1 settings
 
-15. We found some problems with the Helion documentation, and some typos, should we contact someone ?
+These are settings from the param section of the install script, taht can be copy pasted for easy testing.
 
- *Send e-mail to Gert directly (bundle everything in an e-mail)*
+    $messageBus = 'nats://192.168.0.130:4222',
+    $domain = '15.125.74.2.xip.io',
+    $index = 0,
+    $dropletDir = 'C:\Droplets',
+    $localRoute =  '8.8.8.8',
+    $statusPort = 0,
+    $multiTenant = 'true',
+    $maxMemoryMB = 4096,
+    $heartBeatIntervalMS = 10000,
+    $advertiseIntervalMS = 5000,
+    $uploadThrottleBitsPS = 0,
+    $maxConcurrentStarts = 3,
+    $directoryServerPort = 34567,
+    $streamingTimeoutMS = 60000,
+    $stagingEnabled = 'true',
+    $stagingTimeoutMS = 1200000,
+    $stack = "win2012",
+    $installDir = 'C:\WinDEA',
+    $logyardInstallDir = 'C:\logyard',
+    $buildpacksDirectory = 'c:\windea\buildpacks',
+    $logyardRedisURL = 'redis://192.168.0.130:7474/0',
+    $defaultGitPath = "c:\Program Files (x86)\git\bin\git.exe",
+    $deaDownloadURL = "http://15.125.102.70/installers/deainstaller-1.2.47.msi",
+    $logyardInstallerURL = "http://15.125.102.70/installers/logyard-installer-1.2.27.exe",
+    $zmqDownloadURL = "http://15.125.102.70/installers/ZeroMQ-3.2.4~miru1.0-x64.exe",
+    $gitDownloadURL = "http://15.125.102.70/installers/Git-1.9.4-preview20140929.exe"
 
-16. Helion's Horizon does not have the extension you mentioned for ALS. Assuming we need to install the HP Helion Dev Platform Community edition?
- 
-  *Yes* 
 
-17. Stackato uses admin buildpacks (i.e. buildpacks managed by cc and `stackato buildpacks`) for lucid64 stack. The current Windows DEA is not aware of admin buildpacks and CC dosn't keep any relationship between stacks and buildpacks. Should we add an ISS/.NET buildpack as an admin buildpack, or keep it as a system buildpack as part of the Windows DEA? Or, if possible, do both?
- 
-  *Use system buildpack only for now*
 
-18. Given that we don't have something figured out for logging, we can start documenting some workarounds and limitations.
+##Better Windows 2012
 
-  *Shoot an e-mail to Gert about this*
+Use `OS_REGION_NAME=region-b.geo-1` for testing the specialized image.
 
-19. **We need a blob store for Umbraco. It currently has bindings for Azure and S3 blob stores. What is available on ALS? Is the Redis service persisted? We will have to implement an interface for the blob store of choice: https://bitbucket.org/gibedigital/umbraco-amazons3provider/src/6cb43d5dd8887785be6666172ea984f8ffc481b2/Gibe.Umbraco.AmazonS3Provider/AmazonS3Provider.cs?at=master**
 
-##Work Items (to be moved to Trello)
+##MS SQL on ALS
 
-1. CI for unit testing *not needed for HP*
- - Deploy a Windows Jenkins Server in the Romania LAN
- - Create a project that can test/build each commit
- - Expose the Jenkins server to the internet
- - Create account(s) for HP
- - Setup a site for hosting build artifacts (WinDEA installer)
-2. Documentation
- - Start a markdown document (vcap-dotnet-hp/doc/windea.md) with sections all items in the deliverable 
-3. NATS messaging compatibility *Stackato should be closer to v2 than v1 used to be*
- - Research for incompatibilities between vanilla CFv2 and Stackato
- - Implement changes in the Windows DEA
- - Document application lifecycle
-4. Integrate the latest prison code with the v2 DEA
- - Create a submodule for the prison library in the vcap-dotnet-hp repository
- - Replace the older prison code
-5. Logging compatibility (Stackato does not use the loggregator, but logyard)
- - Research how Stackato handles logging
- - Document application lifecycle
-6. Deployment Automation
- - Setup an OpenStack environment
- - Research how ALS cluster creation/destruction happens *Not needed, it's a script + a Horizon extension*
- - *Implementation*
- - Document installation procedures
-7. CI for system tests
- - *not sure how this will work yet*
- *we'll do Linux based tests, probably go (because of the go cf client)*
+These is a log of what we've done on the mssql gateway box so far, to try an make it work with Stackato.
+
+Get a new Ubuntu 10.04
+Do the following (everything as root, to keep things simple):
+
+    apt-get update
+    apt-get install git-core build-essential libcurl4-openssl-dev libpq-dev libexpat1-dev
+
+    curl -sSL https://get.rvm.io | bash
+    source /etc/profile.d/rvm.sh
+    rvm install 1.9.3
+    gem install bundler
+
+    git clone git@github.com:UhuruSoftware/uhuru-services-release.git --recursive
+    cd ./uhuru-services-release/src/mssql_service
+    bundle install --without test
