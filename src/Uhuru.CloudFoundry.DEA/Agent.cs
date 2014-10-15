@@ -2435,11 +2435,15 @@ namespace Uhuru.CloudFoundry.DEA
 
                     if (removeInstance)
                     {
-                        instance.Container.Destroy();
+                        if (instance.Container.IsLocked())
+                        {
+                            instance.Container.Destroy();
+                        }
                         Logger.Debug("Cleaning up directory {0}", instance.Workspace.BaseDir);
                         instance.Cleanup();
                         this.monitoring.RemoveInstanceResources(instance);
                         this.stagingTaskRegistry.RemoveStagingInstance(instance);
+                        
                     }
                 });
         }
