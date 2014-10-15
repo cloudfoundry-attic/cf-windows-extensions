@@ -99,11 +99,8 @@ function CheckParam($paramName, [REF]$paramValue, $mandatory, $templateValue)
 
     if ([string]::IsNullOrWhiteSpace($paramValue.Value) -and $mandatory)
     {
-        if ($mandatory)
-        {
-            Write-Error "The ${paramName} parameter is mandatory."
-            exit 1
-        }
+        Write-Error "The ${paramName} parameter is mandatory."
+        exit 1
     }
     
     Write-Host "Using <${paramName}> = '${paramValue.Value}'"
@@ -112,33 +109,33 @@ function CheckParam($paramName, [REF]$paramValue, $mandatory, $templateValue)
 function VerifyParameters
 {
     # Mandatory parameters
-    CheckParam 'messageBus'             ([ref]$messageBus)              $true  '{{if .messageBus}}{{.messageBus}}{{else}}{{end}}',
-    CheckParam 'domain'                 ([ref]$domain)                  $true  '{{if .domain}}{{.domain}}{{else}}{{end}}',
-    CheckParam 'logyardRedisURL'        ([ref]$logyardRedisURL)         $true  '{{if .logyardRedisURL}}{{.logyardRedisURL}}{{else}}{{end}}',
+    CheckParam 'messageBus'             ([ref]$messageBus)              $true  '{{if .messageBus}}{{.messageBus}}{{else}}{{end}}'
+    CheckParam 'domain'                 ([ref]$domain)                  $true  '{{if .domain}}{{.domain}}{{else}}{{end}}'
+    CheckParam 'logyardRedisURL'        ([ref]$logyardRedisURL)         $true  '{{if .logyardRedisURL}}{{.logyardRedisURL}}{{else}}{{end}}'
 
     # Optional parameters
-    CheckParam 'index'                  ([ref]$index)                   $false '{{if .index}}{{.index}}{{else}}{{end}}',
-    CheckParam 'dropletDir'             ([ref]$dropletDir)              $false '{{if .dropletDir}}{{.dropletDir}}{{else}}{{end}}',
-    CheckParam 'localRoute'             ([ref]$localRoute)              $false '{{if .localRoute}}{{.localRoute}}{{else}}{{end}}',
-    CheckParam 'statusPort'             ([ref]$statusPort)              $false '{{if .statusPort}}{{.statusPort}}{{else}}{{end}}',
-    CheckParam 'multiTenant'            ([ref]$multiTenant)             $false '{{if .multiTenant}}{{.multiTenant}}{{else}}{{end}}',
-    CheckParam 'maxMemoryMB'            ([ref]$maxMemoryMB)             $false '{{if .maxMemoryMB}}{{.maxMemoryMB}}{{else}}{{end}}',
-    CheckParam 'heartBeatIntervalMS'    ([ref]$heartBeatIntervalMS)     $false '{{if .heartBeatIntervalMS}}{{.heartBeatIntervalMS}}{{else}}{{end}}',
-    CheckParam 'advertiseIntervalMS'    ([ref]$advertiseIntervalMS)     $false '{{if .advertiseIntervalMS}}{{.advertiseIntervalMS}}{{else}}{{end}}',
-    CheckParam 'uploadThrottleBitsPS'   ([ref]$uploadThrottleBitsPS)    $false '{{if .uploadThrottleBitsPS}}{{.uploadThrottleBitsPS}}{{else}}{{end}}',
-    CheckParam 'maxConcurrentStarts'    ([ref]$maxConcurrentStarts)     $false '{{if .maxConcurrentStarts}}{{.maxConcurrentStarts}}{{else}}{{end}}',
-    CheckParam 'directoryServerPort'    ([ref]$directoryServerPort)     $false '{{if .directoryServerPort}}{{.directoryServerPort}}{{else}}{{end}}',
-    CheckParam 'streamingTimeoutMS'     ([ref]$streamingTimeoutMS)      $false '{{if .streamingTimeoutMS}}{{.streamingTimeoutMS}}{{else}}{{end}}',
-    CheckParam 'stagingEnabled'         ([ref]$stagingEnabled)          $false '{{if .stagingEnabled}}{{.stagingEnabled}}{{else}}{{end}}',
-    CheckParam 'stagingTimeoutMS'       ([ref]$stagingTimeoutMS)        $false '{{if .stagingTimeoutMS}}{{.stagingTimeoutMS}}{{else}}{{end}}',
-    CheckParam 'stack'                  ([ref]$stack)                   $false '{{if .stack}}{{.stack}}{{else}}{{end}}',
-    CheckParam 'installDir'             ([ref]$installDir)              $false '{{if .installDir}}{{.installDir}}{{else}}{{end}}',
-    CheckParam 'logyardInstallDir'      ([ref]$logyardInstallDir)       $false '{{if .logyardInstallDir}}{{.logyardInstallDir}}{{else}}{{end}}',
-    CheckParam 'buildpacksDirectory'    ([ref]$buildpacksDirectory)     $false '{{if .buildpacksDirectory}}{{.buildpacksDirectory}}{{else}}{{end}}',
-    CheckParam 'defaultGitPath'         ([ref]$defaultGitPath)          $false '{{if .defaultGitPath}}{{.defaultGitPath}}{{else}}{{end}}',
-    CheckParam 'deaDownloadURL'         ([ref]$deaDownloadURL)          $false '{{if .deaDownloadURL}}{{.deaDownloadURL}}{{else}}{{end}}',
-    CheckParam 'logyardInstallerURL'    ([ref]$logyardInstallerURL)     $false '{{if .logyardInstallerURL}}{{.logyardInstallerURL}}{{else}}{{end}}',
-    CheckParam 'zmqDownloadURL'         ([ref]$zmqDownloadURL)          $false '{{if .zmqDownloadURL}}{{.zmqDownloadURL}}{{else}}{{end}}',
+    CheckParam 'index'                  ([ref]$index)                   $false '{{if .index}}{{.index}}{{else}}{{end}}'
+    CheckParam 'dropletDir'             ([ref]$dropletDir)              $false '{{if .dropletDir}}{{.dropletDir}}{{else}}{{end}}'
+    CheckParam 'localRoute'             ([ref]$localRoute)              $false '{{if .localRoute}}{{.localRoute}}{{else}}{{end}}'
+    CheckParam 'statusPort'             ([ref]$statusPort)              $false '{{if .statusPort}}{{.statusPort}}{{else}}{{end}}'
+    CheckParam 'multiTenant'            ([ref]$multiTenant)             $false '{{if .multiTenant}}{{.multiTenant}}{{else}}{{end}}'
+    CheckParam 'maxMemoryMB'            ([ref]$maxMemoryMB)             $false '{{if .maxMemoryMB}}{{.maxMemoryMB}}{{else}}{{end}}'
+    CheckParam 'heartBeatIntervalMS'    ([ref]$heartBeatIntervalMS)     $false '{{if .heartBeatIntervalMS}}{{.heartBeatIntervalMS}}{{else}}{{end}}'
+    CheckParam 'advertiseIntervalMS'    ([ref]$advertiseIntervalMS)     $false '{{if .advertiseIntervalMS}}{{.advertiseIntervalMS}}{{else}}{{end}}'
+    CheckParam 'uploadThrottleBitsPS'   ([ref]$uploadThrottleBitsPS)    $false '{{if .uploadThrottleBitsPS}}{{.uploadThrottleBitsPS}}{{else}}{{end}}'
+    CheckParam 'maxConcurrentStarts'    ([ref]$maxConcurrentStarts)     $false '{{if .maxConcurrentStarts}}{{.maxConcurrentStarts}}{{else}}{{end}}'
+    CheckParam 'directoryServerPort'    ([ref]$directoryServerPort)     $false '{{if .directoryServerPort}}{{.directoryServerPort}}{{else}}{{end}}'
+    CheckParam 'streamingTimeoutMS'     ([ref]$streamingTimeoutMS)      $false '{{if .streamingTimeoutMS}}{{.streamingTimeoutMS}}{{else}}{{end}}'
+    CheckParam 'stagingEnabled'         ([ref]$stagingEnabled)          $false '{{if .stagingEnabled}}{{.stagingEnabled}}{{else}}{{end}}'
+    CheckParam 'stagingTimeoutMS'       ([ref]$stagingTimeoutMS)        $false '{{if .stagingTimeoutMS}}{{.stagingTimeoutMS}}{{else}}{{end}}'
+    CheckParam 'stack'                  ([ref]$stack)                   $false '{{if .stack}}{{.stack}}{{else}}{{end}}'
+    CheckParam 'installDir'             ([ref]$installDir)              $false '{{if .installDir}}{{.installDir}}{{else}}{{end}}'
+    CheckParam 'logyardInstallDir'      ([ref]$logyardInstallDir)       $false '{{if .logyardInstallDir}}{{.logyardInstallDir}}{{else}}{{end}}'
+    CheckParam 'buildpacksDirectory'    ([ref]$buildpacksDirectory)     $false '{{if .buildpacksDirectory}}{{.buildpacksDirectory}}{{else}}{{end}}'
+    CheckParam 'defaultGitPath'         ([ref]$defaultGitPath)          $false '{{if .defaultGitPath}}{{.defaultGitPath}}{{else}}{{end}}'
+    CheckParam 'deaDownloadURL'         ([ref]$deaDownloadURL)          $false '{{if .deaDownloadURL}}{{.deaDownloadURL}}{{else}}{{end}}'
+    CheckParam 'logyardInstallerURL'    ([ref]$logyardInstallerURL)     $false '{{if .logyardInstallerURL}}{{.logyardInstallerURL}}{{else}}{{end}}'
+    CheckParam 'zmqDownloadURL'         ([ref]$zmqDownloadURL)          $false '{{if .zmqDownloadURL}}{{.zmqDownloadURL}}{{else}}{{end}}'
     CheckParam 'gitDownloadURL'         ([ref]$gitDownloadURL)          $false '{{if .gitDownloadURL}}{{.gitDownloadURL}}{{else}}{{end}}'
 }
 
