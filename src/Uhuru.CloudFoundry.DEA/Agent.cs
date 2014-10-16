@@ -2249,6 +2249,10 @@ namespace Uhuru.CloudFoundry.DEA
                             }
                         }
                     }
+                    catch(Exception ex)
+                    {
+                        Logger.Error("Error occured in  MonitorApps method. Exception: {0}", ex.ToString());
+                    }
                     finally
                     {
                         instance.Lock.ExitWriteLock();
