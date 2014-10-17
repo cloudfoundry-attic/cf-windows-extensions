@@ -319,15 +319,17 @@ namespace Uhuru.CloudFoundry.DEA
             throw new Exception("Please specify a web start command in your manifest.yml");
         }
 
-        public void Cleanup()
+        public bool Cleanup()
         {
             // don't crash if cleanup fails
             try
             {
                 DEAUtilities.RemoveReadOnlyAttribute(this.Workspace.BaseDir);
                 Directory.Delete(this.Workspace.BaseDir, true);
+                return true;
             }
             catch { }
+            return false;
         }
 
         /// <summary>
