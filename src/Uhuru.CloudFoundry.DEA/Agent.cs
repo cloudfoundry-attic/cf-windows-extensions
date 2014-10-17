@@ -2352,12 +2352,13 @@ namespace Uhuru.CloudFoundry.DEA
                                     Logger.Info("Cleaning up directory for instance {0}", instance.Properties.Name);
 
                                     Directory.Delete(instance.Properties.Directory, true);
+
+                                    instance.Properties.Directory = null;
                                 }
                                 catch (IOException)
                                 {
                                 }
-
-                                instance.Properties.Directory = null;
+                                
                             }
                             catch (UnauthorizedAccessException ex)
                             {
@@ -2434,17 +2435,26 @@ namespace Uhuru.CloudFoundry.DEA
                     if (instance.Properties.Stopped)
                     {
                         this.AfterStagingFinished(instance);
-                        removeInstance = true;
+
+                        try
+                        {
+                            if (instance.Container.IsLocked())
+                            {
+                                instance.Container.Destroy();
+                            }
+
+                        }
+                        catch{
+                            Logger.Info("Failed destroying prison for directory {0}", instance.Workspace.BaseDir);
+                        }
+
+                        Logger.Debug("Cleaning up directory {0}", instance.Workspace.BaseDir);
+
+                        removeInstance = instance.Cleanup();
                     }
 
                     if (removeInstance)
                     {
-                        if (instance.Container.IsLocked())
-                        {
-                            instance.Container.Destroy();
-                        }
-                        Logger.Debug("Cleaning up directory {0}", instance.Workspace.BaseDir);
-                        instance.Cleanup();
                         this.monitoring.RemoveInstanceResources(instance);
                         this.stagingTaskRegistry.RemoveStagingInstance(instance);
                         
