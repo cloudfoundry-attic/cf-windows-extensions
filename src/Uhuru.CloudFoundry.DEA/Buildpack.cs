@@ -61,7 +61,7 @@ namespace Uhuru.CloudFoundry.DEA
             Process process = prison.Execute(null, script, this.appDir, false, null, null, null, null);
 
             var startTs = DateTime.Now;
-            while (prison.JobObject.ActiveProcesses > 0)
+            while (prison.JobObject != null && prison.JobObject.ActiveProcesses > 0)
             {
                 if ((DateTime.Now - startTs).TotalSeconds > 15)
                 {
