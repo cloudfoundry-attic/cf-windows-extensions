@@ -415,3 +415,128 @@ Wait for the machine shutdown.
 
 	glance image-create --name WS2012 --disk-format qcow2 --container-format bare --is-public true --file ws2012.qcow2
 
+## gorhun
+
+### DESCRIPTION
+
+This tools creates, deletes and retrieves status for one or more Windows Droplet Execution(WinDEA) Servers on OpenStack. The information about the servers is stored in a yaml configuration file.  
+
+### PREREQUISITES
+* Windows 2012 R2 image
+* HP Application Lifecycle Service
+
+### INSTALLATION
+gorhun is currently packaged for Windows. It can be downloaded from http://15.125.102.70/installers/
+
+### PARAMETERS
+
+     -action <install, uninstall, status>
+       Determines if the tool installs, deletes or retrieves status for a WinDEA deployment.
+       Required? yes
+
+     -c <String>
+       Path to the deployment configuration file.
+       Required? 		yes
+
+     -connector <String>
+       Connector used for cloud comunication.
+       Required? 		no    
+       Default value	gopher
+
+     -user <String>
+       Username used to connect to OpenStack.
+       Required? 		yes
+
+     -password <String>
+       Password used to connect to OpenStack.
+       Required? 		yes
+
+     -tenantname <String>
+       Tenant used for deployment.
+       Required? 		yes
+
+     -url <String>
+       OpenStack authentication URL.
+
+###CONFIGURATION FILE
+The gorhun configuration file contains three sections:
+
+* ####deployment
+Contains general information about the deployment:
+
+    * name: <String>
+      Deployment Name.
+
+    * sshkey: <String>
+      OpenStack key used for connecting to the servers.
+
+    * subnetid: <GUID>
+      Id of the subnet that is going to be assigned to the servers.
+
+    * region <String>
+      Region used to deploy.
+
+    * securitygroups <[]String>
+      List of security groups that are going to be assigned to the servers.
+
+* ####vms
+List of VMs. A VM is a Server on which the software is going to be installed.  
+	* type: <winDEA> 
+	  Type of the deployed server (currently only winDea is supported).
+	* flavor: <String> 
+	  Server flavor (ex. standard.small).
+	* imageid: <GUID>
+	  Id of the image used for deployment.
+	* properties: <[]String>
+	  Custom per server properties.
+
+* ####properties
+Contains general, per deployment properties. Examples:
+	* domain: <String>
+	  Domain name of ALS Deployment.
+	* logyardRedisURL: <String>
+	  URL to the redis used by logyard.
+	* messageBus: <String>
+	  NATS server URL.
+	* deaDownloadURL: <String>
+	  URL for the Windows Droplet Execution Agent installer.
+	* logyardInstallerURL: <String>
+	  URL for the Windows Logyard isntaller.
+
+ ###Manifest example:
+	deployment:
+	  name: test
+	  sshkey: test_key
+	  subnetid: 00000000-0000-0000-0000-000000000001
+	  region: "region-a.geo-1"	  
+	  securitygrups: 
+	    - secgroup1
+	    - secgroup2
+	vms:
+	  - type: winDea
+        flavor: standard.small
+        imageid: 00000000-0000-0000-0000-000000000005
+        properties:
+          multiTenant: true
+          maxMemoryMB: 4096
+          stagingEnabled: true
+	  - type: winDea
+        flavor: standard.medium
+        imageid: 00000000-0000-0000-0000-000000000005
+        properties:
+          multiTenant: true
+          maxMemoryMB: 8192
+          stagingEnabled: true
+	properties:
+	  domain: testdomain.com
+	  stack: win2012
+	  logyardRedisURL: http://192.168.0.111:7474/0
+	  messageBus: nats://192.168.0.111:4222
+	  deaDownloadURL: http://15.125.102.70/installers/deainstaller-1.2.48.msi
+	  logyardInstallerURL: http://15.125.102.70/installers/logyard-installer-1.2.28.exe
+	  zmqDownloadURL: http://miru.hk/archive/ZeroMQ-3.2.4~miru1.0-x64.exe 
+	  gitDownloadURL: https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe
+   
+###Example:
+
+	gorhun.exe -c windea.yml -action install -url https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/ -tenantname mytenant -user user1 -password changeme1
