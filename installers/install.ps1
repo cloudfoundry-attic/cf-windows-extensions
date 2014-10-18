@@ -81,7 +81,9 @@ param (
     $deaDownloadURL = "http://rpm.uhurucloud.net/wininstaller/inst/deainstaller-1.2.30.msi",
     $logyardInstallerURL = "http://rpm.uhurucloud.net/wininstaller/inst/logyard-installer.exe",
     $zmqDownloadURL = "http://miru.hk/archive/ZeroMQ-3.2.4~miru1.0-x64.exe",
-    $gitDownloadURL = "https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe"    
+    $gitDownloadURL = "https://github.com/msysgit/msysgit/releases/download/Git-1.9.4-preview20140815/Git-1.9.4-preview20140815.exe",
+    $vs2012BuildTools = "http://15.125.102.70/installers/vs_isoshell.exe",
+    $vs2013BuildTools = "http://15.125.102.70/installers/VS2013Build.exe"
 )
 
 $neccessaryFeatures = "Web-Server","Web-WebServer","Web-Common-Http","Web-Default-Doc","Web-Dir-Browsing","Web-Http-Errors","Web-Static-Content","Web-Http-Redirect","Web-Health","Web-Http-Logging","Web-Custom-Logging","Web-Log-Libraries","Web-ODBC-Logging","Web-Request-Monitor","Web-Http-Tracing","Web-Performance","Web-Stat-Compression","Web-Dyn-Compression","Web-Security","Web-Filtering","Web-Basic-Auth","Web-CertProvider","Web-Client-Auth","Web-Digest-Auth","Web-Cert-Auth","Web-IP-Security","Web-Url-Auth","Web-Windows-Auth","Web-App-Dev","Web-Net-Ext","Web-Net-Ext45","Web-AppInit","Web-ASP","Web-Asp-Net","Web-Asp-Net45","Web-CGI","Web-ISAPI-Ext","Web-ISAPI-Filter","Web-Includes","Web-WebSockets","Web-Mgmt-Tools","Web-Mgmt-Console","Web-Mgmt-Compat","Web-Metabase","Web-Lgcy-Mgmt-Console","Web-Lgcy-Scripting","Web-WMI","Web-Scripting-Tools","Web-Mgmt-Service","WAS","WAS-Process-Model","WAS-NET-Environment","WAS-Config-APIs","NET-Framework-Features","NET-Framework-Core","NET-Framework-45-Features","NET-Framework-45-Core","NET-Framework-45-ASPNET","NET-WCF-Services45","NET-WCF-HTTP-Activation45","Web-WHC"
@@ -137,6 +139,8 @@ function VerifyParameters
     CheckParam 'logyardInstallerURL'    ([ref]$logyardInstallerURL)     $false '{{if .logyardInstallerURL}}{{.logyardInstallerURL}}{{else}}{{end}}'
     CheckParam 'zmqDownloadURL'         ([ref]$zmqDownloadURL)          $false '{{if .zmqDownloadURL}}{{.zmqDownloadURL}}{{else}}{{end}}'
     CheckParam 'gitDownloadURL'         ([ref]$gitDownloadURL)          $false '{{if .gitDownloadURL}}{{.gitDownloadURL}}{{else}}{{end}}'
+    CheckParam 'vs2012BuildTools'       ([ref]$vs2012BuildTools)        $false '{{if .vs2012BuildTools}}{{.vs2012BuildTools}}{{else}}{{end}}'
+    CheckParam 'vs2013BuildTools'       ([ref]$vs2013BuildTools)        $false '{{if .vs2013BuildTools}}{{.vs2013BuildTools}}{{else}}{{end}}'
 }
 
 function CheckFeatureDependency(){
@@ -215,6 +219,31 @@ function InstallLogyard()
     Write-Host 'Logyard installation complete.' -ForegroundColor Green
 }
 
+
+function InstallVSBuildTools()
+{
+    Write-Host 'Installing Build Tools ...'
+
+    #VS2012
+    Write-Host "Downloading VS 2012 isolated shell from ${vs2012BuildTools} ..."
+    Invoke-WebRequest $vs2012BuildTools -OutFile 'vs_isoshell.exe' #DO NOT CHANGE OUT FILE! THE INSTALLER NEEDS TO HAVE THIS FILENAME!
+    Write-Host 'Installing VS 2012 isolated shell ...'
+    $vs2012InstallFile = (Join-Path $env:temp (Join-Path $tempDir 'vs_isoshell.exe'))
+    $vs2012InstallArgs = '/Q'
+    Start-Process -FilePath $vs2012InstallFile -ArgumentList $vs2012InstallArgs -Wait -Passthru -NoNewWindow
+    Write-Host 'VS 2012 isolated shell installation complete.' -ForegroundColor Green
+    
+    #VS2013
+    Write-Host "Downloading VS 2013 isolated shell from ${vs2013BuildTools} ..."
+    Invoke-WebRequest $vs2013BuildTools -OutFile 'vs2013Build.exe'
+    Write-Host 'Installing VS 2013 isolated shell ...'
+    $vs2013InstallFile = (Join-Path $env:temp (Join-Path $tempDir 'vs2013Build.exe'))
+    $vs2013InstallArgs = '/Q'
+    Start-Process -FilePath $vs2013InstallFile -ArgumentList $vs2013InstallArgs -Wait -Passthru -NoNewWindow
+    Write-Host 'VS 2013 isolated shell installation complete.' -ForegroundColor Green    
+}
+
+
 function InstallDEA($gitLocation){
     Write-Host "Downloading Windows DEA"
     Invoke-WebRequest $deaDownloadURL -OutFile "DEAInstaller.msi"
@@ -246,8 +275,10 @@ function Install{
     CheckFeatureDependency
     #check if git is installed, if not, install it
     $gitLocation = CheckGit
+    #Install ZeroMQ
     CheckZMQ
-
+    #Install Visual Studio Build Tools
+    InstallVSBuildTools
     #download and install winDEA
     InstallDEA $gitLocation
     InstallLogyard
