@@ -131,6 +131,7 @@
                     <Component Id="iis8buildpackbin" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b45" Feature="BuildpackFeature">                     
                         <File Id="CompileBat" Name="compile.bat" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\compile.bat"/>
                         <File Id="CompilePS" Name="compile.ps1" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\compile.ps1"/>
+                        <File Id="NugetExe" Name="nuget.exe" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\nuget.exe"/>
                         <File Id="DetectBat" Name="detect.bat" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\detect.bat"/>
                         <File Id="DetectPS" Name="detect.ps1" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\detect.ps1"/>
                         <File Id="ReleaseBat" Name="release.bat" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\release.bat"/>
