@@ -104,8 +104,8 @@ function CheckParam($paramName, [REF]$paramValue, $mandatory, $templateValue)
         Write-Error "The ${paramName} parameter is mandatory."
         exit 1
     }
-    
-    Write-Host "Using <${paramName}> = '${paramValue.Value}'"
+    $paramActualValue = $paramValue.Value
+    Write-Host "Using <${paramName}> = '${paramActualValue}'"
 }
 
 function VerifyParameters
@@ -292,6 +292,6 @@ function Cleanup{
     Remove-Item $tempDir
     Set-Location $location
 }
-
+$progressPreference = 'silentlyContinue' 
 Install
 Cleanup
