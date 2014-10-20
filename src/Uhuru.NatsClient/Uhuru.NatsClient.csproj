@@ -124,10 +124,9 @@
       <LastGenOutput>Language.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Uhuru.Utilities\Uhuru.Utilities.csproj">
-      <Project>{CD3B15D7-8C7D-4302-A621-02BFD96FE6E3}</Project>
+      <Project>{cd3b15d7-8c7d-4302-a621-02bfd96fe6e3}</Project>
       <Name>Uhuru.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
