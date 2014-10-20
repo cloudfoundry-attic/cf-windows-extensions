@@ -115,8 +115,8 @@
               <util:XmlFile Id="SetBackupServiceName" Action="setValue" ElementPath="/uhuru/service/backup/@serviceName" File="[INSTALLDIR]\uhuru.config" Value="[SERVICENAME]" ></util:XmlFile>
 
 
-              <ServiceInstall Id="mssql" Type="ownProcess" Name="MSSQL" DisplayName="MSSQL"
-                Description="Uhuru MSSQL Service" Start="auto" Account="LocalSystem" ErrorControl="normal">
+              <ServiceInstall Id="mssql" Type="ownProcess" Name="MSSQL" DisplayName="Uhuru Services for Microsoft SQL Server"
+                Description="Uhuru Services for Microsoft SQL Server" Start="auto" Account="LocalSystem" ErrorControl="normal">
                 <util:PermissionEx User="Everyone" ServicePauseContinue="yes" ServiceQueryStatus="yes"
                         ServiceStart="yes" ServiceStop="yes" ServiceUserDefinedControl="yes" />
                 <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType ="restart"/>
