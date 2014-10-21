@@ -44,6 +44,9 @@
     <Property Id="MAXLOGSIZE" Value="UNLIMITED"/>    
     <Property Id="LOGICALSTORAGEUNITS" Value="C:"/>
 
+    <Property Id="DEFAULTVERSION" Value="2008R2"/>
+    <Property Id="SUPPORTEDNAME" Value="2008R2"/>
+
     <Property Id="BACKUPBASEDIR" Value="\\192.168.1.105\migration\backup" />
     <Property Id="TIMEOUT" Value="120"/>
     <Property Id="SERVICENAME" Value="MSSQL"/>
@@ -108,6 +111,9 @@
               <util:XmlFile Id="SetmaxLogSize" Action="setValue" ElementPath="/uhuru/service/mssql/@maxLogSize" File="[INSTALLDIR]\uhuru.config" Value="[MAXLOGSIZE]" ></util:XmlFile>
 
               <util:XmlFile Id="SetlogicalStorageUnits" Action="setValue" ElementPath="/uhuru/service/mssql/@logicalStorageUnits" File="[INSTALLDIR]\uhuru.config" Value="[LOGICALSTORAGEUNITS]" ></util:XmlFile>
+
+              <util:XmlFile Id="SetSuportedVersions" Action="setValue" ElementPath="/uhuru/service/supportedVersions/@defaultVersion" File="[INSTALLDIR]\uhuru.config" Value="[DEFAULTVERSION]" ></util:XmlFile>
+              <util:XmlFile Id="SetSuportedVersionName" Action="setValue" ElementPath="/uhuru/service/supportedVersions/supportedVersion/@name" File="[INSTALLDIR]\uhuru.config" Value="[SUPPORTEDNAME]" ></util:XmlFile>              
               
 
               <util:XmlFile Id="SetBackupBaseDir" Action="setValue" ElementPath="/uhuru/service/backup/@backupBaseDir" File="[INSTALLDIR]\uhuru.config" Value="[BACKUPBASEDIR]" ></util:XmlFile>
