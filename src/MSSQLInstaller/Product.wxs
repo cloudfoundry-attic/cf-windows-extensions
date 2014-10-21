@@ -13,7 +13,7 @@
 
 
     <Property Id="INDEX" Value="0"/>    
-    <Property Id="PLAN" Value="FREE"/>
+    <Property Id="PLAN" Value="free"/>
     <Property Id ="CAPACITY" Value="200" />
     <Property Id="BASEDIR" Value=".\"/>
     <Property Id="LOCALROUTE" Value="198.41.0.4"/>
