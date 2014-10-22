@@ -87,15 +87,15 @@ param (
 	$plan = 'free',
    	$BaseDir ='.\',
 	$capacity=200,
-	$NodeId='mssql_node_free_1',
+	$NodeId='mssql_node_free_0',
 	$ZInterval=30000,
 	$LocalDb='localDb.xml',
 	$MaxNatsPayLoad='1048576',
 	$FqdnHosts='false',
 	$OPTimeLimit=6,
 	$HostName='(LOCAL)',
-	$User='sa',
-	$Password='password1234!',
+	$User='',
+	$Password='',
 	$Port=1433,
 	$MaxDbSize=20,
 	$MaxLongQuery=3,
@@ -113,7 +113,7 @@ param (
 	$BackupBaseDir='\\192.168.1.105\migration\backup',
 	$TimeOut=120,
 	$ServiceName='MSSQL',
-        $mssqlDownloadURL = "http://15.125.102.70/installers/MSSQLInstaller.msi",
+    $mssqlDownloadURL = "http://15.125.102.70/installers/MSSQLInstaller.msi",
 	$installDir = 'C:\WinMSSQL'
 )
 
@@ -137,11 +137,22 @@ function CheckParam($paramName, [REF]$paramValue, $mandatory, $templateValue)
     Write-Host "Using <${paramName}> = '${paramActualValue}'"
 }
 
+function CheckMSSQLService(){
+    if (Get-Service "MSSQLSERVER" -ErrorAction SilentlyContinue){
+        Write-Host "MSSQL Server found, continuing instalation"
+    } else {
+        Write-Host "MSSQL Server not installed on this machine! Please install MSSQL Server before installing the MSSQL Node Service."
+        Exit
+    }
+}
+
 function VerifyParameters
 {
     # Mandatory parameters
-    CheckParam 'messageBus'             ([ref]$messageBus)              $true  '{{if .messageBus}}{{.messageBus}}{{else}}{{end}}'
-    CheckParam 'localRoute'                 ([ref]$localRoute)                  $true  '{{if .localRoute}}{{.localRoute}}{{else}}{{end}}'    
+    CheckParam 'messageBus'             ([ref]$messageBus)            $true  '{{if .messageBus}}{{.messageBus}}{{else}}{{end}}'
+    CheckParam 'localRoute'             ([ref]$localRoute)            $true  '{{if .localRoute}}{{.localRoute}}{{else}}{{end}}'    
+    CheckParam 'User'                   ([ref]$User)                  $true  '{{if .User}}{{.User}}{{else}}{{end}}'
+    CheckParam 'Password'               ([ref]$Password)              $true  '{{if .Password}}{{.Password}}{{else}}{{end}}'
 }
 
 function InstallMSSQLService(){
@@ -166,7 +177,8 @@ function InstallMSSQLService(){
 function Install{
     Write-Host "Using message bus" $messageBus
     Write-Host "Using localRoute" $localRoute
-    Write-Host "Checking dependecies"
+
+    CheckMSSQLService
 
     Set-Location $env:temp | Out-Null 
     New-Item -Type Directory -Name $tempDir | Out-Null
