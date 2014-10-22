@@ -121,10 +121,20 @@ GO
 ALTER DATABASE [<DatabaseName>] SET DB_CHAINING OFF 
 GO
 
-EXEC sp_dboption [<DatabaseName>], 'cursor close on commit', 'TRUE'
-EXEC sp_dboption [<DatabaseName>], 'trunc. log on chkpt.', 'TRUE'
-EXEC sp_dboption [<DatabaseName>], 'auto create statistics', 'TRUE'
-EXEC sp_dboption [<DatabaseName>], 'auto update statistics', 'TRUE'
-EXEC sp_dboption [<DatabaseName>], 'torn page detection', 'TRUE'
-EXEC sp_dboption [<DatabaseName>], 'autoshrink', 'TRUE'
+ALTER DATABASE [<DatabaseName>] SET CURSOR_CLOSE_ON_COMMIT ON
+GO
 
+ALTER DATABASE [<DatabaseName>] SET RECOVERY SIMPLE 
+GO
+
+ALTER DATABASE [<DatabaseName>] SET AUTO_CREATE_STATISTICS ON
+GO
+
+ALTER DATABASE [<DatabaseName>] SET AUTO_UPDATE_STATISTICS ON
+GO
+
+ALTER DATABASE [<DatabaseName>] SET TORN_PAGE_DETECTION ON
+GO
+
+ALTER DATABASE [<DatabaseName>] SET AUTO_SHRINK ON
+GO
