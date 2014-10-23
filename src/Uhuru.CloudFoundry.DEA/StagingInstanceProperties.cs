@@ -64,7 +64,9 @@ namespace Uhuru.CloudFoundry.DEA
         [JsonName("instance_id")]
         public string InstanceId { get; set; }
 
+        public bool StagingDone { get; set; }
 
+        public bool CleanupInstance { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [stop processed]. Indicated if the StopStaging routine was completely invoked on this instance.

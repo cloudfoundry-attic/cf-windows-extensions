@@ -877,7 +877,7 @@ namespace Uhuru.CloudFoundry.DEA
                 Zone = "default",
                 Zones = new string[] { "default" }
             };
-            
+
 
             response.Stacks = this.fileResources.Stacks.ToList();
 
@@ -2249,7 +2249,7 @@ namespace Uhuru.CloudFoundry.DEA
                             }
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Logger.Error("Error occured in  MonitorApps method. Exception: {0}", ex.ToString());
                     }
@@ -2358,7 +2358,7 @@ namespace Uhuru.CloudFoundry.DEA
                                 catch (IOException)
                                 {
                                 }
-                                
+
                             }
                             catch (UnauthorizedAccessException ex)
                             {
@@ -2384,8 +2384,6 @@ namespace Uhuru.CloudFoundry.DEA
                 true,
                 delegate(StagingInstance instance)
                 {
-                    bool removeInstance = false;
-
                     if (instance.CompileProcess != null)
                     {
                         if (instance.CompileProcess.HasExited)
@@ -2401,7 +2399,8 @@ namespace Uhuru.CloudFoundry.DEA
                                 instance.Container.JobObject.TerminateProcesses(-1);
                             }
                             catch { }
-                            removeInstance = true;
+                            instance.Properties.CleanupInstance = true;
+                            instance.CompileProcess = null;
                         }
                         else
                         {
@@ -2414,7 +2413,8 @@ namespace Uhuru.CloudFoundry.DEA
                                     instance.Container.JobObject.TerminateProcesses(-1);
                                 }
                                 catch { }
-                                removeInstance = true;
+                                instance.Properties.CleanupInstance = true;
+                                instance.CompileProcess = null;
                             }
 
                             if (DateTime.Now.Subtract(instance.Properties.Start) > TimeSpan.FromMilliseconds(this.stagingTimeoutMs))
@@ -2427,14 +2427,20 @@ namespace Uhuru.CloudFoundry.DEA
                                 }
                                 catch { }
                                 instance.StagingException = new Exception("Compilation timed out");
-                                removeInstance = true;
+                                instance.Properties.CleanupInstance = true;
+                                instance.CompileProcess = null;
                             }
                         }
                     }
 
-                    if (instance.Properties.Stopped)
+                    if (instance.Properties.Stopped && !instance.Properties.StagingDone)
                     {
                         this.AfterStagingFinished(instance);
+                        instance.Properties.StagingDone = true;
+                    }
+
+                    if (instance.Properties.CleanupInstance)
+                    {
 
                         try
                         {
@@ -2443,21 +2449,22 @@ namespace Uhuru.CloudFoundry.DEA
                                 instance.Container.Destroy();
                             }
 
+                            Logger.Debug("Cleaning up directory {0}", instance.Workspace.BaseDir);
+
+                            if (instance.Cleanup())
+                            {
+                                Logger.Debug("Done cleaning up directory {0}", instance.Workspace.BaseDir);
+
+                                this.monitoring.RemoveInstanceResources(instance);
+                                this.stagingTaskRegistry.RemoveStagingInstance(instance);
+                            }
+
                         }
-                        catch{
+                        catch
+                        {
                             Logger.Info("Failed destroying prison for directory {0}", instance.Workspace.BaseDir);
                         }
 
-                        Logger.Debug("Cleaning up directory {0}", instance.Workspace.BaseDir);
-
-                        removeInstance = instance.Cleanup();
-                    }
-
-                    if (removeInstance)
-                    {
-                        this.monitoring.RemoveInstanceResources(instance);
-                        this.stagingTaskRegistry.RemoveStagingInstance(instance);
-                        
                     }
                 });
         }
