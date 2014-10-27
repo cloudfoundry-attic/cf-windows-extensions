@@ -108,12 +108,12 @@ param (
 	$InitialLogSize='2048KB',
 	$MaxLogSize='UNLIMITED',
 	$LogicalStorageUnits='C:',
-	$DefaultVersion='2008R2',
-	$SupportedName='2008R2',
+	$DefaultVersion='2012',
+	$SupportedName='2012',
 	$BackupBaseDir='\\192.168.1.105\migration\backup',
 	$TimeOut=120,
 	$ServiceName='MSSQL',
-    $mssqlDownloadURL = "http://15.125.102.70/installers/MSSQLInstaller.msi",
+    $mssqlDownloadURL = "http://15.125.102.70/installers/mssqlinstaller-1.2.55.msi",
 	$installDir = 'C:\WinMSSQL'
 )
 
@@ -153,6 +153,39 @@ function VerifyParameters
     CheckParam 'localRoute'             ([ref]$localRoute)            $true  '{{if .localRoute}}{{.localRoute}}{{else}}{{end}}'    
     CheckParam 'User'                   ([ref]$User)                  $true  '{{if .User}}{{.User}}{{else}}{{end}}'
     CheckParam 'Password'               ([ref]$Password)              $true  '{{if .Password}}{{.Password}}{{else}}{{end}}'
+	
+	#Optional parameters
+	CheckParam 'index'                  ([ref]$index)                 $false '{{if .index}}{{.index}}{{else}}{{end}}'
+	CheckParam 'DefaultVersion'         ([ref]$DefaultVersion)        $false '{{if .version}}{{.version}}{{else}}{{end}}'
+	CheckParam 'SupportedName'          ([ref]$SupportedName)         $false '{{if .version}}{{.version}}{{else}}{{end}}'	
+	CheckParam 'statusPort'             ([ref]$statusPort)            $false '{{if .statusPort}}{{.statusPort}}{{else}}{{end}}'	
+	CheckParam 'plan'                   ([ref]$plan)                  $false '{{if .plan}}{{.plan}}{{else}}{{end}}'
+	CheckParam 'BaseDir'                ([ref]$BaseDir)               $false '{{if .BaseDir}}{{.BaseDir}}{{else}}{{end}}'
+	CheckParam 'capacity'               ([ref]$capacity)              $false '{{if .capacity}}{{.capacity}}{{else}}{{end}}'
+	CheckParam 'NodeId'                 ([ref]$NodeId)                $false '{{if .NodeId}}{{.NodeId}}{{else}}{{end}}'	   	
+    CheckParam 'ZInterval'              ([ref]$ZInterval)             $false '{{if .ZInterval}}{{.ZInterval}}{{else}}{{end}}'		
+    CheckParam 'LocalDb'                ([ref]$LocalDb)               $false '{{if .LocalDb}}{{.LocalDb}}{{else}}{{end}}'		
+	CheckParam 'MaxNatsPayLoad'         ([ref]$MaxNatsPayLoad)        $false '{{if .MaxNatsPayLoad}}{{.MaxNatsPayLoad}}{{else}}{{end}}'		
+	CheckParam 'FqdnHosts'              ([ref]$FqdnHosts)             $false '{{if .FqdnHosts}}{{.FqdnHosts}}{{else}}{{end}}'		
+	CheckParam 'OPTimeLimit'            ([ref]$OPTimeLimit)           $false '{{if .OPTimeLimit}}{{.OPTimeLimit}}{{else}}{{end}}'		
+	CheckParam 'HostName'               ([ref]$HostName)              $false '{{if .HostName}}{{.HostName}}{{else}}{{end}}'		
+	CheckParam 'Port'                   ([ref]$Port)                  $false '{{if .Port}}{{.Port}}{{else}}{{end}}'		
+	CheckParam 'MaxDbSize'              ([ref]$MaxDbSize)             $false '{{if .MaxDbSize}}{{.MaxDbSize}}{{else}}{{end}}'		
+	CheckParam 'MaxLongQuery'           ([ref]$MaxLongQuery)          $false '{{if .MaxLongQuery}}{{.MaxLongQuery}}{{else}}{{end}}'		
+	CheckParam 'MaxLongTx'              ([ref]$MaxLongTx)             $false '{{if .MaxLongTx}}{{.MaxLongTx}}{{else}}{{end}}'		
+	CheckParam 'MaxUserConns'           ([ref]$MaxUserConns)          $false '{{if .MaxUserConns}}{{.MaxUserConns}}{{else}}{{end}}'		
+	CheckParam 'InitialDataSize'        ([ref]$InitialDataSize)       $false '{{if .InitialDataSize}}{{.InitialDataSize}}{{else}}{{end}}'		
+	CheckParam 'DataFileGrowth'         ([ref]$DataFileGrowth)        $false '{{if .DataFileGrowth}}{{.DataFileGrowth}}{{else}}{{end}}'		
+	CheckParam 'LogFileGrowth'          ([ref]$LogFileGrowth)         $false '{{if .LogFileGrowth}}{{.LogFileGrowth}}{{else}}{{end}}'		
+	CheckParam 'MaxDataSize'            ([ref]$MaxDataSize)           $false '{{if .MaxDataSize}}{{.MaxDataSize}}{{else}}{{end}}'		
+	CheckParam 'InitialLogSize'         ([ref]$InitialLogSize)        $false '{{if .InitialLogSize}}{{.InitialLogSize}}{{else}}{{end}}'	
+	CheckParam 'MaxLogSize'             ([ref]$MaxLogSize)            $false '{{if .MaxLogSize}}{{.MaxLogSize}}{{else}}{{end}}'			
+	CheckParam 'LogicalStorageUnits'    ([ref]$LogicalStorageUnits)   $false '{{if .LogicalStorageUnits}}{{.LogicalStorageUnits}}{{else}}{{end}}'			
+	CheckParam 'BackupBaseDir'          ([ref]$BackupBaseDir)         $false '{{if .BackupBaseDir}}{{.BackupBaseDir}}{{else}}{{end}}'			
+	CheckParam 'TimeOut'                ([ref]$TimeOut)               $false '{{if .TimeOut}}{{.TimeOut}}{{else}}{{end}}'			
+	CheckParam 'ServiceName'            ([ref]$ServiceName)           $false '{{if .ServiceName}}{{.ServiceName}}{{else}}{{end}}'			
+	CheckParam 'mssqlDownloadURL'       ([ref]$mssqlDownloadURL)      $false '{{if .mssqlDownloadURL}}{{.mssqlDownloadURL}}{{else}}{{end}}'	
+	CheckParam 'installDir'             ([ref]$installDir)            $false '{{if .installDir}}{{.installDir}}{{else}}{{end}}'						
 }
 
 function InstallMSSQLService(){
@@ -199,5 +232,4 @@ function Cleanup{
 
 Install
 Cleanup
-
 
