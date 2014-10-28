@@ -106,7 +106,7 @@
               <util:XmlFile Id="SetinitialDataSize" Action="setValue" ElementPath="/uhuru/service/mssql/@initialDataSize" File="[INSTALLDIR]\uhuru.config" Value="[INTIALDATASIZE]" ></util:XmlFile>
               <util:XmlFile Id="SetdataFileGrowth" Action="setValue" ElementPath="/uhuru/service/mssql/@dataFileGrowth" File="[INSTALLDIR]\uhuru.config" Value="[DATAFILEGROWTH]" ></util:XmlFile>
               <util:XmlFile Id="SetlogFileGrowth" Action="setValue" ElementPath="/uhuru/service/mssql/@logFileGrowth" File="[INSTALLDIR]\uhuru.config" Value="[LOGFILEGROWTH]" ></util:XmlFile>
-              <util:XmlFile Id="SetmaxDataSize" Action="setValue" ElementPath="/uhuru/service/mssql/@logFileGrowth" File="[INSTALLDIR]\uhuru.config" Value="[MAXDATASIZE]" ></util:XmlFile>
+              <util:XmlFile Id="SetmaxDataSize" Action="setValue" ElementPath="/uhuru/service/mssql/@maxDataSize" File="[INSTALLDIR]\uhuru.config" Value="[MAXDATASIZE]" ></util:XmlFile>
               <util:XmlFile Id="SetinitialLogSize" Action="setValue" ElementPath="/uhuru/service/mssql/@initialLogSize" File="[INSTALLDIR]\uhuru.config" Value="[INITIALLOGSIZE]" ></util:XmlFile>
               <util:XmlFile Id="SetmaxLogSize" Action="setValue" ElementPath="/uhuru/service/mssql/@maxLogSize" File="[INSTALLDIR]\uhuru.config" Value="[MAXLOGSIZE]" ></util:XmlFile>
 
