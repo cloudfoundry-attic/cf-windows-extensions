@@ -435,6 +435,15 @@ namespace Uhuru.CloudFoundry.DEA
 
             this.RegisterRoutes();
 
+            // Seed routerRegisterTimer with a 5 sec timer, to be compatible with the old router nats protocol.
+            this.routerRegisterTimer = TimerHelper.RecurringLongCall(
+                5 * 1000,
+                delegate
+                {
+                    this.RegisterRoutes();
+                });
+
+
             if (this.enableStaging)
             {
                 this.deaReactor.SubscribeToStaging();
