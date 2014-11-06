@@ -63,7 +63,7 @@ namespace Uhuru.CloudFoundry.DEA
             var startTs = DateTime.Now;
             while (prison.JobObject != null && prison.JobObject.ActiveProcesses > 0)
             {
-                if ((DateTime.Now - startTs).TotalSeconds > 15)
+                if ((DateTime.Now - startTs).TotalSeconds > 30)
                 {
                     Logger.Debug("Staging's detect script timed out. Killing all job processes. Detect path: {0}", exe);
                     prison.JobObject.TerminateProcesses(-2);
