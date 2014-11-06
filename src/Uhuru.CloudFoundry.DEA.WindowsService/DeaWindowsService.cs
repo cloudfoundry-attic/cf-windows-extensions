@@ -6,6 +6,7 @@
 
 namespace Uhuru.CloudFoundry.DEA.WindowsService
 {
+    using System;
     using System.ServiceProcess;
 
     /// <summary>
@@ -31,8 +32,17 @@ namespace Uhuru.CloudFoundry.DEA.WindowsService
         /// </summary>
         internal void Start()
         {
-            this.agent = new Agent();
-            this.agent.Run();
+            try
+            {
+                this.agent = new Agent();
+                this.agent.Run();
+
+            }
+            catch (Exception e)
+            {
+                Uhuru.Utilities.Logger.Error(e.ToString());
+                Environment.FailFast("Unhandled exception in DeaWindowsService.Start", e);
+            }
         }
 
         /// <summary>
