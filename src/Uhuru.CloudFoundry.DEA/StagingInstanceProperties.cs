@@ -105,6 +105,13 @@ namespace Uhuru.CloudFoundry.DEA
             set;
         }
 
+        public DateTime InitializedTime
+        {
+            get;
+            set;
+        }
+
+
         /// <summary>
         /// Indicated if the StopDroplet routine was completely invoked on this instance.
         /// </summary>

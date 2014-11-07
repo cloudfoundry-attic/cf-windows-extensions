@@ -1385,6 +1385,7 @@ namespace Uhuru.CloudFoundry.DEA
                 instance.Properties.Directory = Path.Combine(this.fileResources.StagingDir, pmessage.TaskID);
                 instance.Properties.TaskId = pmessage.TaskID;
                 instance.Properties.Reply = reply;
+                instance.Properties.InitializedTime = DateTime.Now;
                 this.monitoring.AddInstanceResources(instance);
             }
             finally
@@ -1695,7 +1696,7 @@ namespace Uhuru.CloudFoundry.DEA
                     try
                     {
                         instance.Lock.EnterWriteLock();
-                        if (instance.Properties.AppId == request.AppID)
+                        if (instance.Properties.AppId == request.AppID && (DateTime.Now - instance.Properties.InitializedTime).TotalSeconds > 3)
                         {
                             instance.Properties.Stopped = true;
                         }
