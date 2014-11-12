@@ -258,6 +258,8 @@ function InstallDEA($gitLocation){
     Write-Host "Installing Windows DEA"
     [System.Diagnostics.Process]::Start("cmd", [System.String]::Join(" ", $deaArgs)).WaitForExit()
     Write-Host "Done!" -ForegroundColor Green
+    Write-Host "Adding firewall rules"
+    netsh advfirewall firewall add rule name="windea_directoryServerPort" protocol=TCP dir=in localport=$directoryServerPort action=allow
 }
 
 function Install{
