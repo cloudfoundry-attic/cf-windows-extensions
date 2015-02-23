@@ -6,6 +6,7 @@
 
 namespace Uhuru.CloudFoundry.MSSqlService.WindowsService
 {
+    using System;
     using System.Configuration;
     using Uhuru.CloudFoundry.MSSqlService;
     using Uhuru.Configuration;
@@ -33,10 +34,18 @@ namespace Uhuru.CloudFoundry.MSSqlService.WindowsService
         /// </summary>
         internal void Start()
         {
-            ServiceElement serviceConfig = ((UhuruSection)ConfigurationManager.GetSection("uhuru")).Service;
+            try
+            {
+                ServiceElement serviceConfig = ((UhuruSection)ConfigurationManager.GetSection("uhuru")).Service;
 
-            this.node = new Node();
-            this.node.Start(serviceConfig);
+                this.node = new Node();
+                this.node.Start(serviceConfig);
+            }
+            catch (Exception e)
+            {
+                Uhuru.Utilities.Logger.Error(e.ToString());
+                Environment.FailFast("Unhandled exception in MSSqlWindowsService.Start", e);
+            }
         }
 
         /// <summary>

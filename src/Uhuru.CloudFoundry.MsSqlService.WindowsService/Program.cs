@@ -53,7 +53,8 @@ namespace Uhuru.CloudFoundry.MSSqlService.WindowsService
         /// <param name="e">The <see cref="System.UnhandledExceptionEventArgs"/> instance containing the event data.</param>
         internal static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Uhuru.Utilities.Logger.Fatal(e.ExceptionObject.ToString());
+            Uhuru.Utilities.Logger.Error(e.ExceptionObject.ToString());
+            Environment.FailFast("Unhandled Exception caught by AppDomain.CurrentDomain.UnhandledException", (Exception)e.ExceptionObject);
         }
     }
 }
