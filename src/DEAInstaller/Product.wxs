@@ -181,12 +181,6 @@
       <Merge Id="VCRedist86CRT" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_CRT_x86.msm" />
       <Merge Id="VCRedist64CRT" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_CRT_x64.msm" />
 
-      <Merge Id="VCRedist86MFC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFC_x86.msm" />
-      <Merge Id="VCRedist64MFC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFC_x64.msm" />
-
-      <Merge Id="VCRedist86MFCLOC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFCLOC_x86.msm" />
-      <Merge Id="VCRedist64MFCLOC" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_MFCLOC_x64.msm" />
-
       <Merge Id="VCRedist86OpenMP" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_OpenMP_x86.msm" />
       <Merge Id="VCRedist64OpenMP" Language="0" DiskId="1" SourceFile="$(var.REDISTPATH)\Microsoft_VC$(var.MergeModulesVersion)_OpenMP_x64.msm" />
 
@@ -198,10 +192,6 @@
     <ComponentRef Id="ProductComponents" />
       <MergeRef Id="VCRedist86CRT"/>
       <MergeRef Id="VCRedist64CRT"/>
-      <MergeRef Id="VCRedist86MFC"/>
-      <MergeRef Id="VCRedist64MFC"/>
-      <MergeRef Id="VCRedist86MFCLOC"/>
-      <MergeRef Id="VCRedist64MFCLOC"/>
       <MergeRef Id="VCRedist86OpenMP"/>
       <MergeRef Id="VCRedist64OpenMP"/>
       <MergeRef Id="VCRedist86CXXAMP"/>

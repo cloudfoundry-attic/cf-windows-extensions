@@ -6,7 +6,7 @@
   <?define var.BINDIRECTORY = $(var.Uhuru.CloudFoundry.MsSqlService.WindowsService.TargetDir)?>
 
   <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="1.0.0.0" Manufacturer="$(var.Manufacturer)" UpgradeCode="3129fc8c-fa38-4382-89b0-3d869b8b499a">
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" />
@@ -140,5 +140,5 @@
       <ComponentRef Id="ProductComponents" />      
     </Feature>
     
-	</Product>	
+  </Product>	
 </Wix>
