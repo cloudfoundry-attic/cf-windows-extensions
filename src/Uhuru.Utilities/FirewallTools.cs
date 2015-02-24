@@ -71,44 +71,6 @@ namespace Uhuru.Utilities
         }
 
 
-        public static void BlockAllOutbound(string ruleName, string windowsUsername)
-        {
-
-            INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
-
-            // This type is only avaible in Windows Server 2012
-            //INetFwRule3 rule = ((INetFwRule3)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwRule")));
-
-            //rule.Name = ruleName;
-            //rule.Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
-            //rule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
-            //rule.Enabled = true;
-
-            //string userSid = GetLocalUserSid(windowsUsername);
-            //rule.LocalUserAuthorizedList = String.Format("D:(A;;CC;;;{0})", userSid);
-
-            //firewallPolicy.Rules.Add(rule);
-        }
-
-        public static void BlockAllInbound(string ruleName, string windowsUsername)
-        {
-
-            INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
-
-            // This type is only avaible in Windows Server 2012
-            //INetFwRule3 rule = ((INetFwRule3)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwRule")));
-
-            //rule.Name = ruleName;
-            //rule.Action = NET_FW_ACTION_.NET_FW_ACTION_BLOCK;
-            //rule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_IN;
-            //rule.Enabled = true;
-
-            //string userSid = GetLocalUserSid(windowsUsername);
-            //rule.LocalUserAuthorizedList = String.Format("D:(A;;CC;;;{0})", userSid);
-
-            //firewallPolicy.Rules.Add(rule);
-        }
-
         public static void DeleteRule(string ruleName)
         {
             INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
