@@ -125,7 +125,7 @@
                 Description="Uhuru Services for Microsoft SQL Server" Start="auto" Account="LocalSystem" ErrorControl="normal">
                 <util:PermissionEx User="Everyone" ServicePauseContinue="yes" ServiceQueryStatus="yes"
                         ServiceStart="yes" ServiceStop="yes" ServiceUserDefinedControl="yes" />
-                <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType ="restart"/>
+                <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType ="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="15"/>
                 <ServiceConfig DelayedAutoStart="yes" OnInstall="yes"></ServiceConfig>
               </ServiceInstall>
               <ServiceControl Id="MSSQL" Start="install" Stop="both" Remove="both" Name="MSSQL" Wait="no" />
