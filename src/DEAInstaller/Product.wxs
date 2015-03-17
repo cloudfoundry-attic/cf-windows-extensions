@@ -2,11 +2,11 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   
-  <?define var.BINDIRECTORY = $(var.Uhuru.CloudFoundry.DEA.WindowsService.TargetDir)?>  
-  <?define var.BUILDPACKDIRECTORY =$(var.Uhuru.CloudFoundry.DEA.WindowsService.TargetDir)..\src\Buildpacks\?>  
+  <?define var.BINDIRECTORY = $(var.CloudFoundry.WinDEA.WindowsService.TargetDir)?>  
+  <?define var.BUILDPACKDIRECTORY =$(var.CloudFoundry.WinDEA.WindowsService.TargetDir)..\src\Buildpacks\?>  
   
   <?define var.ProductName = "Windows DEA"?>
-  <?define var.Manufacturer = "Uhuru Software, Inc."?>
+  <?define var.Manufacturer = "CloudFoundry"?>
   <?define var.REDISTPATH = "C:\Program Files (x86)\Common Files\Merge Modules"?>
   <?define var.MergeModulesVersion = "120"?>
 
@@ -56,16 +56,16 @@
               <File Id="NLogDll" Name="NLog.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="NLogConfig" Name="NLog.config" Source="$(var.BINDIRECTORY)"/>
               <File Id="SevenZipSharp" Name="SevenZipSharp.dll" Source="$(var.BINDIRECTORY)"/>
-              <File Id="DirectoryServerDll" Name="Uhuru.CloudFoundry.DEA.DirectoryServer.dll" Source="$(var.BINDIRECTORY)"/>
-              <File Id="DirectoryServerPdb" Name="Uhuru.CloudFoundry.DEA.DirectoryServer.pdb" Source="$(var.BINDIRECTORY)"/>
-              <File Id="UhuruCloudFoundryDEADll" Name="Uhuru.CloudFoundry.DEA.dll" Source="$(var.BINDIRECTORY)"/>
-              <File Id="UhuruCloudFoundryDEAPdb" Name="Uhuru.CloudFoundry.DEA.pdb" Source="$(var.BINDIRECTORY)"/>
-              <File Id="UhuruConfigurationDll" Name="Uhuru.Configuration.dll" Source="$(var.BINDIRECTORY)"/>
-              <File Id="UhuruConfigurationPdb" Name="Uhuru.Configuration.pdb" Source="$(var.BINDIRECTORY)"/>
-              <File Id="UhuruNatsClientDll" Name="Uhuru.NatsClient.dll" Source="$(var.BINDIRECTORY)"/>
-              <File Id="UhuruNatsClientPdb" Name="Uhuru.NatsClient.pdb" Source="$(var.BINDIRECTORY)"/>
-              <File Id="UhuruUtilitiesDll" Name="Uhuru.Utilities.dll" Source="$(var.BINDIRECTORY)"/>
-              <File Id="UhuruUtilitiesPdb" Name="Uhuru.Utilities.pdb" Source="$(var.BINDIRECTORY)"/>
+              <File Id="DirectoryServerDll" Name="CloudFoundry.WinDEA.DirectoryServer.dll" Source="$(var.BINDIRECTORY)"/>
+              <File Id="DirectoryServerPdb" Name="CloudFoundry.WinDEA.DirectoryServer.pdb" Source="$(var.BINDIRECTORY)"/>
+              <File Id="CloudFoundryDEADll" Name="CloudFoundry.WinDEA.dll" Source="$(var.BINDIRECTORY)"/>
+              <File Id="CloudFoundryDEAPdb" Name="CloudFoundry.WinDEA.pdb" Source="$(var.BINDIRECTORY)"/>
+              <File Id="CloudFoundryConfigurationDll" Name="CloudFoundry.Configuration.dll" Source="$(var.BINDIRECTORY)"/>
+              <File Id="CloudFoundryConfigurationPdb" Name="CloudFoundry.Configuration.pdb" Source="$(var.BINDIRECTORY)"/>
+              <File Id="CloudFoundryNatsClientDll" Name="CloudFoundry.NatsClient.dll" Source="$(var.BINDIRECTORY)"/>
+              <File Id="CloudFoundryNatsClientPdb" Name="CloudFoundry.NatsClient.pdb" Source="$(var.BINDIRECTORY)"/>
+              <File Id="CloudFoundryUtilitiesDll" Name="CloudFoundry.Utilities.dll" Source="$(var.BINDIRECTORY)"/>
+              <File Id="CloudFoundryUtilitiesPdb" Name="CloudFoundry.Utilities.pdb" Source="$(var.BINDIRECTORY)"/>
               <File Id="YamlDotNetCoreDll" Name="YamlDotNet.Core.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="YamlDotNetCorePdb" Name="YamlDotNet.Core.pdb" Source="$(var.BINDIRECTORY)"/>
               <File Id="YamlDotNetRepresentationModelDll" Name="YamlDotNet.RepresentationModel.dll" Source="$(var.BINDIRECTORY)"/>
@@ -75,36 +75,36 @@
               <File Id="ProcessPrivileges" Name="ProcessPrivileges.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="AlphaFSDll" Name="AlphaFS.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="AlphaFSPdb" Name="AlphaFS.pdb" Source="$(var.BINDIRECTORY)"/>
-              <File Id="UhuruPrisonGuard" Name="Uhuru.Prison.Guard.exe" Source="$(var.BINDIRECTORY)" />
-              <File Id="UhuruPrison" Name="Uhuru.Prison.dll" Source="$(var.BINDIRECTORY)" />
+              <File Id="HPPrisonGuard" Name="HP.WindowsPrison.Guard.exe" Source="$(var.BINDIRECTORY)" />
+              <File Id="HPPrison" Name="HP.WindowsPrison.dll" Source="$(var.BINDIRECTORY)" />
 
 
-              <util:XmlFile Id="SetIndex" Action="setValue" ElementPath="/uhuru/dea/@index" File="[INSTALLDIR]\Dea.config" Value="[INDEX]" ></util:XmlFile>
-              <util:XmlFile Id="SetBaseDir" Action="setValue" ElementPath="/uhuru/dea/@baseDir" File="[INSTALLDIR]\Dea.config" Value="[BASEDIR]" ></util:XmlFile>
-              <util:XmlFile Id="SetLocalRoute" Action="setValue" ElementPath="/uhuru/dea/@localRoute" File="[INSTALLDIR]\Dea.config" Value="[LOCALROUTE]" ></util:XmlFile>
-              <util:XmlFile Id="SetFilerPort" Action="setValue" ElementPath="/uhuru/dea/@filerPort" File="[INSTALLDIR]\Dea.config" Value="[FILERPORT]" ></util:XmlFile>
-              <util:XmlFile Id="SetStatusPort" Action="setValue" ElementPath="/uhuru/dea/@statusPort" File="[INSTALLDIR]\Dea.config" Value="[STATUSPORT]" ></util:XmlFile>
-              <util:XmlFile Id="SetMessageBus" Action="setValue" ElementPath="/uhuru/dea/@messageBus" File="[INSTALLDIR]\Dea.config" Value="[MESSAGEBUS]" ></util:XmlFile>
-              <util:XmlFile Id="SetDomain" Action="setValue" ElementPath="/uhuru/dea/@domain" File="[INSTALLDIR]\Dea.config" Value="[DOMAIN]" ></util:XmlFile>
-              <util:XmlFile Id="SetMultitenant" Action="setValue" ElementPath="/uhuru/dea/@multiTenant" File="[INSTALLDIR]\Dea.config" Value="[MULTITENANT]" ></util:XmlFile>
-              <util:XmlFile Id="SetMaxMemoryMb" Action="setValue" ElementPath="/uhuru/dea/@maxMemoryMB" File="[INSTALLDIR]\Dea.config" Value="[MAXMEMORYMB]" ></util:XmlFile>
-              <util:XmlFile Id="SetSecure" Action="setValue" ElementPath="/uhuru/dea/@secure" File="[INSTALLDIR]\Dea.config" Value="[SECURE]" ></util:XmlFile>
-              <util:XmlFile Id="SetEnforceULimit" Action="setValue" ElementPath="/uhuru/dea/@enforceUlimit" File="[INSTALLDIR]\Dea.config" Value="[ENFORCEULIMIT]" ></util:XmlFile>
-              <util:XmlFile Id="SetHeartBeatIntervalMs" Action="setValue" ElementPath="/uhuru/dea/@heartbeatIntervalMs" File="[INSTALLDIR]\Dea.config" Value="[HEARTBEATINTERVALMS]" ></util:XmlFile>
-              <util:XmlFile Id="SetAdvertiseIntervalMs" Action="setValue" ElementPath="/uhuru/dea/@advertiseIntervalMs" File="[INSTALLDIR]\Dea.config" Value="[ADVERTISEINTERVALMS]" ></util:XmlFile>
-              <util:XmlFile Id="SetUseDiskQuota" Action="setValue" ElementPath="/uhuru/dea/@useDiskQuota" File="[INSTALLDIR]\Dea.config" Value="[USEDISKQUOTA]" ></util:XmlFile>
-              <util:XmlFile Id="SetUploadThrottle" Action="setValue" ElementPath="/uhuru/dea/@uploadThrottleBitsps" File="[INSTALLDIR]\Dea.config" Value="[UPLOADTHROTTLEBITSPS]" ></util:XmlFile>
-              <util:XmlFile Id="SetMaxConcurrentStarts" Action="setValue" ElementPath="/uhuru/dea/@maxConcurrentStarts" File="[INSTALLDIR]\Dea.config" Value="[MAXCONCURRENTSTARTS]" ></util:XmlFile>
-              <util:XmlFile Id="SetDirectoryServerPort" Action="setValue" ElementPath="/uhuru/dea/directoryServer/@v2Port" File="[INSTALLDIR]\Dea.config" Value="[DIRECTORYSERVERPORT]" ></util:XmlFile>
-              <util:XmlFile Id="SetStreamingTimeout" Action="setValue" ElementPath="/uhuru/dea/directoryServer/@streamingTimeoutMS" File="[INSTALLDIR]\Dea.config" Value="[STREAMINGTIMEOUTMS]" ></util:XmlFile>
-              <util:XmlFile Id="SetStagingEnabled" Action="setValue" ElementPath="/uhuru/dea/staging/@enabled" File="[INSTALLDIR]\Dea.config" Value="[STAGINGENABLED]" ></util:XmlFile>
-              <util:XmlFile Id="SetBuildpacksDir" Action="setValue" ElementPath="/uhuru/dea/staging/@buildpacksDirectory" File="[INSTALLDIR]\Dea.config" Value="[BUILDPACKSDIRECTORY]" ></util:XmlFile>
-              <util:XmlFile Id="SetGit" Action="setValue" ElementPath="/uhuru/dea/staging/@gitExecutable" File="[INSTALLDIR]\Dea.config" Value="[GIT]" ></util:XmlFile>
-              <util:XmlFile Id="SetStagingTimeout" Action="setValue" ElementPath="/uhuru/dea/staging/@stagingTimeoutMs" File="[INSTALLDIR]\Dea.config" Value="[STAGINGTIMEOUTMS]" ></util:XmlFile>
-              <util:XmlFile Id="SetStacks" Action="setValue" ElementPath="/uhuru/dea/stacks/stack/@name" File="[INSTALLDIR]\Dea.config" Value="[STACKS]" ></util:XmlFile>
+              <util:XmlFile Id="SetIndex" Action="setValue" ElementPath="/cloudfoundry/dea/@index" File="[INSTALLDIR]\Dea.config" Value="[INDEX]" ></util:XmlFile>
+              <util:XmlFile Id="SetBaseDir" Action="setValue" ElementPath="/cloudfoundry/dea/@baseDir" File="[INSTALLDIR]\Dea.config" Value="[BASEDIR]" ></util:XmlFile>
+              <util:XmlFile Id="SetLocalRoute" Action="setValue" ElementPath="/cloudfoundry/dea/@localRoute" File="[INSTALLDIR]\Dea.config" Value="[LOCALROUTE]" ></util:XmlFile>
+              <util:XmlFile Id="SetFilerPort" Action="setValue" ElementPath="/cloudfoundry/dea/@filerPort" File="[INSTALLDIR]\Dea.config" Value="[FILERPORT]" ></util:XmlFile>
+              <util:XmlFile Id="SetStatusPort" Action="setValue" ElementPath="/cloudfoundry/dea/@statusPort" File="[INSTALLDIR]\Dea.config" Value="[STATUSPORT]" ></util:XmlFile>
+              <util:XmlFile Id="SetMessageBus" Action="setValue" ElementPath="/cloudfoundry/dea/@messageBus" File="[INSTALLDIR]\Dea.config" Value="[MESSAGEBUS]" ></util:XmlFile>
+              <util:XmlFile Id="SetDomain" Action="setValue" ElementPath="/cloudfoundry/dea/@domain" File="[INSTALLDIR]\Dea.config" Value="[DOMAIN]" ></util:XmlFile>
+              <util:XmlFile Id="SetMultitenant" Action="setValue" ElementPath="/cloudfoundry/dea/@multiTenant" File="[INSTALLDIR]\Dea.config" Value="[MULTITENANT]" ></util:XmlFile>
+              <util:XmlFile Id="SetMaxMemoryMb" Action="setValue" ElementPath="/cloudfoundry/dea/@maxMemoryMB" File="[INSTALLDIR]\Dea.config" Value="[MAXMEMORYMB]" ></util:XmlFile>
+              <util:XmlFile Id="SetSecure" Action="setValue" ElementPath="/cloudfoundry/dea/@secure" File="[INSTALLDIR]\Dea.config" Value="[SECURE]" ></util:XmlFile>
+              <util:XmlFile Id="SetEnforceULimit" Action="setValue" ElementPath="/cloudfoundry/dea/@enforceUlimit" File="[INSTALLDIR]\Dea.config" Value="[ENFORCEULIMIT]" ></util:XmlFile>
+              <util:XmlFile Id="SetHeartBeatIntervalMs" Action="setValue" ElementPath="/cloudfoundry/dea/@heartbeatIntervalMs" File="[INSTALLDIR]\Dea.config" Value="[HEARTBEATINTERVALMS]" ></util:XmlFile>
+              <util:XmlFile Id="SetAdvertiseIntervalMs" Action="setValue" ElementPath="/cloudfoundry/dea/@advertiseIntervalMs" File="[INSTALLDIR]\Dea.config" Value="[ADVERTISEINTERVALMS]" ></util:XmlFile>
+              <util:XmlFile Id="SetUseDiskQuota" Action="setValue" ElementPath="/cloudfoundry/dea/@useDiskQuota" File="[INSTALLDIR]\Dea.config" Value="[USEDISKQUOTA]" ></util:XmlFile>
+              <util:XmlFile Id="SetUploadThrottle" Action="setValue" ElementPath="/cloudfoundry/dea/@uploadThrottleBitsps" File="[INSTALLDIR]\Dea.config" Value="[UPLOADTHROTTLEBITSPS]" ></util:XmlFile>
+              <util:XmlFile Id="SetMaxConcurrentStarts" Action="setValue" ElementPath="/cloudfoundry/dea/@maxConcurrentStarts" File="[INSTALLDIR]\Dea.config" Value="[MAXCONCURRENTSTARTS]" ></util:XmlFile>
+              <util:XmlFile Id="SetDirectoryServerPort" Action="setValue" ElementPath="/cloudfoundry/dea/directoryServer/@v2Port" File="[INSTALLDIR]\Dea.config" Value="[DIRECTORYSERVERPORT]" ></util:XmlFile>
+              <util:XmlFile Id="SetStreamingTimeout" Action="setValue" ElementPath="/cloudfoundry/dea/directoryServer/@streamingTimeoutMS" File="[INSTALLDIR]\Dea.config" Value="[STREAMINGTIMEOUTMS]" ></util:XmlFile>
+              <util:XmlFile Id="SetStagingEnabled" Action="setValue" ElementPath="/cloudfoundry/dea/staging/@enabled" File="[INSTALLDIR]\Dea.config" Value="[STAGINGENABLED]" ></util:XmlFile>
+              <util:XmlFile Id="SetBuildpacksDir" Action="setValue" ElementPath="/cloudfoundry/dea/staging/@buildpacksDirectory" File="[INSTALLDIR]\Dea.config" Value="[BUILDPACKSDIRECTORY]" ></util:XmlFile>
+              <util:XmlFile Id="SetGit" Action="setValue" ElementPath="/cloudfoundry/dea/staging/@gitExecutable" File="[INSTALLDIR]\Dea.config" Value="[GIT]" ></util:XmlFile>
+              <util:XmlFile Id="SetStagingTimeout" Action="setValue" ElementPath="/cloudfoundry/dea/staging/@stagingTimeoutMs" File="[INSTALLDIR]\Dea.config" Value="[STAGINGTIMEOUTMS]" ></util:XmlFile>
+              <util:XmlFile Id="SetStacks" Action="setValue" ElementPath="/cloudfoundry/dea/stacks/stack/@name" File="[INSTALLDIR]\Dea.config" Value="[STACKS]" ></util:XmlFile>
 
               <ServiceInstall Id="WinDEA" Type="ownProcess" Name="WinDEA" DisplayName="WinDEA"
-                Description="Uhuru .NET Droplet Execution Agent" Start="auto" Account="LocalSystem" ErrorControl="normal">
+                Description="Cloudfoundry .NET Droplet Execution Agent" Start="auto" Account="LocalSystem" ErrorControl="normal">
                 <util:PermissionEx User="Everyone" ServicePauseContinue="yes" ServiceQueryStatus="yes"
                         ServiceStart="yes" ServiceStop="yes" ServiceUserDefinedControl="yes" />
                 <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="15"/>
@@ -119,23 +119,23 @@
                 <Directory Id="iis8appDir" Name="app">
                   <Directory Id="iis8appbin" Name="bin">                    
                     <Component Id="iis8buildpackapplog" Feature="BuildpackFeature">
-                       <File Id="ASPLOGGING" Name="Uhuru.CloudFoundry.DEA.Plugins.AspDotNetLogging.dll" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\app\bin\Uhuru.CloudFoundry.DEA.Plugins.AspDotNetLogging.dll"/>                     
+                       <File Id="ASPLOGGING" Name="Uhuru.CloudFoundry.DEA.Plugins.AspDotNetLogging.dll" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\app\bin\Uhuru.CloudFoundry.DEA.Plugins.AspDotNetLogging.dll"/>                     
                     </Component>
                   </Directory>
                     <Component Id="iis8buildpackappconfig" Feature="BuildpackFeature">
-                       <File Id="ASPLOGConfig" Name="UhuruAspNetEventProvider.config" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\app\UhuruAspNetEventProvider.config"/>
+                       <File Id="ASPLOGConfig" Name="UhuruAspNetEventProvider.config" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\app\UhuruAspNetEventProvider.config"/>
                     </Component>                
                 </Directory>   
                 
                 <Directory Id="iis8binDir" Name="bin">                  
                     <Component Id="iis8buildpackbin" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b45" Feature="BuildpackFeature">                     
-                        <File Id="CompileBat" Name="compile.bat" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\compile.bat"/>
-                        <File Id="CompilePS" Name="compile.ps1" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\compile.ps1"/>
-                        <File Id="NugetExe" Name="nuget.exe" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\nuget.exe"/>
-                        <File Id="DetectBat" Name="detect.bat" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\detect.bat"/>
-                        <File Id="DetectPS" Name="detect.ps1" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\detect.ps1"/>
-                        <File Id="ReleaseBat" Name="release.bat" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\release.bat"/>
-                        <File Id="ReleasePS" Name="release.ps1" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\bin\release.ps1"/>                      
+                        <File Id="CompileBat" Name="compile.bat" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\bin\compile.bat"/>
+                        <File Id="CompilePS" Name="compile.ps1" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\bin\compile.ps1"/>
+                        <File Id="NugetExe" Name="nuget.exe" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\bin\nuget.exe"/>
+                        <File Id="DetectBat" Name="detect.bat" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\bin\detect.bat"/>
+                        <File Id="DetectPS" Name="detect.ps1" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\bin\detect.ps1"/>
+                        <File Id="ReleaseBat" Name="release.bat" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\bin\release.bat"/>
+                        <File Id="ReleasePS" Name="release.ps1" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\bin\release.ps1"/>                      
                     </Component>                  
                 </Directory>
               
@@ -143,31 +143,31 @@
                   
                     <Directory Id="iis8hwcsrc" Name="src">
                       <Component Id="iis8hwcsln" Feature="BuildpackFeature">
-                        <File Id="slnhwc" Name="iishwc.sln" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\src\iishwc.sln"/>
+                        <File Id="slnhwc" Name="iishwc.sln" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\src\iishwc.sln"/>
                       </Component>
                       <Directory Id="iis8hwcsrcc" Name="iishwc">
                         <Component Id="iis8hwcslncpp" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b46" Feature="BuildpackFeature">
-                          <File Id="iishwcpp" Name="iishwc.cpp" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\src\iishwc\iishwc.cpp"/>
-                          <File Id="iishwcvcxproj" Name="iishwc.vcxproj" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\src\iishwc\iishwc.vcxproj"/>
-                          <File Id="iishwcvcxprojfilter" Name="iishwc.vcxproj.filters" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\src\iishwc\iishwc.vcxproj.filters"/>
+                          <File Id="iishwcpp" Name="iishwc.cpp" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\src\iishwc\iishwc.cpp"/>
+                          <File Id="iishwcvcxproj" Name="iishwc.vcxproj" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\src\iishwc\iishwc.vcxproj"/>
+                          <File Id="iishwcvcxprojfilter" Name="iishwc.vcxproj.filters" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\src\iishwc\iishwc.vcxproj.filters"/>
                         </Component>
                       </Directory>
                     </Directory>
                     
                     <Component Id="iis8isshwc" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b47" Feature="BuildpackFeature">
-                       <File Id="apphostTemp" Name="applicationHostTemplate.config" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\applicationHostTemplate.config"/>
-                       <File Id="detectVersion" Name="detectVersion.ps1" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\detectVersion.ps1"/>
-                       <File Id="iishwcx64" Name="iishwcx64.exe" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\iishwcx64.exe"/>
-                       <File Id="iishwcx86" Name="iishwcx86.exe" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\iishwcx86.exe"/>
+                       <File Id="apphostTemp" Name="applicationHostTemplate.config" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\applicationHostTemplate.config"/>
+                       <File Id="detectVersion" Name="detectVersion.ps1" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\detectVersion.ps1"/>
+                       <File Id="iishwcx64" Name="iishwcx64.exe" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\iishwcx64.exe"/>
+                       <File Id="iishwcx86" Name="iishwcx86.exe" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\iishwcx86.exe"/>
                        
-                       <File Id="rootWeb2064" Name="rootWeb2064.config" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\rootWeb2064.config"/>
-                       <File Id="rootWeb2086" Name="rootWeb2086.config" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\rootWeb2086.config"/>
+                       <File Id="rootWeb2064" Name="rootWeb2064.config" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\rootWeb2064.config"/>
+                       <File Id="rootWeb2086" Name="rootWeb2086.config" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\rootWeb2086.config"/>
                       
-                       <File Id="rootWeb4064" Name="rootWeb4064.config" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\rootWeb4064.config"/>
-                       <File Id="rootWeb4086" Name="rootWeb4086.config" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\rootWeb4086.config"/>
+                       <File Id="rootWeb4064" Name="rootWeb4064.config" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\rootWeb4064.config"/>
+                       <File Id="rootWeb4086" Name="rootWeb4086.config" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\rootWeb4086.config"/>
                        
-                       <File Id="startbat" Name="start.bat" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\start.bat"/>
-                       <File Id="startPS" Name="start.ps1" Source="$(var.BUILDPACKDIRECTORY)\uhuru-buildpack-iis8\iishwc\start.ps1"/>                       
+                       <File Id="startbat" Name="start.bat" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\start.bat"/>
+                       <File Id="startPS" Name="start.ps1" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\iishwc\start.ps1"/>                       
                     </Component>                
                 
                 </Directory>              
