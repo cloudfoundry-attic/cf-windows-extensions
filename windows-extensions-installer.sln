@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudFoundry.Test", "src\Cl
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "DEAInstaller", "src\DEAInstaller\DEAInstaller.wixproj", "{897E9076-9306-4088-BF01-CE50B1195705}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudFoundry.AspDotNetLogging", "src\CloudFoundry.AspDotNetLogging\CloudFoundry.AspDotNetLogging.csproj", "{EFBDC205-6578-47AA-A53C-DFFC5A39CA1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -95,6 +97,10 @@ Global
 		{897E9076-9306-4088-BF01-CE50B1195705}.Debug|x64.Build.0 = Debug|x64
 		{897E9076-9306-4088-BF01-CE50B1195705}.Release|x64.ActiveCfg = Release|x64
 		{897E9076-9306-4088-BF01-CE50B1195705}.Release|x64.Build.0 = Release|x64
+		{EFBDC205-6578-47AA-A53C-DFFC5A39CA1F}.Debug|x64.ActiveCfg = Debug|x64
+		{EFBDC205-6578-47AA-A53C-DFFC5A39CA1F}.Debug|x64.Build.0 = Debug|x64
+		{EFBDC205-6578-47AA-A53C-DFFC5A39CA1F}.Release|x64.ActiveCfg = Release|x64
+		{EFBDC205-6578-47AA-A53C-DFFC5A39CA1F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
