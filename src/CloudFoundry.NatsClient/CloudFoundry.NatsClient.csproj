@@ -28,7 +28,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -82,7 +83,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="key.snk" />
     <None Include="NatsDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>

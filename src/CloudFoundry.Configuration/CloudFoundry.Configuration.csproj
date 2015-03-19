@@ -28,7 +28,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -82,7 +83,6 @@
       <DependentUpon>CloudFoundrySectionDesigner.csd</DependentUpon>
       <SubType>Designer</SubType>
     </None>
-    <None Include="key.snk" />
     <None Include="packages.config" />
     <None Include="CloudFoundrySectionDesigner.csd">
       <Generator>CsdFileGenerator</Generator>
