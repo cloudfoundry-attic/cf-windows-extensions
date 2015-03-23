@@ -6,14 +6,14 @@ bin
 *.vsmdi
 *.opensdf
 *.sdf
-Uhuru.Utilities.WindowsProcess/x64
+CloudFoundry.Utilities.WindowsProcess/x64
 *.user
 StyleCop.Cache
 *.testsettings
 *.trx
 doc/*.xml
 doc/*.XML
-!src/Uhuru.CloudFoundry.Test/TestApps/Umbraco/app/bin
+!src/CloudFoundry.Test/TestApps/Umbraco/app/bin
 !src/Buildpacks/iis8/app/bin
 !src/Buildpacks/iis8/bin
 !src/Buildpacks/iis8/iishwc/iishwcx64.exe
@@ -31,4 +31,4 @@ doc/*.XML
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
 #!**/packages/repositories.config
 
-!src/.nuget/NuGet.exe
+!.nuget/NuGet.exe
