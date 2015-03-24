@@ -1,6 +1,3 @@
-[submodule "src/windows-isolation"]
-	path = src/windows-isolation
-	url = git@github.com:hpcloud/cf-windows-prison.git
 [submodule "src/buildpacks/hp-buildpack-iis8"]
 	path = src/buildpacks/hp-buildpack-iis8
 	url = ../../hpcloud/hp-buildpack-iis8.git
