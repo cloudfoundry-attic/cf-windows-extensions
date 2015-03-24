@@ -177,19 +177,19 @@ namespace CloudFoundry.WinDEA
         public void CreatePrison()
         {
 
-            if (this.Container.IsLocked())
+            if (this.Container.IsLocked)
             {
                 return;
             }
 
             this.Lock.EnterWriteLock();
 
-            var containerRules = new HP.WindowsPrison.PrisonRules();
+            var containerRules = new HP.WindowsPrison.PrisonConfiguration();
 
-            containerRules.PrisonHomePath = this.Properties.Directory;
+            containerRules.PrisonHomeRootPath = this.Properties.Directory;
 
-            containerRules.CellType |= HP.WindowsPrison.RuleType.WindowStation;
-            containerRules.CellType |= HP.WindowsPrison.RuleType.IISGroup;
+            containerRules.Rules |= HP.WindowsPrison.RuleTypes.WindowStation;
+            containerRules.Rules |= HP.WindowsPrison.RuleTypes.IISGroup;
 
 
             containerRules.TotalPrivateMemoryLimitBytes = this.Properties.MemoryQuotaBytes;
@@ -198,25 +198,25 @@ namespace CloudFoundry.WinDEA
 
             if (this.Properties.UploadThrottleBitsps > 0)
             {
-                containerRules.CellType |= HP.WindowsPrison.RuleType.Network;
+                containerRules.Rules |= HP.WindowsPrison.RuleTypes.Network;
                 containerRules.NetworkOutboundRateLimitBitsPerSecond = this.Properties.UploadThrottleBitsps;
                 containerRules.AppPortOutboundRateLimitBitsPerSecond = this.Properties.UploadThrottleBitsps;
             }
 
             if (this.Properties.UseDiskQuota)
             {
-                containerRules.CellType |= HP.WindowsPrison.RuleType.Disk;
+                containerRules.Rules |= HP.WindowsPrison.RuleTypes.Disk;
                 containerRules.DiskQuotaBytes = this.Properties.DiskQuotaBytes;
             }
 
-            Logger.Info("Creating Process Prison: {0}", this.Container.ID.ToString());
+            Logger.Info("Creating Process Prison: {0}", this.Container.Id.ToString());
             this.Container.Tag = "dea";
             this.Container.Lockdown(containerRules);
 
-            this.Properties.WindowsUserName = this.Container.User.Username;
+            this.Properties.WindowsUserName = this.Container.User.UserName;
             this.Properties.WindowsPassword = this.Container.User.Password;
 
-            this.Properties.InstanceId = this.Container.ID.ToString();
+            this.Properties.InstanceId = this.Container.Id.ToString();
 
             this.Lock.ExitWriteLock();
 

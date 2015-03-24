@@ -546,7 +546,7 @@
                     Logger.Info("Recovering Instance: {0}", instance.Properties.ContainerId);
 
                     //instance.Prison.Attach(prisonInfo);
-                    HP.WindowsPrison.Prison.LoadPrisonAndAttach(Guid.Parse(instance.Properties.ContainerId));
+                    HP.WindowsPrison.PrisonManager.LoadPrisonAndAttach(Guid.Parse(instance.Properties.ContainerId));
 
                     if (instance.Properties.State == DropletInstanceState.Starting)
                     {
@@ -1718,12 +1718,12 @@
                 {
                     instance.Lock.EnterWriteLock();
 
-                    var containerRules = new HP.WindowsPrison.PrisonRules();
+                    var containerRules = new HP.WindowsPrison.PrisonConfiguration();
 
-                    containerRules.PrisonHomePath = instance.Properties.Directory;
+                    containerRules.PrisonHomeRootPath = instance.Properties.Directory;
 
-                    containerRules.CellType |= HP.WindowsPrison.RuleType.WindowStation;
-                    containerRules.CellType |= HP.WindowsPrison.RuleType.IISGroup;
+                    containerRules.Rules |= HP.WindowsPrison.RuleTypes.WindowStation;
+                    containerRules.Rules |= HP.WindowsPrison.RuleTypes.IISGroup;
 
 
                     containerRules.TotalPrivateMemoryLimitBytes = instance.Properties.MemoryQuotaBytes;
@@ -1732,17 +1732,17 @@
 
                     if (this.uploadThrottleBitsps > 0)
                     {
-                        containerRules.CellType |= HP.WindowsPrison.RuleType.Network;
+                        containerRules.Rules |= HP.WindowsPrison.RuleTypes.Network;
                         containerRules.NetworkOutboundRateLimitBitsPerSecond = this.uploadThrottleBitsps;
                         containerRules.AppPortOutboundRateLimitBitsPerSecond = this.uploadThrottleBitsps;
                     }
 
-                    containerRules.CellType |= HP.WindowsPrison.RuleType.Httpsys;
+                    containerRules.Rules |= HP.WindowsPrison.RuleTypes.Httpsys;
                     containerRules.UrlPortAccess = instance.Properties.Port;
 
                     if (this.useDiskQuota)
                     {
-                        containerRules.CellType |= HP.WindowsPrison.RuleType.Disk;
+                        containerRules.Rules |= HP.WindowsPrison.RuleTypes.Disk;
                         containerRules.DiskQuotaBytes = instance.Properties.DiskQuotaBytes;
                     }
 
@@ -1765,7 +1765,7 @@
                     //prisonInfo.UrlPortAccess = instance.Properties.Port;
 
                     instance.Prison.Tag = "dea";
-                    instance.Properties.ContainerId = instance.Prison.ID.ToString();
+                    instance.Properties.ContainerId = instance.Prison.Id.ToString();
 
                     Logger.Info("Creating Process Prisson: {0}", instance.Properties.ContainerId);
 
@@ -1777,7 +1777,7 @@
 
                     FirewallTools.OpenPort(instance.Properties.Port, instance.Properties.InstanceId);
 
-                    instance.Properties.WindowsUserName = instance.Prison.User.Username;
+                    instance.Properties.WindowsUserName = instance.Prison.User.UserName;
                     instance.Properties.WindowsPassword = instance.Prison.User.Password;
 
                     //instance.Properties.WindowsPassword = instance.Prison.WindowsPassword;
@@ -1806,7 +1806,7 @@
                     instance.Properties.EnvironmentVariables.Add(VcapWindowsUserVariable, instance.Properties.WindowsUserName);
                     instance.Properties.EnvironmentVariables.Add(VcapWindowsUserPasswordVariable, instance.Properties.WindowsPassword);
 
-                    instance.Prison.SetUsersEnvironmentVariables(instance.Properties.EnvironmentVariables);
+                    instance.Prison.User.SetUserEnvironmentVariables(instance.Properties.EnvironmentVariables);
                 }
                 finally
                 {
@@ -2305,7 +2305,7 @@
                     // Stop the instance gracefully before cleaning up.
                     if (isStopped)
                     {
-                        if (instance.Prison.IsLocked() && instance.Prison.JobObject.ActiveProcesses > 0)
+                        if (instance.Prison.IsLocked && instance.Prison.JobObject.ActiveProcesses > 0)
                         {
                             try
                             {
@@ -2323,7 +2323,7 @@
                     {
                         this.monitoring.RemoveInstanceResources(instance);
 
-                        if (instance.Prison.IsLocked())
+                        if (instance.Prison.IsLocked)
                         {
                             try
                             {
@@ -2347,7 +2347,7 @@
                             instance.Properties.Directory = null;
                         }
 
-                        if (instance.Properties.Directory != null && !instance.Prison.IsLocked())
+                        if (instance.Properties.Directory != null && !instance.Prison.IsLocked)
                         {
                             try
                             {
@@ -2370,7 +2370,7 @@
                             }
                         }
 
-                        if (!instance.Prison.IsLocked() && instance.Properties.Directory == null)
+                        if (!instance.Prison.IsLocked && instance.Properties.Directory == null)
                         {
                             removeDroplet = true;
                         }
@@ -2448,7 +2448,7 @@
 
                         try
                         {
-                            if (instance.Container.IsLocked())
+                            if (instance.Container.IsLocked)
                             {
                                 instance.Container.Destroy();
                             }
@@ -2492,7 +2492,7 @@
 
                     Logger.Info("Recovering Process Prison: {0}", instance.Properties.InstanceId);
 
-                    instance.Container = HP.WindowsPrison.Prison.LoadPrisonAndAttach(Guid.Parse(instance.Properties.InstanceId));
+                    instance.Container = HP.WindowsPrison.PrisonManager.LoadPrisonAndAttach(Guid.Parse(instance.Properties.InstanceId));
 
                     foreach (Process p in instance.Container.JobObject.GetJobProcesses())
                     {
@@ -2501,7 +2501,7 @@
                             p.Kill();
                         }
                     }
-                    if (instance.Container.IsLocked())
+                    if (instance.Container.IsLocked)
                     {
                         instance.Container.Destroy();
                     }
