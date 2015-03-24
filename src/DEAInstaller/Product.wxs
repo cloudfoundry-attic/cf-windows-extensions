@@ -51,7 +51,6 @@
               <File Id="ServiceExe" Name="DEA.exe" Source="$(var.BINDIRECTORY)" KeyPath="yes"/>
               <File Id="ServiceConfig" Name="DEA.exe.config" Source="$(var.BINDIRECTORY)"/>
               <File Id="ServicePdb" Name="DEA.pdb" Source="$(var.BINDIRECTORY)"/>
-              <File Id="InteropDiskQuotaTypeLibrary" Name="Interop.DiskQuotaTypeLibrary.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="NewtonsoftJson" Name="Newtonsoft.Json.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="NLogDll" Name="NLog.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="NLogConfig" Name="NLog.config" Source="$(var.BINDIRECTORY)"/>
@@ -75,7 +74,7 @@
               <File Id="ProcessPrivileges" Name="ProcessPrivileges.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="AlphaFSDll" Name="AlphaFS.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="AlphaFSPdb" Name="AlphaFS.pdb" Source="$(var.BINDIRECTORY)"/>
-              <File Id="HPPrisonGuard" Name="HP.WindowsPrison.Guard.exe" Source="$(var.BINDIRECTORY)" />
+              <File Id="HPPrisonGuard" Name="HP.WindowsPrison.Guard.exe" Source="$(var.BINDIRECTORY)..\packages\windows-prison.1.0.0.15\lib\Net45\" />
               <File Id="HPPrison" Name="HP.WindowsPrison.dll" Source="$(var.BINDIRECTORY)" />
 
 
