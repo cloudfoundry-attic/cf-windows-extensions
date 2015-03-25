@@ -59,9 +59,9 @@
       <HintPath>..\..\packages\AlphaFS.2.0.1\lib\net45\AlphaFS.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HP.WindowsPrison, Version=1.0.0.15, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="HP.WindowsPrison, Version=1.0.0.26, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\windows-prison.1.0.0.15\lib\Net45\HP.WindowsPrison.dll</HintPath>
+      <HintPath>..\..\packages\windows-prison.1.0.0.26\lib\Net45\HP.WindowsPrison.dll</HintPath>
     </Reference>
     <Reference Include="Ini.Net">
       <HintPath>..\..\packages\ini.net.1.1.0\lib\net20\Ini.Net.dll</HintPath>
@@ -73,7 +73,7 @@
     </Reference>
     <Reference Include="ProcessPrivileges, Version=1.5.7.0, Culture=neutral, PublicKeyToken=fa3ff549c00ac058, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\windows-prison.1.0.0.15\lib\Net45\ProcessPrivileges.dll</HintPath>
+      <HintPath>..\..\packages\windows-prison.1.0.0.26\lib\Net45\ProcessPrivileges.dll</HintPath>
     </Reference>
     <Reference Include="SevenZipSharp, Version=0.64.3890.29348, Culture=neutral, PublicKeyToken=20de82c62b055c88, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -182,6 +182,11 @@
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HP.WindowsPrison.Guard.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
