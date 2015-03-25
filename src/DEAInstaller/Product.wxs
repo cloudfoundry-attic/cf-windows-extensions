@@ -74,7 +74,7 @@
               <File Id="ProcessPrivileges" Name="ProcessPrivileges.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="AlphaFSDll" Name="AlphaFS.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="AlphaFSPdb" Name="AlphaFS.pdb" Source="$(var.BINDIRECTORY)"/>
-              <File Id="HPPrisonGuard" Name="HP.WindowsPrison.Guard.exe" Source="$(var.BINDIRECTORY)..\packages\windows-prison.1.0.0.15\lib\Net45\" />
+              <File Id="HPPrisonGuard" Name="HP.WindowsPrison.Guard.exe" Source="$(var.BINDIRECTORY)" />
               <File Id="HPPrison" Name="HP.WindowsPrison.dll" Source="$(var.BINDIRECTORY)" />
 
 
