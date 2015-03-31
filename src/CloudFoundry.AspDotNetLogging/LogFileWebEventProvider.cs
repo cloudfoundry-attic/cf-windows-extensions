@@ -1,5 +1,6 @@
 ﻿namespace CloudFoundry.AspDotNetLogging
 {
+    using CloudFoundry.AspDotNetLogging.Properties;
     using System;
     using System.Configuration;
     using System.Globalization;
@@ -72,11 +73,11 @@
 
             if (this.Name == "ErrorEventProvider")
             {
-                this.logFilePath = ConfigurationManager.AppSettings["CF_ERROR_LOG_FILE"];
+                this.logFilePath = Settings.Default.CF_ERROR_LOG_FILE;
             }
             else
             {
-                this.logFilePath = ConfigurationManager.AppSettings["CF_LOG_FILE"];
+                this.logFilePath = Settings.Default.CF_LOG_FILE;
             }
 
             this.customInfo = new StringBuilder();
