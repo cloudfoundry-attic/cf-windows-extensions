@@ -75,7 +75,7 @@
       <TestDlls Include=".\bin\CloudFoundry.Test.dll"/>
     </ItemGroup>
  
-    <Exec Command="$(VSTestCommand) %(TestDlls.Identity) /inIsolation /TestCaseFilter:$(TestFilter) /logger:trx"  ConsoleToMSBuild="true">
+    <Exec Command="$(VSTestCommand) %(TestDlls.Identity) /inIsolation /TestCaseFilter:$(TestFilter) /logger:trx /Platform:x64 /Framework:framework40 /Enablecodecoverage"  ConsoleToMSBuild="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfTestRun" />
     </Exec>
