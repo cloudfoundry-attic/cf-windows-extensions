@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CloudFoundry.AspDotNetLogging.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CF_LOG_FILE" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">logs\iis.stdout.log</Value>
+    </Setting>
+    <Setting Name="CF_ERROR_LOG_FILE" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">logs\iis.stderr.log</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
