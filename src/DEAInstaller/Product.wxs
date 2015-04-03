@@ -122,9 +122,9 @@
                        <File Id="ASPLOGGING" Name="CloudFoundry.AspDotNetLogging.dll" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\app\bin\CloudFoundry.AspDotNetLogging.dll"/>                     
                     </Component>
                   </Directory>
-                    <Component Id="iis8buildpackappconfig" Feature="BuildpackFeature">
+                    <!--<Component Id="iis8buildpackappconfig" Feature="BuildpackFeature">
                        <File Id="ASPLOGConfig" Name="CloudFoundryAspNetEventProvider.config" Source="$(var.BUILDPACKDIRECTORY)\hp-buildpack-iis8\app\CloudFoundryAspNetEventProvider.config"/>
-                    </Component>                
+                    </Component>-->                
                 </Directory>   
                 
                 <Directory Id="iis8binDir" Name="bin">                  
