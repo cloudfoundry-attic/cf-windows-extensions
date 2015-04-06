@@ -34,8 +34,9 @@ using CloudFoundry.Utilities;
         /// </summary>
         public ApplicationBits()
         {
-            // Setup the Zlib here to avoid errors when extracting for the first time under an impersonated user
-            DEAUtilities.SetupZlib();
+            // Force to load assemby to allow decompression to be executed under a impersonated user
+            DEAUtilities.InitizlizeExtractor();
+
             this.Stacks = new HashSet<string>();
             if (!this.DisableDirCleanup)
             {
@@ -247,10 +248,7 @@ using CloudFoundry.Utilities;
                 // Neccessary for windows disk quota
                 using (new UserImpersonator(instance.Properties.WindowsUserName, ".", instance.Properties.WindowsPassword, true))
                 {
-                    DEAUtilities.UnzipFile(instanceDir, tarZipFile); // Unzip
-                    string tarFileName = Directory.GetFiles(instanceDir, "*.tar")[0];
-                    DEAUtilities.UnzipFile(instanceDir, Path.Combine(instanceDir, tarFileName)); // Untar
-                    File.Delete(Path.Combine(instanceDir, tarFileName));
+                    DEAUtilities.ExtractArchive(tarZipFile, instanceDir);
                 }
 
                 Logger.Debug(Strings.TookXSecondsToStageTheApp, DateTime.Now - startStageing);

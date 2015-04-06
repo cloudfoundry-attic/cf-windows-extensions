@@ -70,9 +70,9 @@
     <Reference Include="ProcessPrivileges">
       <HintPath>..\..\packages\windows-prison.1.0.0.30\lib\Net45\ProcessPrivileges.dll</HintPath>
     </Reference>
-    <Reference Include="SevenZipSharp, Version=0.64.3890.29348, Culture=neutral, PublicKeyToken=20de82c62b055c88, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\SevenZipSharp.0.64\lib\SevenZipSharp.dll</HintPath>
+    <Reference Include="SharpCompress, Version=0.10.3.0, Culture=neutral, PublicKeyToken=beaf6f427e128133, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\sharpcompress.0.10.3\lib\net40\SharpCompress.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -147,10 +147,6 @@
       <Link>CustomDictionary.xml</Link>
       <SubType>Designer</SubType>
     </CodeAnalysisDictionary>
-    <EmbeddedResource Include="lib\7z64.dll" />
-    <EmbeddedResource Include="lib\7z86.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -1591,10 +1591,8 @@
 
                         Logger.Debug("Staging task {0}: Packing droplet {1}", instance.Properties.TaskId, instance.Workspace.StagedDropletPath);
                         Directory.CreateDirectory(instance.Workspace.StagedDropletDir);
-                        string tempFile = Path.ChangeExtension(instance.Workspace.StagedDropletPath, "tar");
-                        DEAUtilities.TarDirectory(instance.Workspace.StagedDir, tempFile);
-                        DEAUtilities.GzipFile(tempFile, instance.Workspace.StagedDropletPath);
-                        File.Delete(tempFile);
+
+                        DEAUtilities.CreateArchive(instance.Workspace.StagedDir, instance.Workspace.StagedDropletPath, false);
 
                         if (File.Exists(instance.Workspace.StagedDropletPath))
                         {
@@ -1620,9 +1618,8 @@
                     try
                     {
                         Directory.CreateDirectory(instance.Workspace.Cache);
-                        string tempFile = Path.ChangeExtension(instance.Workspace.StagedBuildpackCachePath, "tar");
-                        DEAUtilities.TarDirectory(instance.Workspace.Cache, tempFile);
-                        DEAUtilities.GzipFile(tempFile, instance.Workspace.StagedBuildpackCachePath);
+
+                        DEAUtilities.CreateArchive(instance.Workspace.Cache, instance.Workspace.StagedBuildpackCachePath, false);
                         Uri uri = new Uri(instance.Properties.BuildpackCacheUploadURI);
                         Logger.Debug("Staging task {0}: Uploading buildpack cache {1} to {2}", instance.Properties.TaskId, instance.Workspace.StagedBuildpackCachePath, instance.Properties.BuildpackCacheUploadURI);
                         DEAUtilities.HttpUploadFile(instance.Properties.BuildpackCacheUploadURI, new FileInfo(instance.Workspace.StagedBuildpackCachePath), "upload[droplet]", "application/octet-stream", uri.UserInfo);

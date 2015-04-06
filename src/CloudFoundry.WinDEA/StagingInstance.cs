@@ -145,7 +145,7 @@ namespace CloudFoundry.WinDEA
             Directory.CreateDirectory(this.Workspace.UnstagedDir);
             if (File.Exists(this.Workspace.DownloadDropletPath))
             {
-                DEAUtilities.UnzipFile(this.Workspace.UnstagedDir, this.Workspace.DownloadDropletPath);
+                DEAUtilities.ExtractArchive(this.Workspace.DownloadDropletPath, this.Workspace.UnstagedDir);
             }
             else
             {
@@ -155,10 +155,8 @@ namespace CloudFoundry.WinDEA
             if (File.Exists(this.Workspace.DownloadBuildpackCachePath))
             {
                 Logger.Debug("Staging task {0}: Unpacking buildpack cache {1}", this.Properties.TaskId, this.Workspace.DownloadBuildpackCachePath);
-                DEAUtilities.UnzipFile(this.Workspace.Cache, this.Workspace.DownloadBuildpackCachePath); // Unzip
-                string tarFileName = Directory.GetFiles(this.Workspace.DownloadBuildpackCachePath, "*.tar")[0];
-                DEAUtilities.UnzipFile(this.Workspace.Cache, Path.Combine(this.Workspace.Cache, tarFileName)); // Untar
-                File.Delete(Path.Combine(this.Workspace.Cache, tarFileName));
+
+                DEAUtilities.ExtractArchive(this.Workspace.DownloadBuildpackCachePath, this.Workspace.Cache);
             }
         }
 
