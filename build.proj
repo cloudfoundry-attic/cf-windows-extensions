@@ -50,6 +50,8 @@
     <CoverageXml>$(LibraryRoot)\TestResults\cf-windows-extensions.coveragexml</CoverageXml>
     <CoverageHtmlDir>$(LibraryRoot)\TestResults\coveragehtml</CoverageHtmlDir>
     <TestFilter>TestCategory=Unit</TestFilter>
+	<IntegrationTestFilter>TestCategory=Integration</IntegrationTestFilter>
+	<NatsUrl>nats://nats:nats@127.0.0.1:4222</NatsUrl>
   </PropertyGroup>
 
   <!-- Import msbuild extensions -->
@@ -67,6 +69,25 @@
     <MSBuild Projects="$(SDKSolution)"
              Properties="Configuration=$(Configuration);Platform=x64"
              Targets="Clean" />
+  </Target>
+  
+  <!-- Target for running integration tests-->
+  <Target Name="IntegrationTest">
+    <ItemGroup>
+      <TestDlls Include=".\bin\CloudFoundry.Test.dll"/>
+    </ItemGroup>
+ 
+	<MSBuild.ExtensionPack.Xml.XmlFile 
+		TaskAction="UpdateAttribute" 
+		File="bin\CloudFoundry.Test.dll.config" 
+		XPath="/configuration/appSettings/add[@key='nats']/@value" 
+		Value="$(NatsUrl)"
+	/>
+ 
+    <Exec Command="$(VSTestCommand) %(TestDlls.Identity) /inIsolation /TestCaseFilter:$(IntegrationTestFilter) /logger:trx /Platform:x64 /Framework:framework40 /Settings:CodeCoverage.runsettings"  ConsoleToMSBuild="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfTestRun" />
+    </Exec>
   </Target>
 
   <!-- Target for running unit tests with code coverage-->
