@@ -47,6 +47,11 @@
         <Directory Id="ManufacturerFolder" Name="$(var.Manufacturer)">          
           <Directory Id="INSTALLDIR" Name="$(var.ProductName)">
             <Component Id="ProductComponents" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b44">
+              <!-- 
+              Could the addition of binaries be automated using this guide: https://ahordijk.wordpress.com/2013/03/26/automatically-add-references-and-content-to-the-wix-installer/  ?
+              Cherrypicking all files makes the process of managing nuget packages error-prone.
+              -->
+              
               <File Id="DeaConfig" Name="Dea.config" Source="$(var.BINDIRECTORY)"/>
               <File Id="ServiceExe" Name="DEA.exe" Source="$(var.BINDIRECTORY)" KeyPath="yes"/>
               <File Id="ServiceConfig" Name="DEA.exe.config" Source="$(var.BINDIRECTORY)"/>
@@ -54,7 +59,7 @@
               <File Id="NewtonsoftJson" Name="Newtonsoft.Json.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="NLogDll" Name="NLog.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="NLogConfig" Name="NLog.config" Source="$(var.BINDIRECTORY)"/>
-              <File Id="SevenZipSharp" Name="SevenZipSharp.dll" Source="$(var.BINDIRECTORY)"/>
+              <File Id="SharpCompress" Name="SharpCompress.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="DirectoryServerDll" Name="CloudFoundry.WinDEA.DirectoryServer.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="DirectoryServerPdb" Name="CloudFoundry.WinDEA.DirectoryServer.pdb" Source="$(var.BINDIRECTORY)"/>
               <File Id="CloudFoundryDEADll" Name="CloudFoundry.WinDEA.dll" Source="$(var.BINDIRECTORY)"/>
