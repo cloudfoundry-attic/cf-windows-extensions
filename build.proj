@@ -23,7 +23,7 @@
   <PropertyGroup>
     <LibraryRoot>$(MSBuildThisFileDirectory)</LibraryRoot>
     <LibrarySourceFolder>$(LibraryRoot)\src</LibrarySourceFolder>
-    <SDKSolution>windows-extensions-installer.sln</SDKSolution>
+    <WindowsExtensionsSolution>windows-extensions-installer.sln</WindowsExtensionsSolution>
     <PackageOutputDir>$(BinariesFolder)\packages</PackageOutputDir>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
   </PropertyGroup>
@@ -57,14 +57,14 @@
   
   <!-- Build target -->
   <Target Name="Build" DependsOnTargets="RestoreNugetPackages; Versioning">
-    <MSBuild Projects="$(SDKSolution)"
+    <MSBuild Projects="$(WindowsExtensionsSolution)"
              Properties="Configuration=$(Configuration);Platform=x64;"
              Targets="Build" />
   </Target>
 
   <!-- Clean target -->
   <Target Name="Clean" DependsOnTargets="RestoreNugetPackages">
-    <MSBuild Projects="$(SDKSolution)"
+    <MSBuild Projects="$(WindowsExtensionsSolution)"
              Properties="Configuration=$(Configuration);Platform=x64"
              Targets="Clean" />
   </Target>
@@ -75,7 +75,7 @@
       <TestDlls Include=".\bin\CloudFoundry.Test.dll"/>
     </ItemGroup>
  
-    <Exec Command="$(VSTestCommand) %(TestDlls.Identity) /inIsolation /TestCaseFilter:$(TestFilter) /logger:trx /Platform:x64 /Framework:framework40 /Enablecodecoverage"  ConsoleToMSBuild="true">
+    <Exec Command="$(VSTestCommand) %(TestDlls.Identity) /inIsolation /TestCaseFilter:$(TestFilter) /logger:trx /Platform:x64 /Framework:framework40 /Enablecodecoverage /Settings:CodeCoverage.runsettings"  ConsoleToMSBuild="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfTestRun" />
     </Exec>
@@ -102,7 +102,7 @@
 
   <!-- Target for restoring nuget packages -->
   <Target Name="RestoreNugetPackages">
-    <Exec Command="$(NuGetCommand) restore $(SDKSolution)"/>
+    <Exec Command="$(NuGetCommand) restore $(WindowsExtensionsSolution)"/>
   </Target>
   
   
