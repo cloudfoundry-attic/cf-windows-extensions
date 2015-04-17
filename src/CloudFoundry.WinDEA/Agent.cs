@@ -1453,6 +1453,11 @@
                 }
                 instance.CreatePrison();
 
+                if (pmessage.Properties.Environment != null) {
+                    Dictionary<string, string> stagingEnvVars = this.ParseEnvironmnetVariables(pmessage.Properties.Environment);
+                    instance.Container.User.SetUserEnvironmentVariables(stagingEnvVars);
+                }
+
                 instance.GetBuildpack(pmessage, this.gitPath, this.buildpacksDir);
                 this.stagingTaskRegistry.ScheduleSnapshotStagingState();
 
@@ -1955,6 +1960,27 @@
             env.Add("HOMEPATH", Path.Combine(instance.Properties.Directory));
 
             // User's environment settings
+            if (appVars != null)
+            {
+                var parsedAppVards = ParseEnvironmnetVariables(appVars);
+                foreach (var appEnv in parsedAppVards)
+                {
+                    env.Add(appEnv.Key, appEnv.Value);
+                }
+            }
+
+            return env;
+        }
+
+        /// <summary>
+        /// Parse environment variable from string with equal separator to key value type.
+        /// </summary>
+        /// <param name="appVars">The user application variables.</param>
+        /// <returns>Parsed environment variables.</returns>
+        private Dictionary<string, string> ParseEnvironmnetVariables(string[] appVars)
+        {
+            Dictionary<string, string> env = new Dictionary<string, string>();
+
             if (appVars != null)
             {
                 foreach (string appEnv in appVars)
