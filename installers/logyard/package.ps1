@@ -161,10 +161,13 @@ function InstallLogyard($logyardDir, $logyardLogDir, $redisURI)
     }
     
     New-Service -Name 'Logyard' -BinaryPathName "${logyardBinary} -logDir ${logyardLogDir} -redisUri ${redisURI}" -DisplayName 'Logyard' -StartupType Automatic
+    sc.exe failure Logyard actions= restart/0 reset= 0
     Start-Service -DisplayName 'Logyard'
     New-Service -Name 'AppTail' -BinaryPathName "${apptailBinary} -logDir ${logyardLogDir} -redisUri ${redisURI} -uidFile ${uidFile}"  -DisplayName 'AppTail' -StartupType Automatic
+    sc.exe failure AppTail actions= restart/0 reset= 0
     Start-Service -DisplayName 'AppTail'
     New-Service -Name 'SysTail' -BinaryPathName "${systailBinary} -logDir ${logyardLogDir} -redisUri ${redisURI}" -DisplayName 'SysTail' -StartupType Automatic
+    sc.exe failure SysTail actions= restart/0 reset= 0
     Start-Service -DisplayName 'SysTail'
     
     # Setup a firewall rule for Logyard
