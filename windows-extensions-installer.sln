@@ -13,11 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Buildpacks", "Buildpacks", "{BFCFDFC1-D035-4C75-BC44-CC19AF7581AE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "hp-buildpack-iis8", "hp-buildpack-iis8", "{515E386E-A80D-43F9-84CC-BA817DFF5220}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cf-iis8-buildback", "cf-iis8-buildback", "{515E386E-A80D-43F9-84CC-BA817DFF5220}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iishwc", "src\buildpacks\hp-buildpack-iis8\iishwc\src\iishwc\iishwc.vcxproj", "{D577C3D6-9046-40BF-B414-FEECA8FD6EB6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iishwc", "src\buildpacks\cf-iis8-buildback\iishwc\src\iishwc\iishwc.vcxproj", "{D577C3D6-9046-40BF-B414-FEECA8FD6EB6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iishwc_x64", "src\buildpacks\hp-buildpack-iis8\iishwc\src\iishwc\iishwc_x64.vcxproj", "{518046C8-B3CD-4789-A964-12C1FE722E88}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iishwc_x64", "src\buildpacks\cf-iis8-buildback\iishwc\src\iishwc\iishwc_x64.vcxproj", "{518046C8-B3CD-4789-A964-12C1FE722E88}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudFoundry.Utilities", "src\CloudFoundry.Utilities\CloudFoundry.Utilities.csproj", "{CD3B15D7-8C7D-4302-A621-02BFD96FE6E3}"
 EndProject
