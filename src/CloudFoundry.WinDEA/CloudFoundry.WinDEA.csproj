@@ -55,20 +55,25 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AlphaFS">
+    <Reference Include="AlphaFS, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4d31a58f7d7ad5c9, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AlphaFS.2.0.1\lib\net45\AlphaFS.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="HP.WindowsPrison">
-      <HintPath>..\..\packages\windows-prison.1.0.0.30\lib\Net45\HP.WindowsPrison.dll</HintPath>
+    <Reference Include="CloudFoundry.WindowsPrison, Version=1.0.0.39, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\..\packages\windows-prison.1.0.0.39-alpha\lib\Net45\CloudFoundry.WindowsPrison.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Ini.Net">
+    <Reference Include="Ini.Net, Version=1.0.5531.18665, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ini.net.1.1.0\lib\net20\Ini.Net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="NLog">
+    <Reference Include="NLog, Version=3.2.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="ProcessPrivileges">
-      <HintPath>..\..\packages\windows-prison.1.0.0.30\lib\Net45\ProcessPrivileges.dll</HintPath>
+    <Reference Include="ProcessPrivileges, Version=1.5.7.0, Culture=neutral, PublicKeyToken=fa3ff549c00ac058, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\windows-prison.1.0.0.39-alpha\lib\Net45\ProcessPrivileges.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="SharpCompress, Version=0.10.3.0, Culture=neutral, PublicKeyToken=beaf6f427e128133, processorArchitecture=MSIL">
       <HintPath>..\..\packages\sharpcompress.0.10.3\lib\net40\SharpCompress.dll</HintPath>
@@ -175,7 +180,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HP.WindowsPrison.Guard.exe">
+    <Content Include="CloudFoundry.WindowsPrison.Guard.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

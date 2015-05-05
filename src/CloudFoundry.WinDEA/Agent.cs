@@ -403,7 +403,7 @@
             //    Logger.Info("Disk quota initialization complete");
             //}
 
-            HP.WindowsPrison.Prison.Init();
+            CloudFoundry.WindowsPrison.Prison.Init();
 
             this.fileViewer.Start(this.Host, DirectoryConfiguration.ReadConfig(), this);
 
@@ -546,7 +546,7 @@
                     Logger.Info("Recovering Instance: {0}", instance.Properties.ContainerId);
 
                     //instance.Prison.Attach(prisonInfo);
-                    HP.WindowsPrison.PrisonManager.LoadPrisonAndAttach(Guid.Parse(instance.Properties.ContainerId));
+                    CloudFoundry.WindowsPrison.PrisonManager.LoadPrisonAndAttach(Guid.Parse(instance.Properties.ContainerId));
 
                     if (instance.Properties.State == DropletInstanceState.Starting)
                     {
@@ -1720,12 +1720,12 @@
                 {
                     instance.Lock.EnterWriteLock();
 
-                    var containerRules = new HP.WindowsPrison.PrisonConfiguration();
+                    var containerRules = new CloudFoundry.WindowsPrison.PrisonConfiguration();
 
                     containerRules.PrisonHomeRootPath = instance.Properties.Directory;
 
-                    containerRules.Rules |= HP.WindowsPrison.RuleTypes.WindowStation;
-                    containerRules.Rules |= HP.WindowsPrison.RuleTypes.IISGroup;
+                    containerRules.Rules |= CloudFoundry.WindowsPrison.RuleTypes.WindowStation;
+                    containerRules.Rules |= CloudFoundry.WindowsPrison.RuleTypes.IISGroup;
 
 
                     containerRules.TotalPrivateMemoryLimitBytes = instance.Properties.MemoryQuotaBytes;
@@ -1734,17 +1734,17 @@
 
                     if (this.uploadThrottleBitsps > 0)
                     {
-                        containerRules.Rules |= HP.WindowsPrison.RuleTypes.Network;
+                        containerRules.Rules |= CloudFoundry.WindowsPrison.RuleTypes.Network;
                         containerRules.NetworkOutboundRateLimitBitsPerSecond = this.uploadThrottleBitsps;
                         containerRules.AppPortOutboundRateLimitBitsPerSecond = this.uploadThrottleBitsps;
                     }
 
-                    containerRules.Rules |= HP.WindowsPrison.RuleTypes.Httpsys;
+                    containerRules.Rules |= CloudFoundry.WindowsPrison.RuleTypes.Httpsys;
                     containerRules.UrlPortAccess = instance.Properties.Port;
 
                     if (this.useDiskQuota)
                     {
-                        containerRules.Rules |= HP.WindowsPrison.RuleTypes.Disk;
+                        containerRules.Rules |= CloudFoundry.WindowsPrison.RuleTypes.Disk;
                         containerRules.DiskQuotaBytes = instance.Properties.DiskQuotaBytes;
                     }
 
@@ -2515,7 +2515,7 @@
 
                     Logger.Info("Recovering Process Prison: {0}", instance.Properties.InstanceId);
 
-                    instance.Container = HP.WindowsPrison.PrisonManager.LoadPrisonAndAttach(Guid.Parse(instance.Properties.InstanceId));
+                    instance.Container = CloudFoundry.WindowsPrison.PrisonManager.LoadPrisonAndAttach(Guid.Parse(instance.Properties.InstanceId));
 
                     foreach (Process p in instance.Container.JobObject.GetJobProcesses())
                     {
