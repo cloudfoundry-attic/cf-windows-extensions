@@ -3,4 +3,4 @@
 	url = git@github.com:hpcloud/cf-buildpack-iis8.git
 [submodule "src/buildpacks/cf-iis8-buildback"]
 	path = src/buildpacks/cf-iis8-buildback
-	url = git@github.com:hpcloud/cf-iis8-buildback.git
+	url = git@github.com:hpcloud/cf-iis8-buildpack.git
