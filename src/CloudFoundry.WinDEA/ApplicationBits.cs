@@ -34,7 +34,7 @@ using CloudFoundry.Utilities;
         /// </summary>
         public ApplicationBits()
         {
-            // Force to load assemby to allow decompression to be executed under a impersonated user
+            // Force to load assembly to allow decompression to be executed under a impersonated user
             DEAUtilities.InitizlizeExtractor();
 
             this.Stacks = new HashSet<string>();

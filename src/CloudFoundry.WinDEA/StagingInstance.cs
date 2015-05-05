@@ -24,7 +24,7 @@ namespace CloudFoundry.WinDEA
         /// <summary>
         /// Used for security/resource sand-boxing.
         /// </summary>
-        private HP.WindowsPrison.Prison processPrison = new HP.WindowsPrison.Prison();
+        private CloudFoundry.WindowsPrison.Prison processPrison = new CloudFoundry.WindowsPrison.Prison();
 
         private StagingInstanceProperties properties = new StagingInstanceProperties();
 
@@ -54,7 +54,7 @@ namespace CloudFoundry.WinDEA
             set { this.properties = value; }
         }
 
-        public HP.WindowsPrison.Prison Container
+        public CloudFoundry.WindowsPrison.Prison Container
         {
             get { return this.processPrison; }
             set { this.processPrison = value; }
@@ -182,12 +182,12 @@ namespace CloudFoundry.WinDEA
 
             this.Lock.EnterWriteLock();
 
-            var containerRules = new HP.WindowsPrison.PrisonConfiguration();
+            var containerRules = new CloudFoundry.WindowsPrison.PrisonConfiguration();
 
             containerRules.PrisonHomeRootPath = this.Properties.Directory;
 
-            containerRules.Rules |= HP.WindowsPrison.RuleTypes.WindowStation;
-            containerRules.Rules |= HP.WindowsPrison.RuleTypes.IISGroup;
+            containerRules.Rules |= CloudFoundry.WindowsPrison.RuleTypes.WindowStation;
+            containerRules.Rules |= CloudFoundry.WindowsPrison.RuleTypes.IISGroup;
 
 
             containerRules.TotalPrivateMemoryLimitBytes = this.Properties.MemoryQuotaBytes;
@@ -196,14 +196,14 @@ namespace CloudFoundry.WinDEA
 
             if (this.Properties.UploadThrottleBitsps > 0)
             {
-                containerRules.Rules |= HP.WindowsPrison.RuleTypes.Network;
+                containerRules.Rules |= CloudFoundry.WindowsPrison.RuleTypes.Network;
                 containerRules.NetworkOutboundRateLimitBitsPerSecond = this.Properties.UploadThrottleBitsps;
                 containerRules.AppPortOutboundRateLimitBitsPerSecond = this.Properties.UploadThrottleBitsps;
             }
 
             if (this.Properties.UseDiskQuota)
             {
-                containerRules.Rules |= HP.WindowsPrison.RuleTypes.Disk;
+                containerRules.Rules |= CloudFoundry.WindowsPrison.RuleTypes.Disk;
                 containerRules.DiskQuotaBytes = this.Properties.DiskQuotaBytes;
             }
 
