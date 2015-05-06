@@ -14,14 +14,14 @@ StyleCop.Cache
 doc/*.xml
 doc/*.XML
 !src/CloudFoundry.Test/TestApps/Umbraco/app/bin
-!src/buildpacks/cf-iis8-buildback/app/bin
-!src/buildpacks/cf-iis8-buildback/bin
-!src/buildpacks/cf-iis8-buildback/iishwc/iishwcx64.exe
-!src/buildpacks/cf-iis8-buildback/iishwc/iishwcx86.exe
+!src/buildpacks/cf-iis8-buildpack/app/bin
+!src/buildpacks/cf-iis8-buildpack/bin
+!src/buildpacks/cf-iis8-buildpack/iishwc/iishwcx64.exe
+!src/buildpacks/cf-iis8-buildpack/iishwc/iishwcx86.exe
 !installers/logyard/binaries/apptail.exe
 !installers/logyard/binaries/logyard.exe
 !installers/logyard/binaries/systail.exe
-!src/CloudFoundry.WinDEA/HP.WindowsPrison.Guard.exe
+!src/CloudFoundry.WinDEA/CloudFoundry.WindowsPrison.Guard.exe
 
 # NuGet Packages
 *.nupkg
