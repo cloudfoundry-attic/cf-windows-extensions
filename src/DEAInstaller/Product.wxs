@@ -138,7 +138,8 @@
                         <File Id="DetectBat" Name="detect.bat" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\detect.bat"/>
                         <File Id="DetectPS" Name="detect.ps1" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\detect.ps1"/>
                         <File Id="ReleaseBat" Name="release.bat" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\release.bat"/>
-                        <File Id="ReleasePS" Name="release.ps1" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\release.ps1"/>                      
+                        <File Id="ReleasePS" Name="release.ps1" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\release.ps1"/>
+                        <File Id="PublishPubxml" Name="publish.pubxml" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\publish.pubxml"/>
                     </Component>                  
                 </Directory>
               
