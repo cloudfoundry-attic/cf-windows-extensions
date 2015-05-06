@@ -80,8 +80,8 @@
               <File Id="InteropDiskQuotaTypeLibrary" Name="Interop.DiskQuotaTypeLibrary.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="AlphaFSDll" Name="AlphaFS.dll" Source="$(var.BINDIRECTORY)"/>
               <File Id="AlphaFSPdb" Name="AlphaFS.pdb" Source="$(var.BINDIRECTORY)"/>
-              <File Id="HPPrisonGuard" Name="HP.WindowsPrison.Guard.exe" Source="$(var.BINDIRECTORY)" />
-              <File Id="HPPrison" Name="HP.WindowsPrison.dll" Source="$(var.BINDIRECTORY)" />
+              <File Id="CloudFoundryPrisonGuard" Name="CloudFoundry.WindowsPrison.Guard.exe" Source="$(var.BINDIRECTORY)" />
+              <File Id="CloudFoundryPrison" Name="CloudFoundry.WindowsPrison.dll" Source="$(var.BINDIRECTORY)" />
 
 
               <util:XmlFile Id="SetIndex" Action="setValue" ElementPath="/cloudfoundry/dea/@index" File="[INSTALLDIR]\Dea.config" Value="[INDEX]" ></util:XmlFile>

@@ -21,7 +21,7 @@ doc/*.XML
 !installers/logyard/binaries/apptail.exe
 !installers/logyard/binaries/logyard.exe
 !installers/logyard/binaries/systail.exe
-!src/CloudFoundry.WinDEA/HP.WindowsPrison.Guard.exe
+!src/CloudFoundry.WinDEA/CloudFoundry.WindowsPrison.Guard.exe
 
 # NuGet Packages
 *.nupkg

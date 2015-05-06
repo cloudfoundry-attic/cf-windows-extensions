@@ -43,7 +43,7 @@
             this.logFile = logFile;
         }
 
-        public bool Detect(HP.WindowsPrison.Prison prison)
+        public bool Detect(CloudFoundry.WindowsPrison.Prison prison)
         {
             string exe = GetExecutable(Path.Combine(this.path, "bin"), "detect");
 
@@ -89,7 +89,7 @@
             }
         }
 
-        public Process StartCompile(HP.WindowsPrison.Prison prison) 
+        public Process StartCompile(CloudFoundry.WindowsPrison.Prison prison) 
         {
             string exe = GetExecutable(Path.Combine(path, "bin"), "compile");
             string args = string.Format("{0} {1} >> {2} 2>&1", this.appDir, this.cacheDir, this.logFile);
@@ -102,7 +102,7 @@
             return process;
         }
 
-        public ReleaseInfo GetReleaseInfo(HP.WindowsPrison.Prison prison) 
+        public ReleaseInfo GetReleaseInfo(CloudFoundry.WindowsPrison.Prison prison) 
         {
             string exe = GetExecutable(Path.Combine(this.path, "bin"), "release");
 

@@ -39,7 +39,7 @@
         /// <summary>
         /// The Windows Job Object for the application instance. Used for security/resource sandboxing.
         /// </summary>
-        private HP.WindowsPrison.Prison processPrison = new HP.WindowsPrison.Prison();
+        private CloudFoundry.WindowsPrison.Prison processPrison = new CloudFoundry.WindowsPrison.Prison();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DropletInstance"/> class.
@@ -49,7 +49,7 @@
             this.TotalTerminatedProcessesTracked = 0;        
         }
 
-        public HP.WindowsPrison.Prison Prison
+        public CloudFoundry.WindowsPrison.Prison Prison
         {
             get
             {
