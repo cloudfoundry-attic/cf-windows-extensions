@@ -367,41 +367,6 @@
             // Clean everything in the staged directory
             this.fileResources.CleanCacheDirectory();
 
-            //if (this.useDiskQuota)
-            //{
-            //    // Initialize disk quota
-            //    Logger.Info("Initializing disk quota.");
-
-            //    int retryCount = 3;
-            //    while (retryCount > 0)
-            //    {
-            //        try
-            //        {
-            //            DiskQuotaManager.StartQuotaInitialization();
-
-            //            // Wait until the volume diskquota is initialized
-            //            while (!DiskQuotaManager.IsQuotaInitialized())
-            //            {
-            //                Thread.Sleep(200);
-            //            }
-            //            break;
-            //        }
-            //        catch(Exception ex)
-            //        {
-            //            retryCount--;
-            //            if (retryCount > 0)
-            //            {
-            //                Logger.Error(ex.ToString());
-            //                Thread.Sleep(1000);
-            //            }
-            //            else
-            //            {
-            //                throw ex;
-            //            }
-            //        }
-            //    }
-            //    Logger.Info("Disk quota initialization complete");
-            //}
 
             CloudFoundry.WindowsPrison.Prison.Init();
 
@@ -530,22 +495,8 @@
                     this.monitoring.AddInstanceResources(instance);
                     instance.Properties.StopProcessed = false;
 
-                    //var prisonInfo = new ProcessPrisonCreateInfo();
-
-                    //prisonInfo.Id = instance.Properties.InstanceId;
-                    //prisonInfo.TotalPrivateMemoryLimitBytes = instance.Properties.MemoryQuotaBytes;
-                    //prisonInfo.WindowsPassword = instance.Properties.WindowsPassword;
-
-
-                    //if (this.useDiskQuota)
-                    //{
-                    //    prisonInfo.DiskQuotaBytes = instance.Properties.DiskQuotaBytes;
-                    //    prisonInfo.DiskQuotaPath = instance.Properties.Directory;
-                    //}
-
                     Logger.Info("Recovering Instance: {0}", instance.Properties.ContainerId);
 
-                    //instance.Prison.Attach(prisonInfo);
                     CloudFoundry.WindowsPrison.PrisonManager.LoadPrisonAndAttach(Guid.Parse(instance.Properties.ContainerId));
 
                     if (instance.Properties.State == DropletInstanceState.Starting)
@@ -867,13 +818,16 @@
 
             response.Id = this.UUID;
             response.AvailableMemory = this.monitoring.MaxMemoryMbytes - this.monitoring.MemoryReservedMbytes;
-            // TODO: vladi: grab this from the config file
-            response.PhysicalMemory = 1024;
-            // TODO: this looks to be disk_mb from config * overcommit factor?
-            response.AvailableDisk = 204800;
-            // TODO: vladi: grab this from the config file
-            response.Ip = "10.2.0.104";
-            // TODO: vladi: grab this from the config file
+
+            response.PhysicalMemory = (long)new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory / (1024 * 1024);
+
+            string rootPath = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System));
+            var drive = DriveInfo.GetDrives().FirstOrDefault(d => d.Name.ToUpperInvariant() == rootPath.ToUpperInvariant());
+            long driveSize = drive != null ? drive.TotalSize : 0;
+
+            response.AvailableDisk = driveSize / (1024 * 1024);
+            response.Ip = NetworkInterface.GetLocalIPAddress();
+
             response.PlacementProperties = new DeaAdvertiseMessagePlacementProperties()
             {
                 AvailabilityZone = "default",
@@ -2233,6 +2187,19 @@
                         if (isPortReady)
                         {
                             DateTime currentWorldTicks = DateTime.Now;
+
+                            if (instance.Prison == null)
+                            {
+                                Logger.Warning("Instance {0} has an empty prison", instance.Properties.InstanceId);
+                                return;
+                            }
+
+                            if (instance.Prison.JobObject == null)
+                            {
+                                Logger.Warning("Instance {0} has an empty job object", instance.Properties.InstanceId);
+                                return;
+                            }
+
                             long usedTicks = instance.Prison.JobObject.TotalProcessorTime.Ticks;
 
                             long lastUsedTicks = instance.Usage.Count >= 1 ? instance.Usage[instance.Usage.Count - 1].TotalProcessTicks : 0;
