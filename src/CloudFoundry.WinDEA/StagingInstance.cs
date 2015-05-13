@@ -71,6 +71,8 @@ namespace CloudFoundry.WinDEA
         public event StagingTaskEventHandler AfterUpload;
         public event StagingTaskEventHandler AfterStop;
 
+        public bool StopRequested { get; set; }
+
         public void SetupStagingEnvironment()
         {
             try

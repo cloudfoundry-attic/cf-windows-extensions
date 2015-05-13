@@ -1334,6 +1334,7 @@
                 instance.Properties.TaskId = pmessage.TaskID;
                 instance.Properties.Reply = reply;
                 instance.Properties.InitializedTime = DateTime.Now;
+                instance.StopRequested = false;
                 this.monitoring.AddInstanceResources(instance);
             }
             finally
@@ -1648,6 +1649,7 @@
                         instance.Lock.EnterWriteLock();
                         if (instance.Properties.AppId == request.AppID && (DateTime.Now - instance.Properties.InitializedTime).TotalSeconds > 3)
                         {
+                            instance.StopRequested = true;
                             instance.Properties.Stopped = true;
                         }
                     }
@@ -2429,7 +2431,21 @@
 
                     if (instance.Properties.Stopped && !instance.Properties.StagingDone)
                     {
-                        this.AfterStagingFinished(instance);
+                        if (!instance.StopRequested)
+                        {
+                            this.AfterStagingFinished(instance);
+                        }
+                        else
+                        {
+                            Logger.Info("Destroying prison for staging instance {0}", instance.Properties.TaskId);
+                            try
+                            {
+                                instance.Container.JobObject.TerminateProcesses(-1);
+                            }
+                            catch { }
+                            instance.Properties.CleanupInstance = true;
+                            instance.CompileProcess = null;
+                        }
                         instance.Properties.StagingDone = true;
                     }
 
