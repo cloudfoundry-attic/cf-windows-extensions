@@ -160,5 +160,16 @@
             get;
             set;
         }
+
+
+        /// <summary>
+        /// Gets or sets the IP of the host running the droplet.
+        /// </summary>
+        [JsonName("host_ip")]
+        public string HostIp
+        {
+            get;
+            set;
+        }
     }
 }

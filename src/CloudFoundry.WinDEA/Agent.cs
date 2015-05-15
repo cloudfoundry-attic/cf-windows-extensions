@@ -826,7 +826,7 @@
             long driveSize = drive != null ? drive.TotalSize : 0;
 
             response.AvailableDisk = driveSize / (1024 * 1024);
-            response.Ip = NetworkInterface.GetLocalIPAddress();
+            response.Ip = this.Host;
 
             response.PlacementProperties = new DeaAdvertiseMessagePlacementProperties()
             {
@@ -965,6 +965,7 @@
                         response.DropletId = instance.Properties.DropletId;
                         response.InstanceId = instance.Properties.InstanceId;
                         response.Index = instance.Properties.InstanceIndex;
+                        response.HostIp = this.Host;
                         response.State = instance.Properties.State;
                         response.StateTimestamp = instance.Properties.StateTimestamp;
                         response.FileUri = string.Format(CultureInfo.InvariantCulture, Strings.HttpDroplets, Host, this.directoryServerPort);
