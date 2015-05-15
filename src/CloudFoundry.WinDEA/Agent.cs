@@ -826,7 +826,7 @@
             long driveSize = drive != null ? drive.TotalSize : 0;
 
             response.AvailableDisk = driveSize / (1024 * 1024);
-            response.Ip = Host;
+            response.Ip = this.Host;
 
             response.PlacementProperties = new DeaAdvertiseMessagePlacementProperties()
             {
