@@ -1,3 +1,4 @@
+TEST
 Cloud Foundry Windows Extensions
 ===============================================
 
