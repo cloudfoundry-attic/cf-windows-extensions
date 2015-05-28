@@ -21,6 +21,12 @@
         [JsonName("buildpack")]
         public string Buildpack { get; set; }
 
+        [JsonName("buildpack_git_url")]
+        public string BuildpackGitUrl { get; set; }
+
+        [JsonName("buildpack_key")]
+        public string BuildpackKey { get; set; }
+
         [JsonName("resources")]
         public StagingStartRequestResources Resources { get; set; }
 

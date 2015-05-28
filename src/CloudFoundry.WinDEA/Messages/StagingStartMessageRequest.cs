@@ -35,11 +35,25 @@
 
         [JsonName("start_message")]
         public DeaStartMessageRequest StartMessage { get; set; }
+
+        [JsonName("admin_buildpacks")]
+        public StagingStartRequestAdminBuildpack[] AdminBuildpacks { get; set; }
     }
 
     class StagingStopMessageRequest : JsonConvertibleObject
     {
         [JsonName("app_id")]
         public string AppID { get; set; }
+    }
+
+
+    // Ref: https://github.com/cloudfoundry/dea_ng/blob/082c6cbf5c308c35b066034115b7c37b881d2aa1/lib/dea/staging/buildpacks_message.rb
+    public class StagingStartRequestAdminBuildpack : JsonConvertibleObject
+    {
+        [JsonName("key")]
+        public string Key { get; set; }
+
+        [JsonName("url")]
+        public string Url { get; set; }
     }
 }
