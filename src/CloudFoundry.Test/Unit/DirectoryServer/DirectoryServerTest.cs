@@ -1,14 +1,14 @@
-﻿using CloudFoundry.Utilities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
-using CloudFoundry.WinDEA.DirectoryServer;
 using System.Threading;
 using System.Text;
 using System.Net;
 using System.Linq;
 using System.Collections.Generic;
 using CloudFoundry.Configuration;
+using CloudFoundry.Utilities;
+using CloudFoundry.WinDEA.DirectoryServer;
 
 namespace CloudFoundry.Test.Unit.DirectoryServer
 {

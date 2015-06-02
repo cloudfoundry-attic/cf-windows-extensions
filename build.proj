@@ -12,14 +12,17 @@
   /t:UnitTest
     Runs unit tests
     
+  /t:IntegrationTest
+    Runs integration tests
+    
   /t:RestoreNugetPackages
     Restores nuget packages
-  -->  
-  
+  -->
+
   <PropertyGroup>
-    <ExtensionTasksPath>$(SolutionDir)\packages\MSBuild.Extension.Pack.1.5.0\tools\net40\</ExtensionTasksPath>
+    <ExtensionTasksPath Condition="'$(ExtensionTasksPath)' == ''">$(SolutionDir)\packages\MSBuild.Extension.Pack.1.5.0\tools\net40\</ExtensionTasksPath>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <LibraryRoot>$(MSBuildThisFileDirectory)</LibraryRoot>
     <LibrarySourceFolder>$(LibraryRoot)\src</LibrarySourceFolder>
@@ -37,8 +40,8 @@
     <commit Condition="'$(GIT_COMMIT)' == ''">?</commit>
     <commit Condition="'$(GIT_COMMIT)' != ''">$(GIT_COMMIT)</commit>
     <version>$(major).$(minor).$(revision).$(build)</version>
-  </PropertyGroup>  
- 
+  </PropertyGroup>
+
   <PropertyGroup>
     <NuGetCommand>&quot;$(LibraryRoot)\.nuget\nuget.exe&quot;</NuGetCommand>
     <MSTestCommand>&quot;$(VS120COMNTOOLS)\..\IDE\mstest.exe&quot;</MSTestCommand>
@@ -50,13 +53,12 @@
     <CoverageXml>$(LibraryRoot)\TestResults\cf-windows-extensions.coveragexml</CoverageXml>
     <CoverageHtmlDir>$(LibraryRoot)\TestResults\coveragehtml</CoverageHtmlDir>
     <TestFilter>TestCategory=Unit</TestFilter>
-	<IntegrationTestFilter>TestCategory=Integration</IntegrationTestFilter>
-	<NatsUrl>nats://nats:nats@127.0.0.1:4222</NatsUrl>
+    <IntegrationTestFilter>TestCategory=Integration</IntegrationTestFilter>
   </PropertyGroup>
 
   <!-- Import msbuild extensions -->
-  <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks"/>
-  
+  <Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks" Condition="exists('$(ExtensionTasksPath)')"/>
+
   <!-- Build target -->
   <Target Name="Build" DependsOnTargets="RestoreNugetPackages; Versioning">
     <MSBuild Projects="$(WindowsExtensionsSolution)"
@@ -70,20 +72,19 @@
              Properties="Configuration=$(Configuration);Platform=x64"
              Targets="Clean" />
   </Target>
-  
+
   <!-- Target for running integration tests-->
   <Target Name="IntegrationTest">
     <ItemGroup>
-      <TestDlls Include=".\bin\CloudFoundry.Test.dll"/>
+      <TestDlls Include=".\bin\CloudFoundry.Test.Integration.dll"/>
+      <ConfigFile Include=".\bin\CloudFoundry.Test.Integration.dll.config"/>
     </ItemGroup>
- 
-	<MSBuild.ExtensionPack.Xml.XmlFile 
-		TaskAction="UpdateAttribute" 
-		File="bin\CloudFoundry.Test.dll.config" 
-		XPath="/configuration/appSettings/add[@key='nats']/@value" 
-		Value="$(NatsUrl)"
-	/>
- 
+
+    <Warning Text="The nats property not set, value from app.config will be used." Condition="'$(nats)' == ''" />
+
+    <Message Text="Updating config file at %(ConfigFile.Identity)" />
+    <XmlPoke Condition="'$(nats)' != ''" XmlInputPath="%(ConfigFile.Identity)" Query="/configuration/appSettings/add[@key='nats']/@value" Value="$(nats)"/>
+
     <Exec Command="$(VSTestCommand) %(TestDlls.Identity) /inIsolation /TestCaseFilter:$(IntegrationTestFilter) /logger:trx /Platform:x64 /Framework:framework40 /Settings:CodeCoverage.runsettings"  ConsoleToMSBuild="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfTestRun" />
@@ -95,7 +96,7 @@
     <ItemGroup>
       <TestDlls Include=".\bin\CloudFoundry.Test.dll"/>
     </ItemGroup>
- 
+
     <Exec Command="$(VSTestCommand) %(TestDlls.Identity) /inIsolation /TestCaseFilter:$(TestFilter) /logger:trx /Platform:x64 /Framework:framework40 /Enablecodecoverage /Settings:CodeCoverage.runsettings"  ConsoleToMSBuild="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfTestRun" />
@@ -111,7 +112,7 @@
     </PropertyGroup>
 
     <Delete Files="$(CoverageXml)" />
-    
+
     <Message Text="Analysing coverage file $(SourceCoverageFile)"/>
     <Exec Command="$(CoverageCommand) analyze /output:&quot;$(CoverageXml)&quot; &quot;$(SourceCoverageFile)&quot;" />
 
@@ -125,20 +126,20 @@
   <Target Name="RestoreNugetPackages">
     <Exec Command="$(NuGetCommand) restore $(WindowsExtensionsSolution)"/>
   </Target>
-  
-  
-  
+
+
+
   <!-- Target for automatically versioning the assemblies -->
   <Target Name="Versioning">
     <Message Text="Version: $(version)" />
-  
+
     <ItemGroup>
       <AssemblyInfoFiles Include="$(LibraryRoot)\src\CloudFoundry.AspDotNetLogging\Properties\AssemblyInfo.cs"/>
       <AssemblyInfoFiles Include="$(LibraryRoot)\src\CloudFoundry.Configuration\Properties\AssemblyInfo.cs"/>
       <AssemblyInfoFiles Include="$(LibraryRoot)\src\CloudFoundry.NatsClient\Properties\AssemblyInfo.cs"/>
       <AssemblyInfoFiles Include="$(LibraryRoot)\src\CloudFoundry.Utilities\Properties\AssemblyInfo.cs"/>
       <AssemblyInfoFiles Include="$(LibraryRoot)\src\CloudFoundry.WinDEA\Properties\AssemblyInfo.cs"/>
-	  <AssemblyInfoFiles Include="$(LibraryRoot)\src\CloudFoundry.WinDEA.DirectoryServer\Properties\AssemblyInfo.cs"/>
+      <AssemblyInfoFiles Include="$(LibraryRoot)\src\CloudFoundry.WinDEA.DirectoryServer\Properties\AssemblyInfo.cs"/>
       <AssemblyInfoFiles Include="$(LibraryRoot)\src\CloudFoundry.WinDEA.WindowsService\Properties\AssemblyInfo.cs"/>
     </ItemGroup>
 
