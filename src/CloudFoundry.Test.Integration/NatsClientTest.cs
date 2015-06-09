@@ -271,8 +271,6 @@ namespace CloudFoundry.Test.Integration
 
         [TestMethod, Description("should not receive a message that it has unsubscribed from")]
         [TestCategory("Integration")]
-        /// Ignore this test. Justification: test is broken.
-        [Ignore]
         public void TC012_RecieveMessageOnUnsubscription()
         {
             bool errorThrown = false;
@@ -287,6 +285,7 @@ namespace CloudFoundry.Test.Integration
             });
 
             natsClient.Start(natsEndpoint);
+            ManualResetEvent mre = new ManualResetEvent(false);
 
             sid = natsClient.Subscribe("foo", delegate(string msg, string reply, string subject)
             {
@@ -296,7 +295,9 @@ namespace CloudFoundry.Test.Integration
                     if (receivedCount == 2)
                     {
                         natsClient.Unsubscribe(sid);
+                        mre.Set();
                     }
+
                 }
             });
 
@@ -304,8 +305,10 @@ namespace CloudFoundry.Test.Integration
             {
                 natsClient.Publish("foo", () =>
                 {
+                    mre.WaitOne();
                     natsClient.Publish("foo", () => { }, "xxx");
                 }, "xxx");
+
             }, "xxx");
 
             Thread.Sleep(5000);
@@ -567,13 +570,14 @@ namespace CloudFoundry.Test.Integration
                     }
                 });
 
-                natsClient.Publish("foo", delegate() {
+                natsClient.Publish("foo", delegate()
+                {
                     natsClient.Publish("foo", delegate()
                     {
                         resetEvent.Set();
                     }, "xxx");
                 }, "xxx");
-             
+
 
                 resetEvent.WaitOne(5000);
                 natsClient.Close();
@@ -612,7 +616,7 @@ namespace CloudFoundry.Test.Integration
         [TestCategory("Integration")]
         /// Ignore this test as Pedantic state is on TODO list
         /// https://github.com/apcera/gnatsd/blob/b4851466566bf402b186e699292ec0d2571b4d59/TODO.md#L8
-        [Ignore] 
+        [Ignore]
         public void TC020_ErrorHandlerPedantic()
         {
             bool errorThrown = false;
