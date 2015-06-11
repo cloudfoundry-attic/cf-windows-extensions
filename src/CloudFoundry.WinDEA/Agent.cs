@@ -165,6 +165,7 @@
         private string directoryServerHmacKey;
         private string gitPath;
         private string buildpacksDir;
+        private string adminBuildpacksDir;
         private int stagingTimeoutMs;
         private string logyardUidPath;
         public string ExternalHost { get; set; }
@@ -245,6 +246,7 @@
 
             this.gitPath = cfSection.DEA.Staging.GitExecutable;
             this.buildpacksDir = cfSection.DEA.Staging.BuildpacksDirectory;
+            this.adminBuildpacksDir = Path.Combine(this.fileResources.DropletDir, "admin_buildpacks");
             this.stagingTimeoutMs = cfSection.DEA.Staging.StagingTimeoutMs;
         }
 
@@ -1414,7 +1416,7 @@
                     instance.Container.User.SetUserEnvironmentVariables(stagingEnvVars);
                 }
 
-                instance.GetBuildpack(pmessage, this.gitPath, this.buildpacksDir);
+                instance.GetBuildpack(pmessage, this.gitPath, this.buildpacksDir, this.adminBuildpacksDir);
                 this.stagingTaskRegistry.ScheduleSnapshotStagingState();
 
                 try
@@ -1553,7 +1555,7 @@
                         Logger.Debug("Staging task {0}: Packing droplet {1}", instance.Properties.TaskId, instance.Workspace.StagedDropletPath);
                         Directory.CreateDirectory(instance.Workspace.StagedDropletDir);
 
-                        DEAUtilities.CreateArchive(instance.Workspace.StagedDir, instance.Workspace.StagedDropletPath, false);
+                        DEAUtilities.CreateArchive(instance.Workspace.StagedDir, instance.Workspace.StagedDropletPath, true);
 
                         if (File.Exists(instance.Workspace.StagedDropletPath))
                         {
@@ -1580,7 +1582,7 @@
                     {
                         Directory.CreateDirectory(instance.Workspace.Cache);
 
-                        DEAUtilities.CreateArchive(instance.Workspace.Cache, instance.Workspace.StagedBuildpackCachePath, false);
+                        DEAUtilities.CreateArchive(instance.Workspace.Cache, instance.Workspace.StagedBuildpackCachePath, true);
                         Uri uri = new Uri(instance.Properties.BuildpackCacheUploadURI);
                         Logger.Debug("Staging task {0}: Uploading buildpack cache {1} to {2}", instance.Properties.TaskId, instance.Workspace.StagedBuildpackCachePath, instance.Properties.BuildpackCacheUploadURI);
                         DEAUtilities.HttpUploadFile(instance.Properties.BuildpackCacheUploadURI, new FileInfo(instance.Workspace.StagedBuildpackCachePath), "upload[droplet]", "application/octet-stream", uri.UserInfo);
