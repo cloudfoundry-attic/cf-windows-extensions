@@ -2446,9 +2446,11 @@
                                 instance.Container.JobObject.TerminateProcesses(-1);
                             }
                             catch { }
-                            instance.Properties.CleanupInstance = true;
+
                             instance.CompileProcess = null;
                         }
+
+                        instance.Properties.CleanupInstance = true;
                         instance.Properties.StagingDone = true;
                     }
 
