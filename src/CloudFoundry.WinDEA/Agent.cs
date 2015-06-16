@@ -1879,7 +1879,6 @@
                                         instance.Properties.State = DropletInstanceState.Running;
                                         instance.Properties.StateTimestamp = DateTime.Now;
 
-                                        this.SendHeartbeat();
                                         this.RegisterInstanceWithRouter(instance);
                                         this.droplets.ScheduleSnapshotAppState();
                                     }
@@ -1893,6 +1892,11 @@
                             finally
                             {
                                 instance.Lock.ExitWriteLock();
+                            }
+
+                            if (detected)
+                            {
+                                this.SendHeartbeat();
                             }
                         });
                 });
@@ -2446,9 +2450,11 @@
                                 instance.Container.JobObject.TerminateProcesses(-1);
                             }
                             catch { }
-                            instance.Properties.CleanupInstance = true;
+
                             instance.CompileProcess = null;
                         }
+
+                        instance.Properties.CleanupInstance = true;
                         instance.Properties.StagingDone = true;
                     }
 
