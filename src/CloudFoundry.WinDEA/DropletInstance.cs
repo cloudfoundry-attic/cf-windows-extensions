@@ -55,6 +55,10 @@
             {
                 return this.processPrison;
             }
+            set
+            {
+                this.processPrison = value;
+            }
         }
 
         /// <summary>
