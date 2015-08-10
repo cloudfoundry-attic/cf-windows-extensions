@@ -499,7 +499,11 @@
 
                     Logger.Info("Recovering Instance: {0}", instance.Properties.ContainerId);
 
-                    CloudFoundry.WindowsPrison.PrisonManager.LoadPrisonAndAttach(Guid.Parse(instance.Properties.ContainerId));
+                    var recoveredContainer = CloudFoundry.WindowsPrison.PrisonManager.LoadPrisonAndAttach(Guid.Parse(instance.Properties.ContainerId));
+                    if (recoveredContainer != null)
+                    {
+                        instance.Prison = recoveredContainer;
+                    }
 
                     if (instance.Properties.State == DropletInstanceState.Starting)
                     {
@@ -2507,7 +2511,11 @@
 
                     Logger.Info("Recovering Process Prison: {0}", instance.Properties.InstanceId);
 
-                    instance.Container = CloudFoundry.WindowsPrison.PrisonManager.LoadPrisonAndAttach(Guid.Parse(instance.Properties.InstanceId));
+                    var recoveredContainer = CloudFoundry.WindowsPrison.PrisonManager.LoadPrisonAndAttach(Guid.Parse(instance.Properties.InstanceId));
+                    if (recoveredContainer != null)
+                    {
+                        instance.Container = recoveredContainer;
+                    }
 
                     foreach (Process p in instance.Container.JobObject.GetJobProcesses())
                     {
