@@ -1,3 +1,0 @@
-[submodule "src/buildpacks/cf-iis8-buildpack"]
-	path = src/buildpacks/cf-iis8-buildpack
-	url = https://github.com/cloudfoundry-incubator/cf-iis8-buildpack
