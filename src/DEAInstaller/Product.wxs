@@ -3,7 +3,7 @@
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   
   <?define var.BINDIRECTORY = $(var.CloudFoundry.WinDEA.WindowsService.TargetDir)?>  
-  <?define var.BUILDPACKDIRECTORY =$(var.CloudFoundry.WinDEA.WindowsService.TargetDir)..\src\Buildpacks\?>  
+  <?define var.BUILDPACKDIRECTORY =$(var.CloudFoundry.WinDEA.WindowsService.TargetDir)\Buildpacks\?>  
   
   <?define var.ProductName = "Windows DEA"?>
   <?define var.Manufacturer = "CloudFoundry"?>
@@ -118,66 +118,7 @@
               <ServiceControl Id="WinDEA" Start="install" Stop="both" Remove="both" Name="WinDEA" Wait="no" />
               
             </Component>
-            
-            <Directory Id="BuildpackDir" Name="buildpacks">
-              <Directory Id="iis8Dir" Name="iis8">
-                <Directory Id="iis8appDir" Name="app">
-                  <Directory Id="iis8appbin" Name="bin">                    
-                    <Component Id="iis8buildpackapplog" Feature="BuildpackFeature">
-                       <File Id="ASPLOGGING" Name="CloudFoundry.AspDotNetLogging.dll" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\app\bin\CloudFoundry.AspDotNetLogging.dll"/>
-                       <File Id="ASPLOGConfig" Name="CloudFoundry.AspDotNetLogging.dll.config" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\app\bin\CloudFoundry.AspDotNetLogging.dll.config"/>
-                    </Component>
-                  </Directory>                   
-                </Directory>   
-                
-                <Directory Id="iis8binDir" Name="bin">                  
-                    <Component Id="iis8buildpackbin" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b45" Feature="BuildpackFeature">                     
-                        <File Id="CompileBat" Name="compile.bat" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\compile.bat"/>
-                        <File Id="CompilePS" Name="compile.ps1" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\compile.ps1"/>
-                        <File Id="NugetExe" Name="nuget.exe" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\nuget.exe"/>
-                        <File Id="DetectBat" Name="detect.bat" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\detect.bat"/>
-                        <File Id="DetectPS" Name="detect.ps1" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\detect.ps1"/>
-                        <File Id="ReleaseBat" Name="release.bat" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\release.bat"/>
-                        <File Id="ReleasePS" Name="release.ps1" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\release.ps1"/>
-                        <File Id="PublishPubxml" Name="publish.pubxml" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\bin\publish.pubxml"/>
-                    </Component>                  
-                </Directory>
-              
-                <Directory Id="iis8hwc" Name="iishwc">
-                  
-                    <Directory Id="iis8hwcsrc" Name="src">
-                      <Component Id="iis8hwcsln" Feature="BuildpackFeature">
-                        <File Id="slnhwc" Name="iishwc.sln" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\src\iishwc.sln"/>
-                      </Component>
-                      <Directory Id="iis8hwcsrcc" Name="iishwc">
-                        <Component Id="iis8hwcslncpp" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b46" Feature="BuildpackFeature">
-                          <File Id="iishwcpp" Name="iishwc.cpp" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\src\iishwc\iishwc.cpp"/>
-                          <File Id="iishwcvcxproj" Name="iishwc.vcxproj" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\src\iishwc\iishwc.vcxproj"/>
-                          <File Id="iishwcvcxprojfilter" Name="iishwc.vcxproj.filters" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\src\iishwc\iishwc.vcxproj.filters"/>
-                        </Component>
-                      </Directory>
-                    </Directory>
-                    
-                    <Component Id="iis8isshwc" Guid="bb38447b-e955-4496-a7ea-dec6b19f0b47" Feature="BuildpackFeature">
-                       <File Id="apphostTemp" Name="applicationHostTemplate.config" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\applicationHostTemplate.config"/>
-                       <File Id="detectVersion" Name="detectVersion.ps1" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\detectVersion.ps1"/>
-                       <File Id="iishwcx64" Name="iishwcx64.exe" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\iishwcx64.exe"/>
-                       <File Id="iishwcx86" Name="iishwcx86.exe" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\iishwcx86.exe"/>
-                       
-                       <File Id="rootWeb2064" Name="rootWeb2064.config" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\rootWeb2064.config"/>
-                       <File Id="rootWeb2086" Name="rootWeb2086.config" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\rootWeb2086.config"/>
-                      
-                       <File Id="rootWeb4064" Name="rootWeb4064.config" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\rootWeb4064.config"/>
-                       <File Id="rootWeb4086" Name="rootWeb4086.config" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\rootWeb4086.config"/>
-                       
-                       <File Id="startbat" Name="start.bat" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\start.bat"/>
-                       <File Id="startPS" Name="start.ps1" Source="$(var.BUILDPACKDIRECTORY)\cf-iis8-buildpack\iishwc\start.ps1"/>                       
-                    </Component>                
-                
-                </Directory>              
-              </Directory>
-            </Directory>          
-          
+
           </Directory>
         </Directory>
       </Directory>
@@ -200,9 +141,6 @@
       <MergeRef Id="VCRedist64OpenMP"/>
       <MergeRef Id="VCRedist86CXXAMP"/>
       <MergeRef Id="VCRedist64CXXAMP"/>
-  </Feature>
-  
-  <Feature Id="BuildpackFeature" Title="Buildpack" Absent="disallow" Display="hidden">  
   </Feature>
   
   </Product>  

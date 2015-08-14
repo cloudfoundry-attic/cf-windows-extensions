@@ -12,14 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		vcap-dotnet.vsmdi = vcap-dotnet.vsmdi
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Buildpacks", "Buildpacks", "{BFCFDFC1-D035-4C75-BC44-CC19AF7581AE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cf-iis8-buildpack", "cf-iis8-buildpack", "{515E386E-A80D-43F9-84CC-BA817DFF5220}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iishwc", "src\buildpacks\cf-iis8-buildpack\iishwc\src\iishwc\iishwc.vcxproj", "{D577C3D6-9046-40BF-B414-FEECA8FD6EB6}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iishwc_x64", "src\buildpacks\cf-iis8-buildpack\iishwc\src\iishwc\iishwc_x64.vcxproj", "{518046C8-B3CD-4789-A964-12C1FE722E88}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudFoundry.Utilities", "src\CloudFoundry.Utilities\CloudFoundry.Utilities.csproj", "{CD3B15D7-8C7D-4302-A621-02BFD96FE6E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudFoundry.NatsClient", "src\CloudFoundry.NatsClient\CloudFoundry.NatsClient.csproj", "{D3261856-CD6E-4DAE-A91B-A8ED087162C4}"
@@ -47,14 +39,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D577C3D6-9046-40BF-B414-FEECA8FD6EB6}.Debug|x64.ActiveCfg = Debug|Win32
-		{D577C3D6-9046-40BF-B414-FEECA8FD6EB6}.Debug|x64.Build.0 = Debug|Win32
-		{D577C3D6-9046-40BF-B414-FEECA8FD6EB6}.Release|x64.ActiveCfg = Release|x64
-		{D577C3D6-9046-40BF-B414-FEECA8FD6EB6}.Release|x64.Build.0 = Release|x64
-		{518046C8-B3CD-4789-A964-12C1FE722E88}.Debug|x64.ActiveCfg = Debug|x64
-		{518046C8-B3CD-4789-A964-12C1FE722E88}.Debug|x64.Build.0 = Debug|x64
-		{518046C8-B3CD-4789-A964-12C1FE722E88}.Release|x64.ActiveCfg = Release|x64
-		{518046C8-B3CD-4789-A964-12C1FE722E88}.Release|x64.Build.0 = Release|x64
 		{CD3B15D7-8C7D-4302-A621-02BFD96FE6E3}.Debug|x64.ActiveCfg = Debug|x64
 		{CD3B15D7-8C7D-4302-A621-02BFD96FE6E3}.Debug|x64.Build.0 = Debug|x64
 		{CD3B15D7-8C7D-4302-A621-02BFD96FE6E3}.Release|x64.ActiveCfg = Release|x64
@@ -92,9 +76,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{515E386E-A80D-43F9-84CC-BA817DFF5220} = {BFCFDFC1-D035-4C75-BC44-CC19AF7581AE}
-		{D577C3D6-9046-40BF-B414-FEECA8FD6EB6} = {515E386E-A80D-43F9-84CC-BA817DFF5220}
-		{518046C8-B3CD-4789-A964-12C1FE722E88} = {515E386E-A80D-43F9-84CC-BA817DFF5220}
 		{08E89C1C-3D44-480B-8F61-F62EFF7EAA61} = {9AF8C03A-1681-442A-BAB8-AAC2AD2F9B78}
 		{C5F8631C-9046-47B8-8CEB-E975CD440F86} = {9AF8C03A-1681-442A-BAB8-AAC2AD2F9B78}
 		{9E044679-825D-4764-A034-250900843A09} = {9AF8C03A-1681-442A-BAB8-AAC2AD2F9B78}
