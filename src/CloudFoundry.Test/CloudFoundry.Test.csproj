@@ -90,7 +90,6 @@
   <ItemGroup>
     <Compile Include="AssemblyFileInfo.cs" />
     <Compile Include="Unit\DirectoryServer\DirectoryServerTest.cs" />
-    <Compile Include="Unit\DiskUsageTest.cs" />
     <Compile Include="Unit\HeartbeatMessage.cs" />
     <Compile Include="Unit\JsonConvertibleObjectTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

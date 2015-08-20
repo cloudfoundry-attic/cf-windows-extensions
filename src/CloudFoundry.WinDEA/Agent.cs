@@ -539,47 +539,6 @@
         }
 
         /// <summary>
-        /// First evacuates the Instances and after a delay it's calling the shutdown.
-        /// </summary>
-        public void EvacuateAppsThenQuit()
-        {
-            this.shuttingDown = true;
-
-            Logger.Info(Strings.Evacuatingapplications);
-
-            this.droplets.ForEach(delegate(DropletInstance instance)
-            {
-                try
-                {
-                    instance.Lock.EnterWriteLock();
-                    if (instance.Properties.State != DropletInstanceState.Crashed)
-                    {
-                        Logger.Debug(Strings.EvacuatingApp, instance.Properties.InstanceId);
-
-                        instance.Properties.ExitReason = DropletExitReason.DeaEvacuation;
-                        this.deaReactor.SendDropletExited(instance.GenerateDropletExitedMessage().SerializeToJson());
-                        instance.Properties.Evacuated = true;
-                    }
-                }
-                finally
-                {
-                    instance.Lock.ExitWriteLock();
-                }
-            });
-
-            Logger.Info(Strings.SchedulingShutdownIn, this.evacuationDelayMs);
-
-            this.droplets.ScheduleSnapshotAppState();
-
-            TimerHelper.DelayedCall(
-                this.evacuationDelayMs,
-                delegate
-                {
-                    this.Shutdown();
-                });
-        }
-
-        /// <summary>
         /// Shuts down the DEA. First it stops all the instances and then the Nats client.
         /// </summary>
         public void Shutdown()
@@ -1165,10 +1124,6 @@
                         instance.Properties.ExitReason = DropletExitReason.Crashed;
                         instance.Properties.State = DropletInstanceState.Crashed;
                         instance.Properties.StateTimestamp = DateTime.Now;
-                        if (!instance.IsProcessIdRunning)
-                        {
-                            instance.Properties.ProcessId = 0;
-                        }
                     }
 
                     this.deaReactor.SendDropletExited(instance.GenerateDropletExitedMessage().SerializeToJson());
@@ -1456,30 +1411,6 @@
             }
             this.deaReactor.SendReply(instance.Properties.Reply, response.SerializeToJson());
             Logger.Debug("Staging task {0}: sent reply {1}", instance.Properties.TaskId, response.SerializeToJson());
-        }
-
-        private void StopStaging(StagingInstance instance, string reply_to)
-        {
-            try
-            {
-                if (instance.Properties.Stopped)
-                {
-                    return;
-                }
-                instance.Lock.EnterWriteLock();
-                instance.Properties.Stopped = true;
-                StagingStartMessageResponse response = new StagingStartMessageResponse();
-                response.TaskId = instance.Properties.TaskId;
-                this.deaReactor.SendReply(reply_to, response.SerializeToJson());
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Could not stop staging task {0}: {1}", instance.Properties.TaskId, ex.ToString());
-            }
-            finally
-            {
-                instance.Lock.ExitWriteLock();
-            }
         }
 
         private void StartStagedDropletInstance(StagingInstance stagingInstance, string dropletSha)
@@ -2244,7 +2175,6 @@
                         }
                         else
                         {
-                            instance.Properties.ProcessId = 0;
                             if (instance.Properties.State == DropletInstanceState.Running)
                             {
                                 Logger.Warning(Strings.AppNotDetectedReady, instance.Properties.Name, instance.Properties.InstanceId);

@@ -28,25 +28,6 @@ namespace CloudFoundry.WinDEA
             return startCommand;
         }
 
-        public static string GetDetectedBuildpack(string stagingInfoFile)
-        {
-            string buildpack = string.Empty;
-            if (File.Exists(stagingInfoFile))
-            {               
-                using (var stream = new StreamReader(stagingInfoFile))
-                {
-                    var yaml = new YamlStream();
-                    yaml.Load(stream);
-
-                    var startCommandScalar = new YamlScalarNode("detected_buildpack");
-                    var elements = ((YamlMappingNode)yaml.Documents[0].RootNode).Children;
-
-                    buildpack = elements[startCommandScalar].ToString();
-                }
-            }
-            return buildpack;
-        }
-
         public static void SaveBuildpackInfo(string stagingInfoFile, string detectedBuildpack, string startCommand)
         {
             var info = new
