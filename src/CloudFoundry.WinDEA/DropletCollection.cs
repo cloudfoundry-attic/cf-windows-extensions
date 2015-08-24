@@ -108,23 +108,6 @@
         }
 
         /// <summary>
-        /// Checks if there are applications to me monitored.
-        /// </summary>
-        /// <returns>Return true if there are no applications to be monitored.</returns>
-        public bool NoMonitorableApps()
-        {
-            bool result = true;
-            ForEach(delegate(DropletInstance instance)
-            {
-                if (instance.Properties.State == DropletInstanceState.Starting || instance.Properties.State == DropletInstanceState.Running)
-                {
-                    result = false;
-                }
-            });
-            return result;
-        }
-
-        /// <summary>
         /// Iterates through all the droplet instances.
         /// </summary>
         /// <param name="upgradableReadLock">Set it to true if a write lock on the Droplet Collection.</param>

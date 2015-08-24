@@ -393,16 +393,6 @@
         /// <summary>
         /// Gets or sets the process id associated to the instance. Used to track the application resource usage.
         /// </summary>
-        [JsonName("pid")]
-        public int ProcessId
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the process id associated to the instance. Used to track the application resource usage.
-        /// </summary>
         [JsonName("container_id")]
         public string ContainerId
         {

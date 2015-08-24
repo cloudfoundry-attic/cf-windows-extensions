@@ -8,8 +8,6 @@
     using CloudFoundry.WinDEA.Messages;
     using CloudFoundry.Utilities;
     using CloudFoundry.Utilities.Json;
-    using CloudFoundry.Utilities.ProcessPerformance;
-    using CloudFoundry.Utilities.WindowsJobObjects;
 
     /// <summary>
     /// Represents a droplet instance.
@@ -119,27 +117,6 @@
                 this.usage = value;
             }
         }
-        
-        /// <summary>
-        /// Gets a value indicating whether the Pid is still valid and running
-        /// </summary>
-        public bool IsProcessIdRunning
-        {
-            get
-            {
-                if (this.Properties.ProcessId == 0)
-                {
-                    return false;
-                }
-
-                return ProcessInformation.GetProcessUsage(this.Properties.ProcessId) != null;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the error log of the instance.
-        /// </summary>
-        public FileLogger ErrorLog { get; set; }
 
         /// <summary>
         /// Returns the heartbeat info of the current droplet instance.
