@@ -292,8 +292,6 @@ namespace CloudFoundry.WinDEA
             {
                 Logger.Info("Staging task {0}: Detecting buildpack", this.Properties.TaskId);
 
-                List<string> systemBuildpacks = Directory.EnumerateDirectories(buildpacksDir).ToList();
-
                 if (message.AdminBuildpacks != null)
                 {
                     TryCleanupUnusedAdminBuildpacks(message.AdminBuildpacks, adminBuildpackDir);
@@ -321,19 +319,24 @@ namespace CloudFoundry.WinDEA
 
                 if (this.Buildpack == null)
                 {
-                    foreach (string dir in systemBuildpacks)
+                    if (Directory.Exists(buildpacksDir))
                     {
-                        DEAUtilities.DirectoryCopy(dir, Path.Combine(this.Workspace.TempDir, "buildpack"), true);
-                        Buildpack bp = new Buildpack(Path.Combine(this.Workspace.TempDir, "buildpack"), Path.Combine(this.Workspace.StagedDir, "app"), this.Workspace.Cache, this.Workspace.StagingLogPath);
-                        bool success = bp.Detect(this.Container);
-                        if (success)
+                        List<string> systemBuildpacks = Directory.EnumerateDirectories(buildpacksDir).ToList();
+
+                        foreach (string dir in systemBuildpacks)
                         {
-                            this.Buildpack = bp;
-                            break;
-                        }
-                        else
-                        {
-                            Directory.Delete(Path.Combine(this.Workspace.TempDir, "buildpack"), true);
+                            DEAUtilities.DirectoryCopy(dir, Path.Combine(this.Workspace.TempDir, "buildpack"), true);
+                            Buildpack bp = new Buildpack(Path.Combine(this.Workspace.TempDir, "buildpack"), Path.Combine(this.Workspace.StagedDir, "app"), this.Workspace.Cache, this.Workspace.StagingLogPath);
+                            bool success = bp.Detect(this.Container);
+                            if (success)
+                            {
+                                this.Buildpack = bp;
+                                break;
+                            }
+                            else
+                            {
+                                Directory.Delete(Path.Combine(this.Workspace.TempDir, "buildpack"), true);
+                            }
                         }
                     }
                 }
