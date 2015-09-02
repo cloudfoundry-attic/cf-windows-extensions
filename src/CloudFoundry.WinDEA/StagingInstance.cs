@@ -256,7 +256,7 @@ namespace CloudFoundry.WinDEA
                 Logger.Info("Staging task {0}: Downloading buildpack from {1}", this.Properties.TaskId, message.Properties.Buildpack);
                 Directory.CreateDirectory(Path.Combine(this.Workspace.TempDir, "buildpacks"));
                 string buildpackPath = Path.Combine(this.Workspace.TempDir, "buildpacks", Path.GetFileName(new Uri(message.Properties.Buildpack).LocalPath));
-                string command = string.Format("\"{0}\" clone --quiet --recursive {1} {2}", gitPath, message.Properties.Buildpack, buildpackPath);
+                string command = string.Format("set GIT_TERMINAL_PROMPT=0& \"{0}\" clone --quiet --recursive {1} {2}", gitPath, message.Properties.Buildpack, buildpackPath);
                 Logger.Debug(command);
                 int success = Command.ExecuteCommand(command, this.Workspace.TempDir);
                 if (success != 0)
