@@ -59,8 +59,8 @@
       <HintPath>..\..\packages\AlphaFS.2.0.1\lib\net45\AlphaFS.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CloudFoundry.WindowsPrison, Version=1.0.0.39, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\..\packages\windows-prison.1.0.0.39-alpha\lib\Net45\CloudFoundry.WindowsPrison.dll</HintPath>
+    <Reference Include="CloudFoundry.WindowsPrison, Version=1.3.0.6, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\..\packages\windows-prison.1.3.0.6\lib\Net45\CloudFoundry.WindowsPrison.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ini.Net, Version=1.0.5531.18665, Culture=neutral, processorArchitecture=MSIL">
@@ -73,7 +73,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ProcessPrivileges, Version=1.5.7.0, Culture=neutral, PublicKeyToken=fa3ff549c00ac058, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\windows-prison.1.0.0.39-alpha\lib\Net45\ProcessPrivileges.dll</HintPath>
+      <HintPath>..\..\packages\windows-prison.1.3.0.6\lib\Net45\ProcessPrivileges.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpCompress, Version=0.10.3.0, Culture=neutral, PublicKeyToken=beaf6f427e128133, processorArchitecture=MSIL">
